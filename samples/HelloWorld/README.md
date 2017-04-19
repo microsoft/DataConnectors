@@ -6,13 +6,13 @@ This sample provides a simple data source extension that can be run in Visual St
   * Uses string resources that allow for localization.
 * Declaring UI metadata so the extension can show up in the Power BI Desktop Get Data dialog.
 
-**Get Data dialog in Power BI Desktop**
+**Get Data dialog in Power BI Desktop**<br>
 ![GetData]
 
-**Authentication dialog**
+**Authentication dialog**<br>
 ![Auth]
 
-**Query editor**
+**Query editor**<br>
 ![Query]
 
 [GetData]: ../../blobs/helloworld1.png "Hello World in Get Data"
