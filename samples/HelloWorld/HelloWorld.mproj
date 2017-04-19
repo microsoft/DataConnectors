@@ -73,6 +73,9 @@
     <Content Include="HelloWorld.query.m">
       <SubType>Code</SubType>
     </Content>
+    <Content Include="README.md">
+      <SubType>Content</SubType>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <UsingTask TaskName="BuildMEZ" TaskFactory="CodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.v12.0.dll">
