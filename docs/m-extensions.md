@@ -24,11 +24,13 @@ The general process is:
 2. Create a new Data Connector project
 3. Define your connector logic
 4. Build the project to produce a .mez file
-5. Set a **PQ_ExtensionDirectory** environment variable, set it to `"c:\program files\microsoft power bi desktop\bin\extensions"`
+5. Set a **PQ_ExtensionDirectory** environment variable, set it to `c:\program files\microsoft power bi desktop\bin\extensions`
 6. Copy the .mez file in your c:\program files\microsoft power bi desktop\bin\extensions directory
 7. Restart Power BI Desktop 
 
 **Note:** Setting the environment variable (Step 5) is temporary. Extensibility can be enabled as a Preview Feature in Power BI Desktop starting the June release.
+
+(TODO - steps for contacting us about publishing an extension)
 
 ## Additional Resources
 * [M Library Functions](https://msdn.microsoft.com/en-US/library/mt253322.aspx)
@@ -102,15 +104,14 @@ The following table lists the fields for your Resource definition. All fields ar
 | SupportsEncryption | logical  | **(optional)** When true, the UI will present the option to connect to the data source using an encrypted connection. This is typically used for data sources with a non-encrypted fallback mechanism (generally ODBC or ADO.NET based sources).                          |
 
 ## Publish to UI
-
 This record provides the Power Query UI the information it needs to expose this extension in the Get Data dialog.
 
 | Field               | Type    | Details                                                                                                                                                                                                                                                                                                                    |
-|---------------------|---------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+|:--------------------|:--------|:---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | ButtonText          | list    | List of text items that will be displayed next to the data source's icon in the Power BI Get Data dialog.                                                                                                                                                                                                                  |
 | Category            | text    | Where the extension should be displayed in the Get Data dialog. Currently the only category values with special handing are `Azure` and `Database`. All other values will end up under the Other category.                                                                                                               |
-| LearnMoreUrl        | text    | **(optional)** Url to website containing more information about this data source or connector.                                                                                                                                                                                                                             |
 | Beta                | logical | **(optional)** When set to true, the UI will display a Preview/Beta identifier next to your connector name and a warning dialog that the implementation of the connector is subject to breaking changes.                                                                                                                   |
+| LearnMoreUrl        | text    | **(optional)** Url to website containing more information about this data source or connector.                                                                                                                                                                                                                             |
 | SupportsDirectQuery | logical | **(optional)** Enables Direct Query for your extension.<br>**This is currently only supported for ODBC extensions.**                                                                                                                                                                                                       |
 | SourceImage         | record  | **(optional)** A record containing a list of binary images (sourced from the .mez file using the **Extension.Contents** method). The record contains two fields (Icon16, Icon32), each with its own list. Each icon should be a different size.                                                                            |                                                                                                                                                                                                                              |
 | SourceTypeImage     | record  | **(optional)** Similar to SourceImage, except the convention for many out of the box connectors is to display a sheet icon with the source specific icon in the bottom right corner. Having a different set of icons for SourceTypeImage is optional - many extensions simply reuse the same set of icons for both fields. |
@@ -126,11 +127,9 @@ A Data Connector wraps and customizes the behavior of a [data source function in
 ## Authentication and Credentials
 
 ### Authentication Kinds
+An extension can support one or more Authentication kind. Each authentication kind is a different type of credential. The authentication UI displayed to end users in Power Query is driven by the type of credential(s) that an extension supports.
 
-An extension can support one or more AuthenticationKinds. Each authentication kind is a different type of credential. The authentication UI displayed to end users in Power Query is driven by the type of credential(s) that an extension supports.
-
-The list of supported authentication types is defined as part of an extension's [Resource](#resource) definition. Each AuthenticationKind value is a record with specific fields. The table below lists the expected fields for each kind. All fields are required unless marked otherwise.
-
+The list of supported authentication types is defined as part of an extension's [Data Source Kind](#data-source-kind) definition. Each Authentication value is a record with specific fields. The table below lists the expected fields for each kind. All fields are required unless marked otherwise.
 
 | Authentication Kind | Field         | Description                                                                                                                 |
 |:--------------------|:--------------|:----------------------------------------------------------------------------------------------------------------------------|
@@ -152,7 +151,7 @@ The list of supported authentication types is defined as part of an extension's 
 |                     | Fields        | A record containing the custom fields for this type of credential.<br><br>See [Implementing a Parameterized Authentication Kind](#implementing-a-parameterized-authentication-kind) for more details.|
 |                     | Label         | **(optional)** A text value that allows you to override the default label for this AuthenticationKind.                      |
 
-The sample below shows the Authentication record for a connector that supports OAuth, Windows, Basic (Username and Password), and anonymous credentials.
+The sample below shows the Authentication record for a connector that supports OAuth, Key, Windows, Basic (Username and Password), and anonymous credentials.
 
 ```
 Authentication = [
@@ -174,18 +173,15 @@ The current credentials can be retrieved using the **Extension.CurrentCredential
 
 M data source functions that have been enabled for extensibility will automatically inherit your extension's credential scope. In most cases, you will not need to explicitly access the current credentials, however, there are exceptions, such as:
 
--   Passing in the credential in a custom header or query string parameter (such as when you are using the API Key auth type)
+* Passing in the credential in a custom header or query string parameter (such as when you are using the API Key auth type)
+* Setting connection string properties for ODBC or ADO.NET extensions
+* Checking custom properties on an OAuth token
+* Using the credentials as part of an OAuth v1 flow
 
--   Setting connection string properties for ODBC or ADO.NET extensions
-
--   Checking custom properties on an OAuth token
-
--   Using the credentials as part of an OAuth v1 flow
-
-The Extension.CurrentCredential() function returns a record object. The fields it contains will be authentication type specific. See the table below for details.
+The `Extension.CurrentCredential()` function returns a record object. The fields it contains will be authentication type specific. See the table below for details.
 
 | Field              | Description                                                                                                                                                                                                                                                                                                                                          | Used By                        |
-|--------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------|
+|:-------------------|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|:-------------------------------|
 | AuthenticationKind | Contains the name of the authentication kind assigned to this credential (UsernamePassword, OAuth, etc).                                                                                                                                                                                                                                             | All                            |
 | Username           | Username value                                                                                                                                                                                                                                                                                                                                       | UsernamePassword, Windows      |  
 | Password           | Password value. Typically used with UsernamePassword, but it is also set for Key.                                                                                                                                                                                                                                                                    | Key, UsernamePassword, Windows |
@@ -215,16 +211,42 @@ in
 Please see the [full Github sample](../samples/github). 
 
 ### Implementing a Parameterized Authentication Kind
-The following example implements a custom parameterized authentication kind for the Spark connector. It contains three fields – Username, Password, and authmech.
+The following example implements a custom parameterized authentication kind for the Spark connector. It contains three fields - Username, Password, and authmech.
 
 Note, a data source may only have a single Parameterized authentication kind.
 
-(TODO)
+<pre style="font-family:Consolas;font-size:13;color:black;background:white;"><span style="color:#2b91af;">Authentication</span><span style="color:green;">&nbsp;</span>=<span style="color:green;">&nbsp;</span>[<span style="color:green;">
+&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color:#2b91af;">Parameterized</span><span style="color:green;">&nbsp;</span>=<span style="color:green;">&nbsp;</span>[<span style="color:green;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color:#2b91af;">Name</span><span style="color:green;">&nbsp;</span>=<span style="color:green;">&nbsp;</span><span style="color:#a31515;">&quot;Spark&quot;</span>,<span style="color:green;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color:#2b91af;">Fields</span><span style="color:green;">&nbsp;</span>=<span style="color:green;">&nbsp;</span>[<span style="color:green;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color:#2b91af;">Username</span><span style="color:green;">&nbsp;</span>=<span style="color:green;">&nbsp;</span>[<span style="color:green;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color:#2b91af;">Label</span><span style="color:green;">&nbsp;</span>=<span style="color:green;">&nbsp;</span><span style="color:#a31515;">&quot;Username&quot;</span>,<span style="color:green;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color:#2b91af;">Type</span><span style="color:green;">&nbsp;</span>=<span style="color:green;">&nbsp;</span><span style="color:#a31515;">&quot;Text&quot;</span><span style="color:green;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>],<span style="color:green;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color:#2b91af;">Password</span><span style="color:green;">&nbsp;</span>=<span style="color:green;">&nbsp;</span>[<span style="color:green;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color:#2b91af;">Label</span><span style="color:green;">&nbsp;</span>=<span style="color:green;">&nbsp;</span><span style="color:#a31515;">&quot;Password&quot;</span>,<span style="color:green;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color:#2b91af;">Type</span><span style="color:green;">&nbsp;</span>=<span style="color:green;">&nbsp;</span><span style="color:#a31515;">&quot;Password&quot;</span><span style="color:green;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>],<span style="color:green;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color:#2b91af;">authmech</span><span style="color:green;">&nbsp;</span>=<span style="color:green;">&nbsp;</span>[<span style="color:green;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color:#2b91af;">Label</span><span style="color:green;">&nbsp;</span>=<span style="color:green;">&nbsp;</span><span style="color:#a31515;">&quot;AuthMech&quot;</span>,<span style="color:green;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color:#2b91af;">Type</span><span style="color:green;">&nbsp;</span>=<span style="color:green;">&nbsp;</span><span style="color:#a31515;">&quot;List&quot;</span>,<span style="color:green;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color:#2b91af;">Options</span><span style="color:green;">&nbsp;</span>=<span style="color:green;">&nbsp;</span>[<span style="color:green;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>2<span style="color:green;">&nbsp;</span>=<span style="color:green;">&nbsp;</span><span style="color:#a31515;">&quot;AuthMech_Standard&quot;</span>,<span style="color:green;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>6<span style="color:green;">&nbsp;</span>=<span style="color:green;">&nbsp;</span><span style="color:#a31515;">&quot;AuthMech_Azure&quot;</span><span style="color:green;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>]<span style="color:green;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>]<span style="color:green;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>],<span style="color:green;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color:#2b91af;">Label</span><span style="color:green;">&nbsp;</span>=<span style="color:green;">&nbsp;</span><span style="color:#a31515;">&quot;Spark&nbsp;Authentication&quot;</span><span style="color:green;">
+&nbsp;&nbsp;&nbsp;&nbsp;</span>]<span style="color:green;">
+</span>]</pre>
+
+The following `Type` values are supported for fields: `Text`, `List`, and `Password`. `Options` must be specified when using the `List` type.
 
 # Next Steps
 (TODO)
-* Samples and walkthroughs
+* [Samples and walkthroughs](../samples)
 * Using navigation tables
 * Enabling Direct Query for an ODBC based connector
 * OData based connectors
 * Advanced connector scenarios with Table.View
+* [Other topics](other-topics.md)
