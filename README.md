@@ -6,7 +6,7 @@ Power BI extensions are created using M (also known as the Power Query Formula L
 2. Create a new Data Connector project
 3. Define your connector logic
 4. Build the project to produce a .mez file
-5. Set a **PQ_ExtensionDirectory** environment variable, set it to `"c:\program files\microsoft power bi desktop\bin\extensions"`
+5. Set a **PQ_ExtensionDirectory** environment variable, set it to `c:\program files\microsoft power bi desktop\bin\extensions`
 6. Copy the .mez file in your c:\program files\microsoft power bi desktop\bin\extensions directory
 7. Restart Power BI Desktop 
 
@@ -22,6 +22,8 @@ Power BI extensions are created using M (also known as the Power Query Formula L
 
 ## Hello World Sample
 The following code sample defines a simple "Hello World" data source. See the [full sample](samples/HelloWorld) for more information.
+
+![GetData]
 
 <pre style="font-family:Consolas;font-size:13;color:black;background:white;"><span style="color:blue;">section</span><span style="color:green;">&nbsp;</span>HelloWorld;<span style="color:green;">
  
@@ -53,3 +55,4 @@ The following code sample defines a simple "Hello World" data source. See the [f
 </span></pre>
 
 [VSProject]: blobs/vs2017_project.png "Data Connector projects in Visual Studio"
+[GetData]: blobs/helloworld1.png "Hello World in Get Data"
