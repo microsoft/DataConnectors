@@ -20,12 +20,12 @@
 Power BI extensions are created using M (also known as the Power Query Formula Language). This is the same language used by the Power Query (PQ) user experience found in Power BI Desktop (PBID) and Excel 2016. Extensions allow you to define new functions for the M language, and can be used to enable connectivity to new data sources. While this document will focus on defining new connectors, much of the same process applies to defining general purpose M functions. Extensions can vary in complexity, from simple wrappers that essentially just provide "branding" over existing data source functions, to rich connectors that support Direct Query (DQ).
 
 The general process is:
-1. Install the Power Query SDK from the Visual Studio Marketplace (TODO - provide link)
+1. Install the Power Query SDK from the Visual Studio Marketplace
 2. Create a new Data Connector project
 3. Define your connector logic
 4. Build the project to produce a .mez file
 5. Set a **PQ_ExtensionDirectory** environment variable, set it to `c:\program files\microsoft power bi desktop\bin\extensions`
-6. Copy the .mez file in your c:\program files\microsoft power bi desktop\bin\extensions directory
+6. Copy the .mez file in your C:\Program Files\Microsoft Power BI Desktop\bin\extensions directory
 7. Restart Power BI Desktop 
 
 **Note:** Setting the environment variable (Step 5) is temporary. Extensibility can be enabled as a Preview Feature in Power BI Desktop starting the June release.
@@ -43,17 +43,12 @@ The following tools are recommended for developing PQ extensions.
 
 | Tool                              | Description                                                                                                                                   | Location                                                   |
 |:----------------------------------|:----------------------------------------------------------------------------------------------------------------------------------------------|:-----------------------------------------------------------|
-| Power Query SDK for Visual Studio | Visual studio extension (vsix) which provides the M Project templates, as well as syntax highlighting, intellisense, and build capabilities.  | TODO - marketplace link                                    |
+| Power Query SDK for Visual Studio | Visual studio extension (vsix) which provides the Data Connector Project templates, as well as syntax highlighting, intellisense, and build capabilities.  | TODO - marketplace link                       |
 | Power BI Desktop                  | Used to visually build M expressions and test out your data source extension.                                                                 | [Download](https://powerbi.microsoft.com/en-us/desktop/)   |
 
 ## Extension Files (MEZ)
 
-PQ extensions are bundled in a zip file and given a .mez file extension. These are typically referred to as MEZ files. A MEZ will contain the following files:
-
-* Script file containing your function and model definition (i.e. MyConnector.m)
-* Icons of various sizes (i.e. *.png)
-* Resource file(s) containing strings for localization (i.e. resources.resx)
-
+PQ extensions are bundled in a zip file and given a .mez file extension. These are typically referred to as MEZ files. 
 At runtime, PBI Desktop will load extensions from directory defined by the PQ_ExtensionDirectory environment variable.
 PBI Desktop will load files with both the .m and .mez format, however, use of a .mez is required if you want to include icons or localized strings for your extension.
 
@@ -62,17 +57,15 @@ PBI Desktop will load files with both the .m and .mez format, however, use of a 
 ## Creating a New Extension in Visual Studio
 Installing the Power Query SDK for Visual Studio will create a new Data Connector project template in Visual Studio.
 
-(TODO - picture)
+![VSProject]
 
 This creates a new project containing the following files:
 1. Connector definition file (&lt;connectorName&gt;.m)
 2. A query test file (&lt;connectorName&gt;.query.m)
 3. A string resource file (resources.resx)
-4. PNG files of various sizes
+4. PNG files of various sizes used to create icons
 
 Your connector definition file will start with an empty Data Source Kind description. Please see the [Data Source Kind](#data-source-kind) section later in this document for details.
-
-(TODO - picture)
 
 ## Testing in Visual Studio
 
@@ -85,17 +78,52 @@ Data Connector projects do not support custom post build steps to copy the outpu
 
 # Technical Reference
 
+## Extension File Format
+Extensions are defined within an M section document. A section document has a slightly different format from the query document(s) generated in Power Query. Code you import from Power Query typically requires modification to fit into a section document, but the changes are minor. Section document differences you should be aware of include:
+
+* They begin with a section declaration (ex. `section HelloWorld;`)
+* Each expression ends with a semi-colon (ex. `a = 1;` or `b = let c = 1 + 2 in c;`)
+* All functions and variables are local to the section document, unless they are marked as `shared`. Shared functions become visible to other queries/functions, and can be thought of as the _exports_ for your extension (i.e. they become callable from Power Query).
+
+More information about M section documents can be found in the [M Language specification](https://msdn.microsoft.com/en-us/library/mt807488.aspx).
+
+## Data Source Functions
+A Data Connector wraps and customizes the behavior of a [data source function in the M Library](https://msdn.microsoft.com/en-us/library/mt253322.aspx#Anchor_15). For example, an extension for a REST API would make use of the Web.Contents() function to make HTTP requests. Currently, a limited set of data source functions have been enabled to support extensibility.
+- [Web.Contents](https://msdn.microsoft.com/en-us/library/mt260892.aspx)
+- [OData.Feed](https://msdn.microsoft.com/en-us/library/mt260868.aspx)
+- [Odbc.DataSource](https://msdn.microsoft.com/en-us/library/mt708843.aspx)
+- [AdoDotNet.DataSource](https://msdn.microsoft.com/en-us/library/mt736964)
+- [OleDb.DataSource](https://msdn.microsoft.com/en-us/library/mt790573.aspx)
+
+Example:
+```
+[DataSource.Kind="HelloWorld", Publish="HelloWorld.Publish"]
+shared HelloWorld.Contents = (optional message as text) =>
+    let
+        message = if (message <> null) then message else "Hello world"
+    in
+        message;
+```
+
 ## Data Source Kind
+Functions marked as `shared` in your extension can be associated with a specific data source by including a `DataSource.Kind` metadata record on the function with the name of a Data Source definition record. 
+The Data Source record defines the authentication types supported by your data source, and basic branding information (like the display name / label).
+The name of the record becomes is unique identifier. 
+Functions associated with a data source must have the same required function parameters (including name, type, and order). Functions for a specific Data Source Kind can only use credentials associated with that Kind. Credentials are identified at runtime by performing a lookup based on the combination of the function's required parameters.
 
-The Resource record defines a specific data source extension. This record is where you'll define your exports (i.e. which functions will be exposed to end users), branding information, supported authentication types, and how to uniquely identify a credential (known as a "Resource Path").
+Example:
 
-Each Resource has a unique name (Description) used to identify and distinguish it from other data sources.
-
-After defining your Resource, it is registered using the Extension.Module function.
+```
+HelloWorld = [
+    Authentication = [
+        Implicit = []
+    ],
+    Label = Extension.LoadString("DataSourceLabel")
+];
+```
 
 ### Properties
-
-The following table lists the fields for your Resource definition. All fields are required unless indicated otherwise.
+The following table lists the fields for your Data Source definition record.
 
 | Field              | Type     | Details                                                                                                                                                                                                                                                                   |
 |:-------------------|:---------|:--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -104,7 +132,25 @@ The following table lists the fields for your Resource definition. All fields ar
 | SupportsEncryption | logical  | **(optional)** When true, the UI will present the option to connect to the data source using an encrypted connection. This is typically used for data sources with a non-encrypted fallback mechanism (generally ODBC or ADO.NET based sources).                          |
 
 ## Publish to UI
-This record provides the Power Query UI the information it needs to expose this extension in the Get Data dialog.
+Similar to the (Data Source)[#data-source-kind] definition record, the Publish record provides the Power Query UI the information it needs to expose this extension in the Get Data dialog.
+
+Example:
+```
+HelloWorld.Publish = [
+    Beta = true,
+    ButtonText = { Extension.LoadString("FormulaTitle"), Extension.LoadString("FormulaHelp") },
+    SourceImage = HelloWorld.Icons,
+    SourceTypeImage = HelloWorld.Icons
+];
+
+HelloWorld.Icons = [
+    Icon16 = { Extension.Contents("HelloWorld16.png"), Extension.Contents("HelloWorld20.png"), Extension.Contents("HelloWorld24.png"), Extension.Contents("HelloWorld32.png") },
+    Icon32 = { Extension.Contents("HelloWorld32.png"), Extension.Contents("HelloWorld40.png"), Extension.Contents("HelloWorld48.png"), Extension.Contents("HelloWorld64.png") }
+];
+```
+
+### Properties
+The following table lists the fields for your Publish record.
 
 | Field               | Type    | Details                                                                                                                                                                                                                                                                                                                    |
 |:--------------------|:--------|:---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -116,18 +162,10 @@ This record provides the Power Query UI the information it needs to expose this 
 | SourceImage         | record  | **(optional)** A record containing a list of binary images (sourced from the .mez file using the **Extension.Contents** method). The record contains two fields (Icon16, Icon32), each with its own list. Each icon should be a different size.                                                                            |                                                                                                                                                                                                                              |
 | SourceTypeImage     | record  | **(optional)** Similar to SourceImage, except the convention for many out of the box connectors is to display a sheet icon with the source specific icon in the bottom right corner. Having a different set of icons for SourceTypeImage is optional - many extensions simply reuse the same set of icons for both fields. |
 
-## Data Source Functions
-A Data Connector wraps and customizes the behavior of a [data source function in the M Library](https://msdn.microsoft.com/en-us/library/mt253322.aspx#Anchor_15). For example, an extension for a REST API would make use of the Web.Contents() function to make HTTP requests. Currently, a limited set of data source functions have been enabled to support extensibility.
-- [Web.Contents](https://msdn.microsoft.com/en-us/library/mt260892.aspx)
-- [OData.Feed](https://msdn.microsoft.com/en-us/library/mt260868.aspx)
-- [Odbc.DataSource](https://msdn.microsoft.com/en-us/library/mt708843.aspx)
-- [AdoDotNet.DataSource](https://msdn.microsoft.com/en-us/library/mt736964)
-- [OleDb.DataSource](https://msdn.microsoft.com/en-us/library/mt790573.aspx)
-
 ## Authentication and Credentials
 
 ### Authentication Kinds
-An extension can support one or more Authentication kind. Each authentication kind is a different type of credential. The authentication UI displayed to end users in Power Query is driven by the type of credential(s) that an extension supports.
+An extension can support one or more kinds of Authentication. Each authentication kind is a different type of credential. The authentication UI displayed to end users in Power Query is driven by the type of credential(s) that an extension supports.
 
 The list of supported authentication types is defined as part of an extension's [Data Source Kind](#data-source-kind) definition. Each Authentication value is a record with specific fields. The table below lists the expected fields for each kind. All fields are required unless marked otherwise.
 
@@ -250,3 +288,6 @@ The following `Type` values are supported for fields: `Text`, `List`, and `Passw
 * OData based connectors
 * Advanced connector scenarios with Table.View
 * [Other topics](other-topics.md)
+
+[VSProject]: ../blobs/vs2017_project.png "Data Connector projects in Visual Studio"
+
