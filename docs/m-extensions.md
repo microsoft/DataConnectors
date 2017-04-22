@@ -5,6 +5,8 @@
   * [1.1 - Additional Resources](#additional-resources)
   * [1.2 - Developer Tools](#developer-tools)
   * [1.3 - Extension Files (MEZ)](#extension-files-mez)
+  * [1.4 - Extension File Format](#extension-file-format)
+  * [1.5 - Query File](#query-file)
 * [2 - Power Query SDK](#power-query-sdk)
   * [2.1 - Creating a Data Connector in Visual Studio](#creating-a-new-extension-in-visual-studio)
   * [2.2 - Testing in Visual Studio](#testing-in-visual-studio)
@@ -30,7 +32,7 @@ The general process is:
 
 **Note:** Setting the environment variable (Step 5) is temporary. Extensibility can be enabled as a Preview Feature in Power BI Desktop starting the June release.
 
-(TODO - steps for contacting us about publishing an extension)
+We are currently working on enabling a central marketplace/distribution mechanism for Data Connectors. In the meantime, ISVs interested in distributing their connectors with Power BI Desktop can contact DataConnectors@microsoft.com.
 
 ## Additional Resources
 * [M Library Functions](https://msdn.microsoft.com/en-US/library/mt253322.aspx)
@@ -38,19 +40,12 @@ The general process is:
 * [Power BI Developer Center](https://powerbi.microsoft.com/en-us/developers/)
 
 ## Developer Tools 
-
 The following tools are recommended for developing PQ extensions.
 
 | Tool                              | Description                                                                                                                                   | Location                                                   |
 |:----------------------------------|:----------------------------------------------------------------------------------------------------------------------------------------------|:-----------------------------------------------------------|
 | Power Query SDK for Visual Studio | Visual studio extension (vsix) which provides the Data Connector Project templates, as well as syntax highlighting, intellisense, and build capabilities.  | TODO - marketplace link                       |
 | Power BI Desktop                  | Used to visually build M expressions and test out your data source extension.                                                                 | [Download](https://powerbi.microsoft.com/en-us/desktop/)   |
-
-## Extension Files (MEZ)
-
-PQ extensions are bundled in a zip file and given a .mez file extension. These are typically referred to as MEZ files. 
-At runtime, PBI Desktop will load extensions from directory defined by the PQ_ExtensionDirectory environment variable.
-PBI Desktop will load files with both the .m and .mez format, however, use of a .mez is required if you want to include icons or localized strings for your extension.
 
 # Power Query SDK
 
@@ -65,18 +60,20 @@ This creates a new project containing the following files:
 3. A string resource file (resources.resx)
 4. PNG files of various sizes used to create icons
 
-Your connector definition file will start with an empty Data Source Kind description. Please see the [Data Source Kind](#data-source-kind) section later in this document for details.
+Your connector definition file will start with an empty Data Source description. Please see the [Data Source Kind](#data-source-kind) section later in this document for details.
 
 ## Testing in Visual Studio
-
-&lt;TODO&gt;
+The Power Query SDK provides basic query execution capabilities, allowing you to test your extension without having to switch over to Power BI Desktop. See the (Query File)[#query-file] section for more details.
 
 ## Build and Deploy from Visual Studio
 Building your project will produce your .mez file.
 
 Data Connector projects do not support custom post build steps to copy the output .mez file to your `PQ_ExtensionDirectory`. If this is something you want to do, you may want to use a third party visual studio extension, such as [Auto Deploy](https://visualstudiogallery.msdn.microsoft.com/9f7165ab-eef6-4576-8733-b630db1a59c0?SRC=VSIDE).
 
-# Technical Reference
+## Extension Files (MEZ)
+PQ extensions are bundled in a zip file and given a .mez file extension. These are typically referred to as MEZ files. 
+At runtime, PBI Desktop will load extensions from directory defined by the PQ_ExtensionDirectory environment variable.
+PBI Desktop will load files with both the .m and .mez format, however, use of a .mez is required if you want to include icons or localized strings for your extension.
 
 ## Extension File Format
 Extensions are defined within an M section document. A section document has a slightly different format from the query document(s) generated in Power Query. Code you import from Power Query typically requires modification to fit into a section document, but the changes are minor. Section document differences you should be aware of include:
@@ -86,6 +83,13 @@ Extensions are defined within an M section document. A section document has a sl
 * All functions and variables are local to the section document, unless they are marked as `shared`. Shared functions become visible to other queries/functions, and can be thought of as the _exports_ for your extension (i.e. they become callable from Power Query).
 
 More information about M section documents can be found in the [M Language specification](https://msdn.microsoft.com/en-us/library/mt807488.aspx).
+
+## Query File
+In addition to the [extension file](#extension-file-format), Data Connector projects can have a Query file (&lt;name&gt;.query.m). This file can be used to run test queries within Visual Studio. The query evaluation will automatically include your extension code, without having to register your .mez file, allowing you to call/test any `shared` functions in your extension code. 
+
+The query file can contain a single expression (ex. `HelloWorld.Contents()`), a let expression (such as what Power Query would generate), or a section document. 
+
+# Technical Reference
 
 ## Data Source Functions
 A Data Connector wraps and customizes the behavior of a [data source function in the M Library](https://msdn.microsoft.com/en-us/library/mt253322.aspx#Anchor_15). For example, an extension for a REST API would make use of the Web.Contents() function to make HTTP requests. Currently, a limited set of data source functions have been enabled to support extensibility.
@@ -281,7 +285,8 @@ Note, a data source may only have a single Parameterized authentication kind.
 The following `Type` values are supported for fields: `Text`, `List`, and `Password`. `Options` must be specified when using the `List` type.
 
 # Next Steps
-(TODO)
+(still in progress)
+
 * [Samples and walkthroughs](../samples)
 * Using navigation tables
 * Enabling Direct Query for an ODBC based connector
