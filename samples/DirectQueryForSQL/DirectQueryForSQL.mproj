@@ -1,0 +1,108 @@
+﻿<Project DefaultTargets="BuildMEZ" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>
+    </ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>MyRootNamespace</RootNamespace>
+    <AssemblyName>MyAssemblyName</AssemblyName>
+    <EnableUnmanagedDebugging>False</EnableUnmanagedDebugging>
+    <AllowNativeQuery>False</AllowNativeQuery>
+    <AsAction>False</AsAction>
+    <FastCombine>False</FastCombine>
+    <ClearLog>False</ClearLog>
+    <ShowEngineTraces>False</ShowEngineTraces>
+    <ShowUserTraces>False</ShowUserTraces>
+    <LegacyRedirects>False</LegacyRedirects>
+    <SuppressRowErrors>False</SuppressRowErrors>
+    <SuppressCellErrors>False</SuppressCellErrors>
+    <MaxRows>1000</MaxRows>
+    <ExtensionProject>Yes</ExtensionProject>
+    <Name>DirectQueryForSQL</Name>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DebugSymbols>false</DebugSymbols>
+    <!--Should be true, fix this when the debugger is implemented -->
+    <OutputPath>bin\Debug\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DebugSymbols>false</DebugSymbols>
+    <OutputPath>bin\Release\</OutputPath>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="mscorlib" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <!--<Compile Include="AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>-->
+    <Compile Include="DirectQueryForSQL.m">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DirectQueryForSQL16.png">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DirectQueryForSQL20.png">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DirectQueryForSQL24.png">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DirectQueryForSQL32.png">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DirectQueryForSQL40.png">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DirectQueryForSQL48.png">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DirectQueryForSQL64.png">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DirectQueryForSQL80.png">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="resources.resx">
+      <SubType>Code</SubType>
+    </Compile>
+    <Content Include="DirectQueryForSQL.query.m">
+      <SubType>Code</SubType>
+    </Content>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <UsingTask TaskName="BuildMEZ" TaskFactory="CodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.v12.0.dll">
+    <ParameterGroup>
+      <InputDirectory ParameterType="System.String" Required="true" />
+      <OutputFile ParameterType="System.String" Required="true" />
+    </ParameterGroup>
+    <Task>
+      <Reference Include="System.IO.Compression" />
+      <Reference Include="System.IO.Compression.FileSystem" />
+      <Using Namespace="System.Globalization" />
+      <Using Namespace="System.IO.Compression " />
+      <Code Type="Fragment" Language="cs"><![CDATA[    
+    using(FileStream fileStream = File.Create(OutputFile))
+    using(ZipArchive archiveOut = new ZipArchive(fileStream, ZipArchiveMode.Create, false))
+    {
+        foreach(string fullPath in Directory.EnumerateFiles(InputDirectory))
+        {
+            string filename = Path.GetFileName(fullPath);
+        
+            archiveOut.CreateEntryFromFile(fullPath, filename, CompressionLevel.Optimal);
+        }
+    }
+]]></Code>
+    </Task>
+  </UsingTask>
+  <Target Name="BuildMEZ">
+    <MakeDir Directories="$(IntermediateOutputPath)" />
+    <MakeDir Directories="$(OutputPath)" />
+    <Copy SourceFiles="@(Compile)" DestinationFolder="$(IntermediateOutputPath)" />
+    <BuildMEZ InputDirectory="$(IntermediateOutputPath)" OutputFile="$(OutputPath)\$(ProjectName).mez" />
+  </Target>
+</Project>

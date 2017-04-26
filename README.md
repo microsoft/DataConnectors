@@ -1,4 +1,6 @@
-# Getting Started with M Extensions
+# Getting Started with Data Connectors
+<TODO - value>
+
 Power BI extensions are created using M (also known as the Power Query Formula Language). This is the same language used by the Power Query (PQ) user experience found in Power BI Desktop (PBID) and Excel 2016. Extensions allow you to define new functions for the M language, and can be used to enable connectivity to new data sources. While this document will focus on defining new connectors, much of the same process applies to defining general purpose M functions. Extensions can vary in complexity, from simple wrappers that essentially just provide "branding" over existing data source functions, to rich connectors that support Direct Query (DQ).
 
 ## Quickstart
@@ -53,6 +55,12 @@ The following code sample defines a simple "Hello World" data source. See the [f
 &nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color:#2b91af;">Icon32</span><span style="color:green;">&nbsp;</span>=<span style="color:green;">&nbsp;</span>{<span style="color:green;">&nbsp;</span><span style="font-weight:bold;color:#008800;">Extension.Contents</span>(<span style="color:#a31515;">&quot;HelloWorld32.png&quot;</span>),<span style="color:green;">&nbsp;</span><span style="font-weight:bold;color:#008800;">Extension.Contents</span>(<span style="color:#a31515;">&quot;HelloWorld40.png&quot;</span>),<span style="color:green;">&nbsp;</span><span style="font-weight:bold;color:#008800;">Extension.Contents</span>(<span style="color:#a31515;">&quot;HelloWorld48.png&quot;</span>),<span style="color:green;">&nbsp;</span><span style="font-weight:bold;color:#008800;">Extension.Contents</span>(<span style="color:#a31515;">&quot;HelloWorld64.png&quot;</span>)<span style="color:green;">&nbsp;</span>}<span style="color:green;">
 </span>];<span style="color:green;">
 </span></pre>
+
+## What Can You Do With a Data Connector
+<TODO - features/scenarios that work today> 
+
+### Coming soon
+<TODO - gateway support, office store integration, connector certification>
 
 [VSProject]: blobs/vs2017_project.png "Data Connector projects in Visual Studio"
 [GetData]: blobs/helloworld1.png "Hello World in Get Data"

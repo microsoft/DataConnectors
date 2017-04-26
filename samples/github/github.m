@@ -12,7 +12,7 @@
 // Note: due to incompatibilities with the Internet Explorer control used in Visual Studio,
 // you will not be able to authorize a new github application during the OAuth flow. You can workaround
 // this by loading your extension in Power BI Desktop, and completing the OAuth flow there. 
-// Once theapplication has been authorized for a given user, then the OAuth flow will work when 
+// Once the application has been authorized for a given user, then the OAuth flow will work when 
 // run in Visual Studio.
 
 client_id = Text.FromBinary(Extension.Contents("client_id"));
