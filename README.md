@@ -1,7 +1,11 @@
 # Getting Started with Data Connectors
 Data Connectors for Power BI provide access to your data, allowing your customers to build interactive reports and dashboards in Power BI, leveraging data from your app or service for robust analytics and intelligence. Data Connectors seameless integrate into the Power Query experience in Power BI Desktop, where power users can query, shape and mashup data from your app to build reports and dashboards that meet their needs.
 
+![PBIGetData]
+
 Data Connectors are created using the [M language](https://msdn.microsoft.com/en-us/library/mt211003.aspx). This is the same language used by the Power Query user experience found in Power BI Desktop and Excel 2016. Extensions allow you to define new functions for the M language, and can be used to enable connectivity to new data sources. While this document will focus on defining new connectors, much of the same process applies to defining general purpose M functions. Extensions can vary in complexity, from simple wrappers that essentially just provide "branding" over existing data source functions, to rich connectors that support Direct Query.
+
+Please see the [Data Connector technical reference](docs/m-extensions.md) for more details.
 
 ## Quickstart
 1. Install the Power Query SDK from the Visual Studio Marketplace
@@ -14,8 +18,6 @@ Data Connectors are created using the [M language](https://msdn.microsoft.com/en
 
 **Note:** Setting the environment variable (Step 5) is temporary. Extensibility can be enabled as a Preview Feature in Power BI Desktop, starting with the June release.
 
-See the [Data Connector technical reference](docs/m-extensions.md) for more details on how to create a Power BI extension.
-
 ![VSProject]
 
 ## Distribution of Data Connectors
@@ -24,7 +26,7 @@ Power BI Desktop users can download extension files (.mez) and place them in a k
 _We are hard at work finalizing the distribution mechanism so that end users can discover and install data connectors you build. During this preview phase, developers interested in distributing their connectors for use with Power BI can contact us at DataConnectors (at) microsoft.com._
 
 ## Additional Links and Resources
-* [Data Connector technical reference](docs/m-extensions.md)
+* [Data Connector Technical Reference](docs/m-extensions.md)
 * [M Library Functions](https://msdn.microsoft.com/en-US/library/mt253322.aspx)
 * [M Language Specification](http://pqreference.azurewebsites.net/PowerQueryFormulaLanguageSpecificationAugust2015.pdf)
 * [Power BI Developer Center](https://powerbi.microsoft.com/en-us/developers/)
@@ -90,3 +92,4 @@ Please report issues and feature requests through our [Github issues page](https
 
 [VSProject]: blobs/vs2017_project.png "Data Connector projects in Visual Studio"
 [GetData]: blobs/helloworld1.png "Hello World in Get Data"
+[PBIGetData]: blobs/pbigetdata.png "Get Data dialog in Power BI Desktop"

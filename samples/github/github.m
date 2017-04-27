@@ -82,19 +82,6 @@ Github.PagedTable = (url as text) => Table.GenerateByPage((previous) =>
     in
         table meta [Next=link]);
 
-TokenMethod = (code) =>
-    let
-        Response = Web.Contents("https://github.com/login/oauth/access_token", [
-            Content = Text.ToBinary(Uri.BuildQueryString([
-                client_id = client_id,
-                client_secret = client_secret,
-                code = code,
-                redirect_uri = redirect_uri])),
-            Headers=[#"Content-type" = "application/x-www-form-urlencoded",#"Accept" = "application/json"]]),
-        Parts = Json.Document(Response)
-    in
-        Parts;
-
 StartLogin = (resourceUrl, state, display) =>
     let
         AuthorizeUrl = "https://github.com/login/oauth/authorize?" & Uri.BuildQueryString([
@@ -116,6 +103,19 @@ FinishLogin = (context, callbackUri, state) =>
         Parts = Uri.Parts(callbackUri)[Query]
     in
         TokenMethod(Parts[code]);
+
+TokenMethod = (code) =>
+    let
+        Response = Web.Contents("https://github.com/login/oauth/access_token", [
+            Content = Text.ToBinary(Uri.BuildQueryString([
+                client_id = client_id,
+                client_secret = client_secret,
+                code = code,
+                redirect_uri = redirect_uri])),
+            Headers=[#"Content-type" = "application/x-www-form-urlencoded",#"Accept" = "application/json"]]),
+        Parts = Json.Document(Response)
+    in
+        Parts;
 
 Table.GenerateByPage = (getNextPage as function) as table =>
     let
