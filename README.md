@@ -1,5 +1,5 @@
 # Getting Started with Data Connectors
-Data Connectors for Power BI provide access to your data, allowing your customers to build interactive reports and dashboards in Power BI, leveraging data from your app or service for robust analytics and intelligence. Data Connectors seameless integrate into the Power Query experience in Power BI Desktop, where power users can query, shape and mashup data from your app to build reports and dashboards that meet their needs.
+Data Connectors for Power BI enables users to connect to and access data from your app, providing them with rich business intelligence and robust analytics over multiple data sources. By integrating seamlessly into the Power Query connectivity experience in Power BI Desktop, Data Connectors make it easy for power users to query, shape and mashup data from your app to build reports and dashboards that meet the needs of their organization.
 
 ![PBIGetData]
 
