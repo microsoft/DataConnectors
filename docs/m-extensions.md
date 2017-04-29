@@ -4,7 +4,7 @@
 * [1 - Overview](#overview)
   * [1.1 - Additional Resources](#additional-resources)
   * [1.2 - Developer Tools](#developer-tools)
-  * [1.3 - Extension Files (MEZ)](#extension-files-mez)
+  * [1.3 - Extension Files (PQX)](#extension-files-pqx)
   * [1.4 - Extension File Format](#extension-file-format)
   * [1.5 - Query File](#query-file)
 * [2 - Power Query SDK](#power-query-sdk)
@@ -25,9 +25,9 @@ The general process is:
 1. Install the Power Query SDK from the Visual Studio Marketplace
 2. Create a new Data Connector project
 3. Define your connector logic
-4. Build the project to produce a .mez file
+4. Build the project to produce a .pqx file
 5. Set a **PQ_ExtensionDirectory** environment variable, set it to `c:\program files\microsoft power bi desktop\bin\extensions`
-6. Copy the .mez file in your C:\Program Files\Microsoft Power BI Desktop\bin\extensions directory
+6. Copy the .pqx file in your C:\Program Files\Microsoft Power BI Desktop\bin\extensions directory
 7. Restart Power BI Desktop 
 
 **Note:** Setting the environment variable (Step 5) is temporary. Extensibility can be enabled as a Preview Feature in Power BI Desktop starting the June release.
@@ -55,8 +55,8 @@ Installing the Power Query SDK for Visual Studio will create a new Data Connecto
 ![VSProject]
 
 This creates a new project containing the following files:
-1. Connector definition file (&lt;connectorName&gt;.m)
-2. A query test file (&lt;connectorName&gt;.query.m)
+1. Connector definition file (&lt;connectorName&gt;.pq)
+2. A query test file (&lt;connectorName&gt;.query.pq)
 3. A string resource file (resources.resx)
 4. PNG files of various sizes used to create icons
 
@@ -66,14 +66,13 @@ Your connector definition file will start with an empty Data Source description.
 The Power Query SDK provides basic query execution capabilities, allowing you to test your extension without having to switch over to Power BI Desktop. See the (Query File)[#query-file] section for more details.
 
 ## Build and Deploy from Visual Studio
-Building your project will produce your .mez file.
+Building your project will produce your .pqx file.
 
-Data Connector projects do not support custom post build steps to copy the output .mez file to your `PQ_ExtensionDirectory`. If this is something you want to do, you may want to use a third party visual studio extension, such as [Auto Deploy](https://visualstudiogallery.msdn.microsoft.com/9f7165ab-eef6-4576-8733-b630db1a59c0?SRC=VSIDE).
+Data Connector projects do not support custom post build steps to copy the output .pqx file to your `PQ_ExtensionDirectory`. If this is something you want to do, you may want to use a third party visual studio extension, such as [Auto Deploy](https://visualstudiogallery.msdn.microsoft.com/9f7165ab-eef6-4576-8733-b630db1a59c0?SRC=VSIDE).
 
-## Extension Files (MEZ)
-PQ extensions are bundled in a zip file and given a .mez file extension. These are typically referred to as MEZ files. 
+## Extension Files (PQX)
+PQ extensions are bundled in a zip file and given a .pqx file extension.
 At runtime, PBI Desktop will load extensions from directory defined by the PQ_ExtensionDirectory environment variable.
-PBI Desktop will load files with both the .m and .mez format, however, use of a .mez is required if you want to include icons or localized strings for your extension.
 
 ## Extension File Format
 Extensions are defined within an M section document. A section document has a slightly different format from the query document(s) generated in Power Query. Code you import from Power Query typically requires modification to fit into a section document, but the changes are minor. Section document differences you should be aware of include:
@@ -85,7 +84,7 @@ Extensions are defined within an M section document. A section document has a sl
 More information about M section documents can be found in the [M Language specification](https://msdn.microsoft.com/en-us/library/mt807488.aspx).
 
 ## Query File
-In addition to the [extension file](#extension-file-format), Data Connector projects can have a Query file (&lt;name&gt;.query.m). This file can be used to run test queries within Visual Studio. The query evaluation will automatically include your extension code, without having to register your .mez file, allowing you to call/test any `shared` functions in your extension code. 
+In addition to the [extension file](#extension-file-format), Data Connector projects can have a Query file (&lt;name&gt;.query.m). This file can be used to run test queries within Visual Studio. The query evaluation will automatically include your extension code, without having to register your .pqx file, allowing you to call/test any `shared` functions in your extension code. 
 
 The query file can contain a single expression (ex. `HelloWorld.Contents()`), a let expression (such as what Power Query would generate), or a section document. 
 
@@ -163,7 +162,7 @@ The following table lists the fields for your Publish record.
 | Beta                | logical | **(optional)** When set to true, the UI will display a Preview/Beta identifier next to your connector name and a warning dialog that the implementation of the connector is subject to breaking changes.                                                                                                                   |
 | LearnMoreUrl        | text    | **(optional)** Url to website containing more information about this data source or connector.                                                                                                                                                                                                                             |
 | SupportsDirectQuery | logical | **(optional)** Enables Direct Query for your extension.<br>**This is currently only supported for ODBC extensions.**                                                                                                                                                                                                       |
-| SourceImage         | record  | **(optional)** A record containing a list of binary images (sourced from the .mez file using the **Extension.Contents** method). The record contains two fields (Icon16, Icon32), each with its own list. Each icon should be a different size.                                                                            |                                                                                                                                                                                                                              |
+| SourceImage         | record  | **(optional)** A record containing a list of binary images (sourced from the .pqx file using the **Extension.Contents** method). The record contains two fields (Icon16, Icon32), each with its own list. Each icon should be a different size.                                                                            |                                                                                                                                                                                                                              |
 | SourceTypeImage     | record  | **(optional)** Similar to SourceImage, except the convention for many out of the box connectors is to display a sheet icon with the source specific icon in the bottom right corner. Having a different set of icons for SourceTypeImage is optional - many extensions simply reuse the same set of icons for both fields. |
 
 ## Authentication and Credentials
