@@ -286,13 +286,12 @@ Note, a data source may only have a single Parameterized authentication kind.
 The following `Type` values are supported for fields: `Text`, `List`, and `Password`. `Options` must be specified when using the `List` type.
 
 # Next Steps
-(still in progress)
 
 * [Samples and walkthroughs](../samples)
-* Using navigation tables
-* Enabling Direct Query for an ODBC based connector
-* OData based connectors
-* Advanced connector scenarios with Table.View
+* Using navigation tables (coming soon)
+* Enabling Direct Query for an ODBC based connector (coming soon)
+* OData based connectors (coming soon)
+* Advanced connector scenarios with Table.View (coming soon)
 * [Other topics](other-topics.md)
 
 [VSProject]: ../blobs/vs2017_project.png "Data Connector projects in Visual Studio"
