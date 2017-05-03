@@ -251,7 +251,7 @@ in
 ```
 
 ### Implementing an OAuth Flow
-Please see the [full Github sample](../samples/github). 
+Please see the [MyGraph](../samples/MyGraph) and [Github](../samples/github) samples.
 
 ### Implementing a Parameterized Authentication Kind
 The following example implements a custom parameterized authentication kind for the Spark connector. It contains three fields - Username, Password, and authmech.
