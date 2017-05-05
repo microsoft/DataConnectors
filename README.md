@@ -1,5 +1,5 @@
 # Getting Started with Data Connectors
-Data Connectors for Power BI enables users to connect to and access data from your app, providing them with rich business intelligence and robust analytics over multiple data sources. By integrating seamlessly into the Power Query connectivity experience in Power BI Desktop, Data Connectors make it easy for power users to query, shape and mashup data from your app to build reports and dashboards that meet the needs of their organization.
+Data Connectors for Power BI enables users to connect to and access data from your application, service, or data source, providing them with rich business intelligence and robust analytics over multiple data sources. By integrating seamlessly into the Power Query connectivity experience in Power BI Desktop, Data Connectors make it easy for power users to query, shape and mashup data from your app to build reports and dashboards that meet the needs of their organization.
 
 ![PBIGetData]
 
@@ -80,7 +80,8 @@ Currently, Data Connectors are only supported in Power BI Desktop.
 ### Coming Soon
 Data Connectors are currently in preview. We plan to incrementally roll out a number of enhancements prior to general availability, including:
 
-- [ ] Improved tracing and diagnostics for Direct Query
+- [ ] File extension changes (.mez to .pqx)
+- [ ] Improved tracing and diagnostics for developing Direct Query capable connectors
 - [ ] Versioning of extensions, and support for dependencies
 - [ ] Improved support for Library extensions (for reusable utility functions)
 - [ ] Integration and support for API Connectors for Microsoft Flow and PowerApps
