@@ -1,10 +1,13 @@
 # Helper Functions
+
 This file contains a number of helper functions commonly used in M extensions.
 These functions may eventually be moved to the official M library, but for now can be copied into your extension file code.
 You should not mark any of these functions as `shared` within your extension code. 
 
 ## Navigation Tables
+
 ### Table.ToNavigationTable
+
 This function adds the table type metadata needed for your extension to return a table value that Power Query can recognize as a Navigation Tree. 
 
 ```
@@ -42,7 +45,7 @@ Table.ToNavigationTable = (
 | itemNameColumn | The name of the column to use to determine the type of tooltip to display. Valid values for the column are `Table` and `Function`. |
 | isLeafColumn   | The name of the column used to determine if this is a leaf node, or if the node can be expanded to contain another navigation table. |
 
-Example usage:
+**Example usage:**
 
 ```
 shared MyExtension.Contents = () =>
@@ -60,7 +63,9 @@ shared MyExtension.Contents = () =>
 ```
 
 ## URI Manipulation
+
 ### Uri.FromParts
+
 This function constructs a full URL based on individual fields in the record. It acts as the reverse of [Uri.Parts](https://msdn.microsoft.com/en-us/library/mt260886).
 
 ```
@@ -75,6 +80,7 @@ Uri.FromParts = (parts) =>
 ```
 
 ### Uri.GetHost
+
 This function returns the scheme, host, and default port (for HTTP/HTTPS) for a given URL. For example, `https://bing.com/subpath/query?param=1&param2=hello` would become `https://bing.com:443`. 
 
 ```
@@ -87,7 +93,9 @@ Uri.GetHost = (url) =>
 ```
 
 ## Retrieving Data
+
 ### Value.WaitFor
+
 This function is useful when making an asynchronous HTTP request, and you need to poll the server until the request is complete. 
 
 ```
