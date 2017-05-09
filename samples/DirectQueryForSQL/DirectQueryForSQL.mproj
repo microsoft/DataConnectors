@@ -1,9 +1,8 @@
-﻿<Project DefaultTargets="BuildMEZ" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project DefaultTargets="BuildExtension" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>
-    </ProjectGuid>
+    <ProjectGuid>{c7c4a39e-fd85-45a6-a43e-5b244ee349bf}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <RootNamespace>MyRootNamespace</RootNamespace>
     <AssemblyName>MyAssemblyName</AssemblyName>
@@ -37,10 +36,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <!--<Compile Include="AssemblyInfo.cs">
-      <SubType>Code</SubType>
-    </Compile>-->
-    <Compile Include="DirectQueryForSQL.m">
+    <Compile Include="DirectQueryForSQL.pq">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="DirectQueryForSQL16.png">
@@ -70,12 +66,12 @@
     <Compile Include="resources.resx">
       <SubType>Code</SubType>
     </Compile>
-    <Content Include="DirectQueryForSQL.query.m">
+    <Content Include="DirectQueryForSQL.query.pq">
       <SubType>Code</SubType>
     </Content>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <UsingTask TaskName="BuildMEZ" TaskFactory="CodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.v12.0.dll">
+  <UsingTask TaskName="BuildExtension" TaskFactory="CodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.v12.0.dll">
     <ParameterGroup>
       <InputDirectory ParameterType="System.String" Required="true" />
       <OutputFile ParameterType="System.String" Required="true" />
@@ -99,10 +95,14 @@
 ]]></Code>
     </Task>
   </UsingTask>
-  <Target Name="BuildMEZ">
+  <Target Name="BuildExtension">
+    <ItemGroup>
+      <PQFiles Include="@(Compile)" Condition="'%(Extension)' == '.pq'" />
+    </ItemGroup>
     <MakeDir Directories="$(IntermediateOutputPath)" />
     <MakeDir Directories="$(OutputPath)" />
     <Copy SourceFiles="@(Compile)" DestinationFolder="$(IntermediateOutputPath)" />
-    <BuildMEZ InputDirectory="$(IntermediateOutputPath)" OutputFile="$(OutputPath)\$(ProjectName).mez" />
+    <Copy SourceFiles="@(PQFiles)" DestinationFiles="@(PQFiles->'$(IntermediateOutputPath)%(RecursiveDir)%(FileName).m')" />
+    <BuildExtension InputDirectory="$(IntermediateOutputPath)" OutputFile="$(OutputPath)\$(ProjectName).mez" />
   </Target>
 </Project>
