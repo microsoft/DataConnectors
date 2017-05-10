@@ -9,13 +9,13 @@ Please see the [Data Connector technical reference](docs/m-extensions.md) for mo
 
 ## Quickstart
 
-1. Install the Power Query SDK from the Visual Studio Marketplace
+1. Install the [Power Query SDK](https://aka.ms/powerquerysdk) from the Visual Studio Marketplace
 2. Create a new Data Connector project
 3. Define your connector logic
-4. Build the project to produce a .mez file
+4. Build the project to produce an extension file
 5. Create a `C:\Program Files\Microsoft Power BI Desktop\bin\extensions` directory
 6. Create a `PQ_ExtensionDirectory` environment variable, set its value to this directory
-7. Copy the .mez file into this directory
+7. Copy the extension file into this directory
 8. Restart Power BI Desktop
 
 > **Note:** Creating the extensions directory and setting the environment variable (Steps 5 and 6) are temporary. Data Connector extensibility will be offered as a Preview Feature in Power BI Desktop, starting with the June release.

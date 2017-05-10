@@ -23,13 +23,14 @@
 Power BI extensions are created using M (also known as the Power Query Formula Language). This is the same language used by the Power Query (PQ) user experience found in Power BI Desktop (PBID) and Excel 2016. Extensions allow you to define new functions for the M language, and can be used to enable connectivity to new data sources. While this document will focus on defining new connectors, much of the same process applies to defining general purpose M functions. Extensions can vary in complexity, from simple wrappers that essentially just provide "branding" over existing data source functions, to rich connectors that support Direct Query (DQ).
 
 The general process is:
-1. Install the Power Query SDK from the Visual Studio Marketplace
+1. Install the [Power Query SDK](https://aka.ms/powerquerysdk) from the Visual Studio Marketplace
 2. Create a new Data Connector project
 3. Define your connector logic
-4. Build the project to produce a .mez file
-5. Set a **PQ_ExtensionDirectory** environment variable, set it to `C:\Program Files\Microsoft Power BI Desktop\bin\extensions`
-6. Copy the .mez file in your `C:\Program Files\Microsoft Power BI Desktop\bin\extensions` directory
-7. Restart Power BI Desktop 
+4. Build the project to produce an extension file
+5. Create a `C:\Program Files\Microsoft Power BI Desktop\bin\extensions` directory
+6. Create a `PQ_ExtensionDirectory` environment variable, set its value to this directory
+7. Copy the extension file into this directory
+8. Restart Power BI Desktop
 
 > **Note:** Setting the environment variable (Step 5) is temporary. Extensibility can be enabled as a Preview Feature in Power BI Desktop starting the June release. Also note that starting in the June release, the default file exchange will be changed to .pqx.
 
@@ -47,8 +48,8 @@ The following tools are recommended for developing PQ extensions.
 
 | Tool                              | Description                                                                                                                                   | Location                                                   |
 |:----------------------------------|:----------------------------------------------------------------------------------------------------------------------------------------------|:-----------------------------------------------------------|
-| Power Query SDK for Visual Studio | Visual studio extension (vsix) which provides the Data Connector Project templates, as well as syntax highlighting, intellisense, and build capabilities.  | TODO - marketplace link                       |
-| Power BI Desktop                  | Used to visually build M expressions and test out your data source extension.                                                                 | [Download](https://powerbi.microsoft.com/desktop/)   |
+| Power Query SDK for Visual Studio | Visual studio extension (vsix) which provides the Data Connector Project templates, as well as syntax highlighting, intellisense, and build capabilities.  | [Download](https://aka.ms/powerquerysdk)      |
+| Power BI Desktop                  | Used to visually build M expressions and test out your data source extension.                                                                 | [Download](https://powerbi.microsoft.com/desktop/)         |
 
 ## Power Query SDK
 
