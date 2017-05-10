@@ -83,6 +83,25 @@ Data Connectors allow you to create new data sources, or customize and extend an
 
 Currently, Data Connectors are only supported in Power BI Desktop.
 
+## Known Issues ##
+**Warning – Compatibility issue with Microsoft Analysis Services Projects extension and SQL Server Data Tools**
+
+We have a known [compatibility issue](#2) with Analysis Services Tabular projects. You may encounter assembly loading exception dialogs under the following conditions:
+
+1)	You are using a Tabular model project with compatibility level of 1400
+2)	While using a Tabular project, you use the Import from Data Source experience or refresh an existing data source 
+3)	You are using a Data Connector project 
+4)	You try to use both projects in a single Visual Studio session
+
+The errors occur due to a version mismatch between assemblies that are shared by both projects. This results in one of the following errors: 
+
+* Could not load type 'Microsoft.Mashup.Engine.Interface.MashupFileExtension' from assembly 'Microsoft.MashupEngine, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35'.
+* Could not load file or assembly 'Microsoft.ProBI.MashupLibrary, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35' or one of its dependencies. The system cannot find the file specified.
+
+You will see a different error depending on which project type is used first within a single Visual Studio session. Using the projects from different Visual Studio instances should not cause conflicts. Once you see the error, restarting Visual Studio should make it go away (until both projects are loaded again). 
+
+We are working to address this issue upcoming updates for both extensions.
+
 ### Coming Soon
 
 Data Connectors are currently in preview. We plan to incrementally roll out a number of enhancements prior to general availability, including:
