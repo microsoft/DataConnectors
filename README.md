@@ -84,7 +84,7 @@ Data Connectors allow you to create new data sources, or customize and extend an
 Currently, Data Connectors are only supported in Power BI Desktop.
 
 ## Known Issues ##
-**Warning – Compatibility issue with Microsoft Analysis Services Projects extension and SQL Server Data Tools**
+**Warning: Compatibility issue with Microsoft Analysis Services Projects extension and SQL Server Data Tools**
 
 We have a known [compatibility issue](#2) with Analysis Services Tabular projects. You may encounter assembly loading exception dialogs under the following conditions:
 
