@@ -26,7 +26,7 @@ Please see the [Data Connector technical reference](docs/m-extensions.md) for mo
 
 Power BI Desktop users can download extension files and place them in a known directory (steps described above). Power BI Desktop will automatically load the extensions on restart.
 
-_We are hard at work finalizing the distribution mechanism so that end users can discover and install data connectors you build. During this preview phase, developers interested in distributing their connectors for use with Power BI can contact us at DataConnectors (at) microsoft.com._
+_We are hard at work on Office Store integration to make it easy for users to discover and install data connectors you build. During this preview phase, developers interested in distributing their connectors for use with Power BI can contact us at DataConnectors (at) microsoft.com._
 
 ## Additional Links and Resources
 
