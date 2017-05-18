@@ -69,7 +69,7 @@ Your connector definition file will start with an empty Data Source description.
 
 ### Testing in Visual Studio
 
-The Power Query SDK provides basic query execution capabilities, allowing you to test your extension without having to switch over to Power BI Desktop. See the (Query File)[#query-file] section for more details.
+The Power Query SDK provides basic query execution capabilities, allowing you to test your extension without having to switch over to Power BI Desktop. See the [Query File](#query-file) section for more details.
 
 ### Build and Deploy from Visual Studio
 
@@ -314,8 +314,9 @@ The following `Type` values are supported for fields: `Text`, `List`, and `Passw
 ## Next Steps
 
 * [Samples and walkthroughs](../samples)
-* Using navigation tables (coming soon)
-* Enabling Direct Query for an ODBC based connector (coming soon)
+* [Using navigation tables](nav-tables.md)
+* [Adding documentation to your functions](function-docs.md)
 * OData based connectors (coming soon)
+* Enabling Direct Query for an ODBC based connector (coming soon)
 * Advanced connector scenarios with Table.View (coming soon)
 * [Other topics](other-topics.md)
