@@ -5,7 +5,7 @@ Navigation Tables (or nav tables) are a core part of providing a user friendly e
 
 Behind the scenes, a nav table is a regular M Table value with specific metadata fields defined on its Type. When your data source function returns a table with these fields defined, Power Query will display the navigator dialog. You can actually see the underlying data as a Table value by right clicking on the root node, and clicking Edit. 
 
-![NavTable](../blobs/navtableAsTable.png)
+![NavTable](../blobs/navTableAsTable.png)
 
 ## Table.ToNavigationTable
 You can use the `Table.ToNavigationTable` function to add the table type metadata needed to create a nav table. 
@@ -71,7 +71,7 @@ shared NavigationTable.Simple = () =>
 
 This code would result in the following Navigator display in Power BI Desktop:
 
-![NavTable](../blobs/navtableSample.png)
+![NavTable](../blobs/navTableSample.png)
 
 
 ### Multi-level navigation table
@@ -104,6 +104,6 @@ CreateNavTable = (message as text) as table =>
 ```
 This code would result in the following Navigator display in Power BI Desktop:
 
-![NavTable](../blobs/navtableNested.png)
+![NavTable](../blobs/navTableNested.png)
 
 
