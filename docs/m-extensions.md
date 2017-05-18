@@ -32,7 +32,7 @@ The general process is:
 7. Copy the extension file into this directory
 8. Restart Power BI Desktop
 
-> **Note:** Setting the environment variable (Step 5) is temporary. Extensibility can be enabled as a Preview Feature in Power BI Desktop starting the June release. Also note that starting in the June release, the default file exchange will be changed to .pqx.
+> **Note:** Setting the environment variable (Step 5) is temporary. Extensibility can be enabled as a Preview Feature in Power BI Desktop starting the June release. Also note that starting in the June release, the default file extension will be changed to .pqx.
 
 We are currently working on enabling a central marketplace/distribution mechanism for Data Connectors. In the meantime, ISVs interested in distributing their connectors with Power BI Desktop can contact DataConnectors@microsoft.com.
 
