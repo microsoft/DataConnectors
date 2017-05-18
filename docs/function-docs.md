@@ -30,13 +30,9 @@ The following table lists the Documentation fields that can be set in the metada
 
 | Field                         | Type    | Details                                                                                                                                                                                                                                                                                                                    |
 |:------------------------------|:--------|:---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Documentation.Caption         | text    | |
-| Documentation.Description     | text    | Short description of what the function does, displayed on the invocation dialog.|
-| Documentation.DisplayName     | text    | Text to display across the top of the function invocation dialog. |
 | Documentation.Examples        | list    | List of record objects with example usage of the function. Only displayed as part of the function info. Each record should contain the following optional text fields: `Description`, `Code`, `Result`. |
 | Documentation.LongDescription | text    | Full description of what the function does, displayed in the function info. |
-| Documentation.Name            | text    | |
-
+| Documentation.Name            | text    | Text to display across the top of the function invocation dialog. |
 
 ### Parameter Documentation
 The following table lists the Documentation fields that can be set in the metadata for your *function parameters*. All fields are optional.
@@ -55,37 +51,30 @@ The following code snippet (and resulting dialogs) are from the [HelloWorldWithD
 [DataSource.Kind="HelloWorldWithDocs", Publish="HelloWorldWithDocs.Publish"]
 shared HelloWorldWithDocs.Contents = Value.ReplaceType(HelloWorldImpl, HelloWorldType);
 
-HelloWorldType =
-    let 
-        messageParam = type text meta [
-            Documentation.FieldCaption = "Message",
-            Documentation.FieldDescription = "Text to display",
-            Documentation.SampleValues = {"Hello world", "Hola mundo"}
-        ],
-        countParam = type number meta [
-            Documentation.FieldCaption = "Count",
-            Documentation.FieldDescription = "Number of times to repeat the message",
-            Documentation.AllowedValues = { 1, 2, 3 }
-        ],
-
-        t = type function (message as messageParam, optional count as countParam) as table
-    in 
-        t meta [
-            Documentation.FieldDescription = "Hello - Description",
-            Documentation.DisplayName = "Hello - DisplayName",
-            Documentation.FieldCaption = "Hello - Caption",
-            Documentation.Name = "Hello - Name",
-            Documentation.LongDescription = "Hello - Long Description",
-            Documentation.Examples = {[
-                Description = "Returns a table with 'Hello world' repeated 2 times",
-                Code = "HelloWorldWithDocs.Contents(""Hello world"", 2)",
-                Result = "#table({""Column1""}, {{""Hello world""}, {""Hello world""}})"
-            ],[
-                Description = "Another example, new message, new count!",
-                Code = "HelloWorldWithDocs.Contents(""Goodbye"", 1)",
-                Result = "#table({""Column1""}, {{""Goodbye""}})"
-            ]}
-        ];
+HelloWorldType = type function (
+    message as (type text meta [
+        Documentation.FieldCaption = "Message",
+        Documentation.FieldDescription = "Text to display",
+        Documentation.SampleValues = {"Hello world", "Hola mundo"}
+    ]),
+    optional count as (type number meta [
+        Documentation.FieldCaption = "Count",
+        Documentation.FieldDescription = "Number of times to repeat the message",
+        Documentation.AllowedValues = { 1, 2, 3 }
+    ]))
+    as table meta [
+        Documentation.Name = "Hello - Name",
+        Documentation.LongDescription = "Hello - Long Description",
+        Documentation.Examples = {[
+            Description = "Returns a table with 'Hello world' repeated 2 times",
+            Code = "HelloWorldWithDocs.Contents(""Hello world"", 2)",
+            Result = "#table({""Column1""}, {{""Hello world""}, {""Hello world""}})"
+        ],[
+            Description = "Another example, new message, new count!",
+            Code = "HelloWorldWithDocs.Contents(""Goodbye"", 1)",
+            Result = "#table({""Column1""}, {{""Goodbye""}})"
+        ]}
+    ];
 
 HelloWorldImpl = (message as text, optional count as number) as table =>
     let
