@@ -316,7 +316,7 @@ The following `Type` values are supported for fields: `Text`, `List`, and `Passw
 * [Samples and walkthroughs](../samples)
 * [Using navigation tables](nav-tables.md)
 * [Adding documentation to your functions](function-docs.md)
-* OData based connectors (coming soon)
+* [Data Connector tutorial](https://github.com/Microsoft/DataConnectors/tree/master/samples/TripPin)
 * Enabling Direct Query for an ODBC based connector (coming soon)
 * Advanced connector scenarios with Table.View (coming soon)
 * [Other topics](other-topics.md)
