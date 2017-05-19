@@ -131,9 +131,9 @@ in
     expand
 ```
 
-Give the query a name ("Airlines”). 
+Give the query a name ("Airlines"). 
 
-Create a new Blank Query. This time, use the TripPin.Feed function to access the /Airports entity. Apply transforms until you get something similar to the share shown below. The matching query can also be found below – give this query a name ("Airports”) as well.
+Create a new Blank Query. This time, use the TripPin.Feed function to access the /Airports entity. Apply transforms until you get something similar to the share shown below. The matching query can also be found below – give this query a name ("Airports") as well.
 
 ![Formatted airports](../../../blobs/trippin2Airports.png)
 
@@ -174,7 +174,7 @@ in
     source
 ```
 
-If you have not set your Privacy Levels setting to "Always ignore Privacy level settings” (aka "Fast Combine”) you will see a privacy prompt. 
+If you have not set your Privacy Levels setting to "Always ignore Privacy level settings" (aka "Fast Combine") you will see a privacy prompt. 
 
 ![Firewall](../../../blobs/trippin2Firewall.png)
 
@@ -186,7 +186,7 @@ Click Save and your table will appear. While this isn't a navigation table yet, 
 
 ![FakeNav](../../../blobs/trippin2FakeNav.png)
 
-> Data combination checks do not occur when accessing multiple data sources from within an extension. Since all data source calls made from within the extension inherit the same authorization context, it is assumed they are "safe” to combine. Your extension will always be treated as a single data source when it comes to data combination rules. Users would still receive the regular privacy prompts when combining your source with other M sources. 
+> Data combination checks do not occur when accessing multiple data sources from within an extension. Since all data source calls made from within the extension inherit the same authorization context, it is assumed they are "safe" to combine. Your extension will always be treated as a single data source when it comes to data combination rules. Users would still receive the regular privacy prompts when combining your source with other M sources. 
 
 If you run Fiddler and click the **Refresh Preview** button in the Query Editor, you'll notice separate web requests for each item in your navigation table. This indicates that an eager evaluation is occurring, which isn't ideal when building navigation tables with a lot of elements. Subsequent lessons will show how to build a proper navigation table that supports lazy evaluation. 
 
