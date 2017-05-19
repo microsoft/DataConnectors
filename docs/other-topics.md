@@ -8,7 +8,7 @@ The [Web.Contents](https://msdn.microsoft.com/en-us/library/mt260892) function h
 
 ### Automatic retry
 
-Web.Contents will automatically retry requests that fail with one of the following status codes:
+[Web.Contents](https://msdn.microsoft.com/en-us/library/mt260892.aspx) will automatically retry requests that fail with one of the following status codes:
 
 | Code | Status                     |
 |:-----|:---------------------------|

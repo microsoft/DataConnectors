@@ -104,7 +104,7 @@ The query file can contain a single expression (ex. `HelloWorld.Contents()`), a 
 
 ### Data Source Functions
 
-A Data Connector wraps and customizes the behavior of a [data source function in the M Library](https://msdn.microsoft.com/library/mt253322.aspx#Anchor_15). For example, an extension for a REST API would make use of the Web.Contents() function to make HTTP requests. Currently, a limited set of data source functions have been enabled to support extensibility.
+A Data Connector wraps and customizes the behavior of a [data source function in the M Library](https://msdn.microsoft.com/library/mt253322.aspx#Anchor_15). For example, an extension for a REST API would make use of the [Web.Contents](https://msdn.microsoft.com/en-us/library/mt260892.aspx) function to make HTTP requests. Currently, a limited set of data source functions have been enabled to support extensibility.
 
 - [Web.Contents](https://msdn.microsoft.com/library/mt260892.aspx)
 - [OData.Feed](https://msdn.microsoft.com/library/mt260868.aspx)

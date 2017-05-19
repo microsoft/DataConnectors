@@ -123,9 +123,9 @@ Close the Advanced Query Editor to see the generated authorization URL.
 
 ![authorizeUrl value in Power BI Desktop](../../blobs/graph1.png)
 
-Launch Fiddler and copy and paste the URL into the browser of your choice. 
+Launch [Fiddler](http://www.telerik.com/fiddler) and copy and paste the URL into the browser of your choice. 
 
-**You will need to configure Fiddler to decrypt HTTPS traffic and skip decryption for the following hosts: `msft.sts.microsoft.com`**
+> **You will need to configure Fiddler to decrypt HTTPS traffic and skip decryption for the following hosts: `msft.sts.microsoft.com`**
 
 Entering the URL should bring up the standard Azure Active Directory login page. Complete the auth flow using your regular credentials, and then look at the fiddler trace.
 You'll be interested in the lines with a status of 302 and a host value of login.microsoftonline.com. 
