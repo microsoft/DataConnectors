@@ -61,7 +61,7 @@ TripPin.Feed("http://services.odata.org/TripPinRESTierService/(S(dh0deax3pfzop33
 
 Click the Start button to launch the M Query utility. 
 
-> The `<project>.query.pq` file is used to test out your extension without having to deploy it to your Power BI Desktop’s bin folder. Clicking the Start button (or pressing F5) will automatically compile your extension and launch the M Query utility.
+> The `<project>.query.pq` file is used to test out your extension without having to deploy it to your Power BI Desktop's bin folder. Clicking the Start button (or pressing F5) will automatically compile your extension and launch the M Query utility.
 
 Running your query for the first time will result in a credential error. 
 In Power Query, the hosting application would convert this error into a credential prompt.
@@ -97,13 +97,13 @@ One thing to note if you look at the URLs is that you can see the query folding 
 
 If you add more transformations to your query, you will see how they impact the generated URL. 
 
-> This behavior is important to note. Even though you did not implement explicit folding logic, your connector inherits these capabilities from the [OData.Feed](https://msdn.microsoft.com/en-us/library/mt260868.aspx) function. M statements are compose-able – filter contexts will flow from one function to another, whenever possible. This is similar in concept to the way data source functions used within your connector inherit its authentication context and credentials. In later lessons, we will replace the use of [OData.Feed](https://msdn.microsoft.com/en-us/library/mt260868.aspx), which has native folding capabilities, with Web.Contents, which does not. To get the same level of capabilities, we will need to use the Table.View interface and implement our own explicit folding logic.
+> This behavior is important to note. Even though you did not implement explicit folding logic, your connector inherits these capabilities from the [OData.Feed](https://msdn.microsoft.com/en-us/library/mt260868.aspx) function. M statements are compose-able – filter contexts will flow from one function to another, whenever possible. This is similar in concept to the way data source functions used within your connector inherit its authentication context and credentials. In later lessons, we will replace the use of [OData.Feed](https://msdn.microsoft.com/en-us/library/mt260868.aspx), which has native folding capabilities, with [Web.Contents](https://msdn.microsoft.com/en-us/library/mt260892.aspx), which does not. To get the same level of capabilities, we will need to use the Table.View interface and implement our own explicit folding logic.
 
 ## Loading Your Extension in Power BI Desktop
-To use your extension in Power BI Desktop, you’ll need to copy your connector project’s output file (TripPin.mez) to your `PQ_ExtensionDirectory` folder. 
-1. In Visual Studio, select **Build | Build Solution (F6)** from the menu bar. This will generate the .mez file for you project. By default, this will go in your project’s bin\Debug folder. 
-2. Copy this file to a subdirectory under your Power BI Desktop’s bin folder (i.e. `C:\Program Files\Microsoft Power BI Desktop\bin\Extensions`)
-3. If you haven’t already done so, set the `PQ_ExtensionDirectory` environment variable to this folder
+To use your extension in Power BI Desktop, you'll need to copy your connector project's output file (TripPin.mez) to your `PQ_ExtensionDirectory` folder. 
+1. In Visual Studio, select **Build | Build Solution (F6)** from the menu bar. This will generate the .mez file for you project. By default, this will go in your project's bin\Debug folder. 
+2. Copy this file to a subdirectory under your Power BI Desktop's bin folder (i.e. `C:\Program Files\Microsoft Power BI Desktop\bin\Extensions`)
+3. If you haven't already done so, set the `PQ_ExtensionDirectory` environment variable to this folder
 4. Start (or restart) Power BI Desktop
 5. Click **Get Data | More …** to bring up the Get Data dialog
 
@@ -123,12 +123,11 @@ Notice that instead of getting a simple table of data, the navigator appears. Th
 
 ![Nav Table](../../../blobs/trippin1NavTable.png)
 
-Select the **Me** table, and click Edit. Notice that the columns already have types assigned (well, most of them). This is another feature of the underlying [OData.Feed](https://msdn.microsoft.com/en-us/library/mt260868.aspx) function. If you watch the requests in [Fiddler](http://www.telerik.com/fiddler), you will see that we fetch the service’s $metadata document. The engine’s OData implementation does this automatically to determine the service’s schema, data types, and relationships. 
+Select the **Me** table, and click Edit. Notice that the columns already have types assigned (well, most of them). This is another feature of the underlying [OData.Feed](https://msdn.microsoft.com/en-us/library/mt260868.aspx) function. If you watch the requests in [Fiddler](http://www.telerik.com/fiddler), you will see that we fetch the service's $metadata document. The engine's OData implementation does this automatically to determine the service's schema, data types, and relationships. 
 
 ![Me Record](../../../blobs/trippin1Me.png)
 
 ## Conclusion
 
 This lesson walked you through the creation of a simple connector based on the [OData.Feed](https://msdn.microsoft.com/en-us/library/mt260868.aspx) library function. As you saw, very little logic is needed to enable a fully functional connector over the OData base function. Other extensibility enabled functions, such as [ODBC.DataSource](https://msdn.microsoft.com/en-us/library/mt708843.aspx), provide similar capabilities. 
-In the next lesson, we will replace the use of [OData.Feed](https://msdn.microsoft.com/en-us/library/mt260868.aspx) with a less capable function - Web.Contents. Each lesson will implement more connector features, including paging, metadata/schema detection and query folding to the OData query syntax, until your custom connector supports the same range of capabilities as [OData.Feed](https://msdn.microsoft.com/en-us/library/mt260868.aspx).
-You can find the full sample used in this lesson in the embedded zip file.
+In the next lesson, we will replace the use of [OData.Feed](https://msdn.microsoft.com/en-us/library/mt260868.aspx) with a less capable function - [Web.Contents](https://msdn.microsoft.com/en-us/library/mt260892.aspx). Each lesson will implement more connector features, including paging, metadata/schema detection and query folding to the OData query syntax, until your custom connector supports the same range of capabilities as [OData.Feed](https://msdn.microsoft.com/en-us/library/mt260868.aspx).
