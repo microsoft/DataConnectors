@@ -1,0 +1,22 @@
+### Power Query M LANGUAGE ###
+
+#   ELEMENT_NAME [optional-css-class] REGULAR_EXPRESSION
+
+    NAME                M
+    VERSION             0.1
+
+    COMMENT             (?default)
+    PREPROCESSOR		(?default)
+    STRING              (?default)
+    
+    STATEMENT           \b(?alt:statement.txt)\b
+    RESERVED            \b(?alt:reserved.txt)\b
+    TYPE                \b(?alt:type.txt)\b
+    MODIFIER            \b(?alt:modifier.txt)\b
+    
+    ENTITY              (?default)
+    VARIABLE            (?default)
+    IDENTIFIER          (?default)
+    CONSTANT            (?default)
+    OPERATOR            \b(?alt:operator.txt)\b
+    SYMBOL              (?default)
