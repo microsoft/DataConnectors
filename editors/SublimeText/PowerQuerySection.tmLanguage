@@ -1,0 +1,347 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>fileTypes</key>
+	<array>
+		<string>pq</string>
+		<string>PQ</string>
+		<string>m</string>
+		<string>M</string>
+	</array>
+
+	<key>name</key>
+	<string>powerquerysection</string>
+
+    <key>scopeName</key>
+	<string>source.powerquerysection</string>
+
+	<key>uuid</key>
+	<string>D751E199-9A4C-4A95-BC0F-0C4E4C75E3DB</string>
+
+
+    <!-- START REPOSITORY -->
+	<key>repository</key>
+	<dict>
+        <key>Noise</key>
+        <dict>
+            <key>patterns</key>
+            <array>
+                <dict>
+                    <key>include</key>
+                    <string>#BlockComment</string>
+                </dict>
+                <dict>
+                    <key>include</key>
+                    <string>#LineComment</string>
+                </dict>
+                <dict>
+                    <key>include</key>
+                    <string>#Whitespace</string>
+                </dict>
+            </array>
+        </dict>
+
+        <key>IllegalKeyword</key>
+        <dict>
+            <key>match</key> <!-- Keywords starting with # are left out -->
+            <string>\b(and|as|each|else|error|false|if|in|is|let|meta|not|otherwise|or|section|shared|then|true|try|type)\b</string>
+            <key>name</key>
+            <string>invalid.illegal.keyword.powerquery</string>
+        </dict>
+
+        <key>IllegalOperator</key>
+        <dict>
+            <key>match</key> 
+            <string>&gt;|&lt;|=|&amp;|\+|-|\*|\/|!|\?|\.|,|\(|\)|\{|\}|_</string>
+            <key>name</key>
+            <string>invalid.illegal.keyword.operator.powerquery</string>
+        </dict>
+
+        <key>Section</key>
+		<dict>
+			<key>begin</key>
+            <string>([_\p{Lu}\p{Ll}\p{Lt}\p{Lm}\p{Lo}\p{Nl}][_\p{Lu}\p{Ll}\p{Lt}\p{Lm}\p{Lo}\p{Nl}\p{Nd}\p{Pc}\p{Mn}\p{Mc}\p{Cf}]*(?:\.[_\p{Lu}\p{Ll}\p{Lt}\p{Lm}\p{Lo}\p{Nl}][_\p{Lu}\p{Ll}\p{Lt}\p{Lm}\p{Lo}\p{Nl}\p{Nd}\p{Pc}\p{Mn}\p{Mc}\p{Cf}]*)*)</string>
+			<key>beginCaptures</key>
+			<dict>
+				<key>1</key>
+				<dict>
+					<key>name</key>
+					<string>entity.name.sectionmember.powerquery</string>
+				</dict>
+			</dict>
+
+            <key>end</key>
+            <string>(?=;)</string>
+			<key>endCaptures</key>
+			<dict>
+				<key>0</key>
+				<dict>
+					<key>name</key>
+					<string>punctuation.terminator.sectionmember.powerquery</string>
+				</dict>
+			</dict>
+
+			<key>patterns</key>
+			<array>
+                <dict>
+                    <key>include</key>
+                    <string>#SectionMemberPatterns</string>
+                </dict>
+             </array>
+
+			<key>name</key>
+			<string>meta.sectionmember.powerquery</string>
+		</dict>
+
+        <key>SectionMemberPatterns</key>
+        <dict>
+            <key>patterns</key>
+			<array>
+                <dict>
+                    <key>include</key>
+                    <string>#Noise</string>
+                </dict>
+                <dict>
+                    <key>match</key>
+                    <string>[^\s=]</string>
+                    <key>name</key>
+                    <string>invalid.illegal.powerquery</string>
+                </dict>
+                <dict>
+                    <key>begin</key>
+                    <string>=</string>
+                    <key>beginCaptures</key>
+                    <dict>
+                        <key>0</key>
+                        <dict>
+                            <key>name</key>
+                            <string>keyword.operator.assignment.powerquery</string>
+                        </dict>
+                    </dict>
+                    <key>end</key>
+                    <string>(?=;)</string>
+                    <key>patterns</key>
+                    <array>
+                        <dict>
+                            <key>include</key>
+                            <string>source.powerqueryexpression</string>
+                        </dict>
+                    </array>
+                    <key>contentName</key>
+                    <string>meta.expression.powerquery</string>
+                </dict>
+			</array>
+        </dict>
+
+        <key>Whitespace</key>
+        <dict>
+            <key>match</key>
+            <string>\s*</string>
+        </dict>
+
+		<key>BlockComment</key>
+		<dict>
+			<key>begin</key>
+			<string>/\*</string>
+			<key>end</key>
+			<string>\*/</string>
+			<key>name</key>
+			<string>comment.block.powerquery</string>
+		</dict>
+
+		<key>LineComment</key>
+		<dict>
+			<key>match</key>
+			<string>//.*</string>
+			<key>name</key>
+			<string>comment.line.double-slash.powerquery</string>
+		</dict>      
+
+        <key>SectionName</key>
+        <!-- TODO: No Quoted Identifiers yet -->
+        <dict>
+            <key>begin</key>
+            <string>([_\p{Lu}\p{Ll}\p{Lt}\p{Lm}\p{Lo}\p{Nl}][_\p{Lu}\p{Ll}\p{Lt}\p{Lm}\p{Lo}\p{Nl}\p{Nd}\p{Pc}\p{Mn}\p{Mc}\p{Cf}]*(?:\.[_\p{Lu}\p{Ll}\p{Lt}\p{Lm}\p{Lo}\p{Nl}][_\p{Lu}\p{Ll}\p{Lt}\p{Lm}\p{Lo}\p{Nl}\p{Nd}\p{Pc}\p{Mn}\p{Mc}\p{Cf}]*)*)\s*</string>
+            <key>beginCaptures</key>
+            <dict>
+                <key>1</key>
+                <dict>
+                    <key>name</key>
+                    <string>entity.name.section.powerquery</string>
+                </dict>
+            </dict>
+            <key>end</key>
+            <string>(?=;)</string>
+            <key>patterns</key>
+            <array>
+                <dict>
+                    <key>include</key>
+                    <string>#Noise</string>
+                </dict>
+                <dict>
+                    <key>match</key>
+                    <string>[^\s;]</string>
+                    <key>name</key>
+                    <string>invalid.illegal.powerquery</string>
+                </dict>
+            </array>
+        </dict>
+	</dict>
+    <!-- END REPOSITORY -->
+
+
+
+	<key>patterns</key>
+	<array>
+        <dict>
+            <key>include</key>
+            <string>#Noise</string>
+        </dict>
+
+        <!-- Literal-attributes -->
+		<dict>
+			<key>begin</key>
+			<string>\[</string>
+			<key>beginCaptures</key>
+			<dict>
+				<key>1</key>
+				<dict>
+					<key>name</key>
+					<string>punctuation.section.brackets.begin.powerquery</string>
+				</dict>
+			</dict>
+			<key>end</key>
+			<string>\]</string>
+			<key>endCaptures</key>
+			<dict>
+				<key>0</key>
+				<dict>
+					<key>name</key>
+					<string>punctuation.section.brackets.end.powerquery</string>
+				</dict>
+			</dict>
+			<key>patterns</key>
+			<array>
+                <dict>
+                    <key>include</key>
+                    <string>#Noise</string>
+                </dict>
+                <dict>
+                    <key>include</key>
+                    <string>#IllegalKeyword</string>
+                </dict>
+                <dict>
+                    <key>include</key>
+                    <string>source.powerqueryexpression</string>
+                </dict>
+			</array>
+			<key>name</key>
+			<string>meta.literal-attribute.powerquery</string>
+        </dict>
+
+        <!--  SECTION declaration, and section name -->
+		<dict>
+			<key>begin</key>
+			<string>\b(section)\b</string>
+			<key>beginCaptures</key>
+			<dict>
+				<key>1</key>
+				<dict>
+					<key>name</key>
+					<string>keyword.other.section.powerquery</string>
+				</dict>
+			</dict>
+			<key>end</key>
+			<string>;</string>
+			<key>endCaptures</key>
+			<dict>
+				<key>0</key>
+				<dict>
+					<key>name</key>
+					<string>punctuation.terminator.sectiondeclaration.powerquery</string>
+				</dict>
+			</dict>
+			<key>patterns</key>
+			<array>
+                <dict>
+                    <key>include</key>
+                    <string>#Noise</string>
+                </dict>
+                <dict>
+                    <key>include</key>
+                    <string>#IllegalKeyword</string>
+                </dict>
+                <dict>
+                    <key>include</key>
+                    <string>#SectionName</string>
+                </dict>
+                <dict>
+                    <key>match</key>
+                    <string>[^\s]</string>
+                    <key>name</key>
+                    <string>invalid.illegal.powerquery</string>
+                </dict>
+			</array>
+			<key>name</key>
+			<string>meta.sectiondeclaration.powerquery</string>
+		</dict>
+
+        <!-- SHARED SECTION Member -->
+		<dict>
+			<key>begin</key>
+            <string>\b(shared)\b</string>
+			<key>beginCaptures</key>
+			<dict>
+				<key>0</key>
+				<dict>
+					<key>name</key>
+					<string>keyword.other.shared.powerquery</string>
+				</dict>
+			</dict>
+            <key>end</key>
+            <string>;</string>
+			<key>endCaptures</key>
+			<dict>
+				<key>0</key>
+				<dict>
+					<key>name</key>
+					<string>punctuation.terminator.sectionmember.powerquery</string>
+				</dict>
+			</dict>
+
+			<key>patterns</key>
+			<array>
+                <dict>
+                    <key>include</key>
+                    <string>#Noise</string>
+                </dict>
+                <dict>
+                    <key>include</key>
+                    <string>#IllegalKeyword</string>
+                </dict>
+                <dict>
+                    <key>include</key>
+                    <string>#Section</string>
+                </dict>
+             </array>
+		</dict>
+
+        <dict>
+            <key>include</key>
+            <string>#IllegalKeyword</string>
+        </dict>
+        <dict>
+            <key>include</key>
+            <string>#IllegalOperator</string>
+        </dict>
+
+        <!-- NAKED SECTION Member -->
+        <dict>
+            <key>include</key>
+            <string>#Section</string>
+        </dict>
+
+	</array>
+</dict>
+</plist>
