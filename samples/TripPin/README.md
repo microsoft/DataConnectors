@@ -20,6 +20,7 @@ Reviewing the [M Extensibility documentation](../../docs/m-extensions.md) before
 |1   |[OData](1-OData)             |Create a simple Data Connector over an OData service |
 |2   |[Rest](2-Rest)               |Connect to a REST API that returns a JSON response   | 
 |3   |[Nav Tables](3-NavTables)    |Providing a navigation experience for your source    | 
-|4   |[Paging](4-Paging)           |Read with a paged response from a web service        | 
-|5   |[Enforcing Schema](5-Schema) |Enforce table structure and column data types        | 
+|4   |[Data Source Paths](4-Paths) |How credentials are identified for your data source  | 
+|5   |[Paging](5-Paging)           |Read with a paged response from a web service        | 
+|6   |[Enforcing Schema](6-Schema) |Enforce table structure and column data types        | 
 
