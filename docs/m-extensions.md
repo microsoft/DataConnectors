@@ -209,9 +209,6 @@ The list of supported authentication types is defined as part of an extension's 
 |                     | Label         | **(optional)** A text value that allows you to override the default label for this AuthenticationKind.                      |
 | Key                 | KeyLabel      | **(optional)** A text value to replace the default label for the *API Key* text box on the credentials UI.                  |
 |                     | Label         | **(optional)** A text value that allows you to override the default label for this AuthenticationKind.                      |
-| Parameterized       | Name          | A text value which identifies the type of parameterized credential.                                                         |
-|                     | Fields        | A record containing the custom fields for this type of credential.<br><br>See [Implementing a Parameterized Authentication Kind](#implementing-a-parameterized-authentication-kind) for more details.|
-|                     | Label         | **(optional)** A text value that allows you to override the default label for this AuthenticationKind.                      |
 
 The sample below shows the Authentication record for a connector that supports OAuth, Key, Windows, Basic (Username and Password), and anonymous credentials.
 
@@ -277,39 +274,6 @@ in
 #### Implementing an OAuth Flow
 
 Please see the [MyGraph](../samples/MyGraph) and [Github](../samples/github) samples.
-
-#### Implementing a Parameterized Authentication Kind
-
-The following example implements a custom parameterized authentication kind for the Spark connector. It contains three fields - Username, Password, and authmech.
-
-> **Note:** A data source may only have a single Parameterized authentication kind.
-
-<pre style="font-family:Consolas;font-size:13;color:black;background:white;"><span style="color:#2b91af;">Authentication</span><span style="color:green;">&nbsp;</span>=<span style="color:green;">&nbsp;</span>[<span style="color:green;">
-&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color:#2b91af;">Parameterized</span><span style="color:green;">&nbsp;</span>=<span style="color:green;">&nbsp;</span>[<span style="color:green;">
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color:#2b91af;">Name</span><span style="color:green;">&nbsp;</span>=<span style="color:green;">&nbsp;</span><span style="color:#a31515;">&quot;Spark&quot;</span>,<span style="color:green;">
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color:#2b91af;">Fields</span><span style="color:green;">&nbsp;</span>=<span style="color:green;">&nbsp;</span>[<span style="color:green;">
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color:#2b91af;">Username</span><span style="color:green;">&nbsp;</span>=<span style="color:green;">&nbsp;</span>[<span style="color:green;">
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color:#2b91af;">Label</span><span style="color:green;">&nbsp;</span>=<span style="color:green;">&nbsp;</span><span style="color:#a31515;">&quot;Username&quot;</span>,<span style="color:green;">
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color:#2b91af;">Type</span><span style="color:green;">&nbsp;</span>=<span style="color:green;">&nbsp;</span><span style="color:#a31515;">&quot;Text&quot;</span><span style="color:green;">
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>],<span style="color:green;">
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color:#2b91af;">Password</span><span style="color:green;">&nbsp;</span>=<span style="color:green;">&nbsp;</span>[<span style="color:green;">
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color:#2b91af;">Label</span><span style="color:green;">&nbsp;</span>=<span style="color:green;">&nbsp;</span><span style="color:#a31515;">&quot;Password&quot;</span>,<span style="color:green;">
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color:#2b91af;">Type</span><span style="color:green;">&nbsp;</span>=<span style="color:green;">&nbsp;</span><span style="color:#a31515;">&quot;Password&quot;</span><span style="color:green;">
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>],<span style="color:green;">
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color:#2b91af;">authmech</span><span style="color:green;">&nbsp;</span>=<span style="color:green;">&nbsp;</span>[<span style="color:green;">
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color:#2b91af;">Label</span><span style="color:green;">&nbsp;</span>=<span style="color:green;">&nbsp;</span><span style="color:#a31515;">&quot;AuthMech&quot;</span>,<span style="color:green;">
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color:#2b91af;">Type</span><span style="color:green;">&nbsp;</span>=<span style="color:green;">&nbsp;</span><span style="color:#a31515;">&quot;List&quot;</span>,<span style="color:green;">
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color:#2b91af;">Options</span><span style="color:green;">&nbsp;</span>=<span style="color:green;">&nbsp;</span>[<span style="color:green;">
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>2<span style="color:green;">&nbsp;</span>=<span style="color:green;">&nbsp;</span><span style="color:#a31515;">&quot;AuthMech_Standard&quot;</span>,<span style="color:green;">
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>6<span style="color:green;">&nbsp;</span>=<span style="color:green;">&nbsp;</span><span style="color:#a31515;">&quot;AuthMech_Azure&quot;</span><span style="color:green;">
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>]<span style="color:green;">
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>]<span style="color:green;">
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>],<span style="color:green;">
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color:#2b91af;">Label</span><span style="color:green;">&nbsp;</span>=<span style="color:green;">&nbsp;</span><span style="color:#a31515;">&quot;Spark&nbsp;Authentication&quot;</span><span style="color:green;">
-&nbsp;&nbsp;&nbsp;&nbsp;</span>]<span style="color:green;">
-</span>]</pre>
-
-The following `Type` values are supported for fields: `Text`, `List`, and `Password`. `Options` must be specified when using the `List` type.
 
 ## Next Steps
 
