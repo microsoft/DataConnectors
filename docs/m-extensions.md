@@ -16,6 +16,7 @@
   * [3.2 - Publish to UI](#publish-to-ui)
   * [3.3 - Data Source Functions](#data-source-functions)
   * [3.4 - Authentication and Credentials](#authentication-and-credentials)
+  * [3.5 - Data Source Paths](#data-source-paths)
 * [4 - Next Steps](#next-steps)
 
 ## Overview
@@ -92,7 +93,7 @@ Extensions are defined within an M section document. A section document has a sl
 * Each expression ends with a semi-colon (ex. `a = 1;` or `b = let c = 1 + 2 in c;`)
 * All functions and variables are local to the section document, unless they are marked as `shared`. Shared functions become visible to other queries/functions, and can be thought of as the _exports_ for your extension (i.e. they become callable from Power Query).
 
-More information about M section documents can be found in the [M Language specification](https://msdn.microsoft.com/en-us/library/mt807488.aspx).
+More information about M section documents can be found in the [M Language specification](https://msdn.microsoft.com/library/mt807488.aspx).
 
 ### Query File
 
@@ -104,7 +105,9 @@ The query file can contain a single expression (ex. `HelloWorld.Contents()`), a 
 
 ### Data Source Functions
 
-A Data Connector wraps and customizes the behavior of a [data source function in the M Library](https://msdn.microsoft.com/library/mt253322.aspx#Anchor_15). For example, an extension for a REST API would make use of the [Web.Contents](https://msdn.microsoft.com/en-us/library/mt260892.aspx) function to make HTTP requests. Currently, a limited set of data source functions have been enabled to support extensibility.
+A Data Connector wraps and customizes the behavior of a [data source function in the M Library](https://msdn.microsoft.com/library/mt253322.aspx#Anchor_15).
+For example, an extension for a REST API would make use of the [Web.Contents](https://msdn.microsoft.com/library/mt260892.aspx) function to make HTTP requests.
+Currently, a limited set of data source functions have been enabled to support extensibility.
 
 - [Web.Contents](https://msdn.microsoft.com/library/mt260892.aspx)
 - [OData.Feed](https://msdn.microsoft.com/library/mt260868.aspx)
@@ -128,7 +131,10 @@ shared HelloWorld.Contents = (optional message as text) =>
 Functions marked as `shared` in your extension can be associated with a specific data source by including a `DataSource.Kind` metadata record on the function with the name of a Data Source definition record. 
 The Data Source record defines the authentication types supported by your data source, and basic branding information (like the display name / label).
 The name of the record becomes is unique identifier. 
-Functions associated with a data source must have the same required function parameters (including name, type, and order). Functions for a specific Data Source Kind can only use credentials associated with that Kind. Credentials are identified at runtime by performing a lookup based on the combination of the function's required parameters.
+
+Functions associated with a data source must have the same required function parameters (including name, type, and order). Functions for a specific Data Source Kind can only use credentials associated with that Kind.
+Credentials are identified at runtime by performing a lookup based on the combination of the function's required parameters.
+For more information about how credentials are identified, please see [Data Source Paths] below.
 
 **Example:**
 
@@ -147,8 +153,8 @@ The following table lists the fields for your Data Source definition record.
 
 | Field              | Type     | Details                                                                                                                                                                                                                                                                   |
 |:-------------------|:---------|:--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Label              | text     | Friendly display name for this extension.                                                                                                                                                                                                                                 |
 | Authentication     | record   | Specifies one or more types of authentication supported by your data source. At least one kind is required. Each kind will be displayed as an option in the Power Query credential prompt. For more information, see [Authentication Kinds](#authentication-kinds) below. |
+| Label              | text     | **(optional)** Friendly display name for this extension in credential dialogs.                                                                                                                                                                                            |
 | SupportsEncryption | logical  | **(optional)** When true, the UI will present the option to connect to the data source using an encrypted connection. This is typically used for data sources with a non-encrypted fallback mechanism (generally ODBC or ADO.NET based sources).                          |
 
 ### Publish to UI
@@ -274,6 +280,64 @@ in
 #### Implementing an OAuth Flow
 
 Please see the [MyGraph](../samples/MyGraph) and [Github](../samples/github) samples.
+
+### Data Source Paths
+
+The M engine identifies a data source using a combination of its *Kind* and *Path*.
+When a data source is encountered during a query evaluation, the M engine will try to find matching credentials.
+If no credentials are found, the engine returns an special error which results in a credential prompt in Power Query. 
+
+The *Kind* value comes from [Data Source Kind] definition. 
+
+The *Path* value is derived from the _required parameters_ of your [data source function](#data-source-functions). Optional parameters are not factored into the data source path identifier.
+As a result, all data source functions associated with a data source kind must have the same parameters.
+There is special handling for functions that have a single parameter of type `Uri.Type`. See the [section below](#functions-with-an-uri-parameter) for details.
+
+You can see an example of how credentials are stored in the *Data source settings* dialog in Power BI Desktop. In this dialog, the Kind is represented by an icon, and the Path value is displayed as text.
+
+![DataSourcePaths](../blobs/dataSourceSettingsCreds.png)
+
+>**Note:** If you change your data source function's required parameters during development, previously stored credentials will no longer work (because the path values no longer match). You should delete any stored credentials any time you change your data source function parameters. If incompatible credentials are found, you may receive an error at runtime.
+
+#### Data Source Path Format
+The _Path_ value for a data source is derived from the data source function's required parameters. 
+
+By default, you can see the actual string value in the Data source settings dialog in Power BI Desktop, and in the credential prompt.
+If the Data Source Kind definition has included a `Label` value, you will see the label value instead.
+
+For example, the data source function in the [HelloWorldWithDocs sample](../samples/HelloWorldWithDocs) has the following signature:
+
+```
+HelloWorldWithDocs.Contents = (message as text, optional count as number) as table => ...
+```
+
+The function has a single required parameter (`message`) of type `text`, and will be used to calculate the data source path. The optional parameter (`count`) would be ignored. The path would be displayed 
+
+Credential prompt: 
+
+![DataSourceCredentials](../blobs/credentialPromptWithPath.png)
+
+Data source settings UI:
+
+![DataSourceSettings](../blobs/dataSourceSettingsJson.png)
+
+When a Label value is defined, the data source path value would not be shown:
+
+![DataSourceLabel](../blobs/dataSourceSettingsLabel.png)
+
+>**Note:** We currently recommend you _do not_ include a Label for your data source if your function has required parameters, as users will not be able to distinguish between the different credentials they have entered. We are hoping to improve this in the future (i.e. allowing data connectors to display their own custom data source paths).
+
+#### Functions with an Uri parameter
+Because data sources with an Uri based identifier are so common, there is special handling in the Power Query UI when dealing with Uri based data source paths.
+When an Uri-based data source is encountered, the credential dialog provides a drop down allowing the user to select the base path, rather than the full path (and all paths in between).
+
+![DataSourceUrl](../blobs/credentialPromptWithUrl.png)
+
+As `Uri.Type` is an _ascribed type_ rather than a _primitive type_ in the M language, you will need to use the [Value.ReplaceType](https://msdn.microsoft.com/library/mt260838) function to indicate that your text parameter should be treated as an Uri.
+
+```
+shared GithubSample.Contents = Value.ReplaceType(Github.Contents, type function (url as Uri.Type) as any);
+```
 
 ## Next Steps
 

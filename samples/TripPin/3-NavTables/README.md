@@ -6,7 +6,6 @@ In this lesson, you will:
 
 * Create a navigation table for a fixed set of queries
 * Test the navigation table in Power BI Desktop
-* Simplify the connection logic for our connector
  
 This lesson adds a navigation table to the TripPin connector created in the [previous lesson](../2-Rest). When our connector used the OData.Feed function ([Part 1](../1_OData)), we received the navigation table “for free”, as derived from the OData service’s $metadata document. When we moved to the Web.Contents function ([Part 2](../2-Rest)), we lost the built-in navigation table. In this lesson, we will take a set of fixed queries we created in Power BI Desktop and add the appropriate metadata for Power Query to popup the Navigator dialog for our data source function.
 

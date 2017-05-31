@@ -40,8 +40,8 @@ HelloWorldImpl = (message as text, optional count as number) as table =>
 HelloWorldWithDocs = [
     Authentication = [
         Implicit = []
-    ],
-    Label = "Hello World With Docs"
+    ]//,
+    //Label = "Hello World With Docs"
 ];
 
 // Data Source UI publishing description
