@@ -33,7 +33,7 @@ scopes = {
 // Exported function(s)
 //
 [DataSource.Kind="MyGraph", Publish="MyGraph.UI"]
-MyGraph.Feed = () =>
+shared MyGraph.Feed = () =>
     let
         source = OData.Feed("https://graph.microsoft.com/v1.0/me/", null, [ ODataVersion = 4, MoreColumns = true ])
     in
