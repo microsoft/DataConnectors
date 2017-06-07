@@ -23,59 +23,50 @@ TripPin.Publish = [
 // Implementation
 // 
 
-[DataSource.Kind="TripPin"]
-shared TripPin.Feed = Value.ReplaceType(TripPinImpl, type function (url as Uri.Type) as any);
-
-[DataSource.Kind="TripPin", Publish="TripPin.Publish"]
-shared TripPin.Contents =  Value.ReplaceType(TripPinNavTable, type function (url as Uri.Type) as any);
-
 DefaultRequestHeaders = [
     #"Accept" = "application/json;odata.metadata=minimal",  // column name and values only
     #"OData-MaxVersion" = "4.0"                             // we only support v4
 ];
 
-TripPinImpl = (url as text) =>
-    let
-        source = Web.Contents(url, [ Headers = DefaultRequestHeaders ]),
-        json = Json.Document(source)
-    in
-        json;
+BaseUrl = "http://services.odata.org/TripPinRESTierService/(S(ejvc5qehmzmktnv1xnzzwpv2))/";
+
+RootEntities = {
+    "Airlines",
+    "Airports",
+    "People"
+};
+
+[DataSource.Kind="TripPin", Publish="TripPin.Publish"]
+shared TripPin.Contents = () => TripPinNavTable(BaseUrl) as table;
 
 TripPinNavTable = (url as text) as table =>
     let
-        source = #table({"Name", "Data", "ItemKind", "ItemName", "IsLeaf"}, {
-            { "Airlines", GetAirlinesTable(url), "Table", "Table", true },
-            { "Airports", GetAirportsTable(url), "Table", "Table", true }
-        }),
-        navTable = Table.ToNavigationTable(source, {"Name"}, "Name", "Data", "ItemKind", "ItemName", "IsLeaf")
+        entitiesAsTable = Table.FromList(RootEntities, Splitter.SplitByNothing()),
+        rename = Table.RenameColumns(entitiesAsTable, {{"Column1", "Name"}}),
+        // Add Data as a calculated column
+        withData = Table.AddColumn(rename, "Data", each TripPin.Feed(Uri.Combine(url, [Name])), Uri.Type),
+        // Add ItemKind and ItemName as fixed text values
+        withItemKind = Table.AddColumn(withData, "ItemKind", each "Table", type text),
+        withItemName = Table.AddColumn(withItemKind, "ItemName", each "Table", type text),
+        // Indicate that the node should not be expandable
+        withIsLeaf = Table.AddColumn(withItemName, "IsLeaf", each true, type logical),
+        // Generate the nav table
+        navTable = Table.ToNavigationTable(withIsLeaf, {"Name"}, "Name", "Data", "ItemKind", "ItemName", "IsLeaf")
     in
         navTable;
 
-GetAirlinesTable = (url as text) as table =>
+TripPin.Feed = (url as text) =>
     let
-        source = TripPin.Feed(url & "Airlines"),
-        value = source[value],
-        toTable = Table.FromList(value, Splitter.SplitByNothing(), null, null, ExtraValues.Error),
-        expand = Table.ExpandRecordColumn(toTable, "Column1", {"AirlineCode", "Name"}, {"AirlineCode", "Name"})
+        source = Web.Contents(url, [ Headers = DefaultRequestHeaders ]),
+        json = Json.Document(source),
+        // The response is a JSON record - the data we want is a list of records in the "value" field
+        value = json[value],
+        asTable = Table.FromList(value, Splitter.SplitByNothing()),
+        // expand all columns from the record
+        fields = Record.FieldNames(Table.FirstValue(asTable, [Empty = null])),
+        expandAll = Table.ExpandRecordColumn(asTable, "Column1", fields)
     in
-        expand;
-
-GetAirportsTable = (url as text) as table =>
-    let
-        source = TripPin.Feed(url & "Airports"),
-        value = source[value],
-        #"Converted to Table" = Table.FromList(value, Splitter.SplitByNothing(), null, null, ExtraValues.Error),
-        #"Expanded Column1" = Table.ExpandRecordColumn(#"Converted to Table", "Column1", {"Name", "IcaoCode", "IataCode", "Location"}, {"Name", "IcaoCode", "IataCode", "Location"}),
-        #"Expanded Location" = Table.ExpandRecordColumn(#"Expanded Column1", "Location", {"Address", "Loc", "City"}, {"Address", "Loc", "City"}),
-        #"Expanded City" = Table.ExpandRecordColumn(#"Expanded Location", "City", {"Name", "CountryRegion", "Region"}, {"Name.1", "CountryRegion", "Region"}),
-        #"Renamed Columns" = Table.RenameColumns(#"Expanded City",{{"Name.1", "City"}}),
-        #"Expanded Loc" = Table.ExpandRecordColumn(#"Renamed Columns", "Loc", {"coordinates"}, {"coordinates"}),
-        #"Added Custom" = Table.AddColumn(#"Expanded Loc", "Latitude", each [coordinates]{1}),
-        #"Added Custom1" = Table.AddColumn(#"Added Custom", "Longitude", each [coordinates]{0}),
-        #"Removed Columns" = Table.RemoveColumns(#"Added Custom1",{"coordinates"}),
-        #"Changed Type" = Table.TransformColumnTypes(#"Removed Columns",{{"Name", type text}, {"IcaoCode", type text}, {"IataCode", type text}, {"Address", type text}, {"City", type text}, {"CountryRegion", type text}, {"Region", type text}, {"Latitude", type number}, {"Longitude", type number}})
-    in
-        #"Changed Type";
+        expandAll;
 
 //
 // Common functions

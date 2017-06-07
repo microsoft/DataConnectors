@@ -17,7 +17,7 @@ Open Visual Studio, and create a new Project. Under the Power Query folder, sele
 Open the TripPin.pq file and paste in the following connector definition. It contains:
 * A Data Source definition record for the TripPin connector
 * A declaration that Implicit (Anonymous) is the only authentication type for this source
-* A function (TripPinImpl) with an implementation that calls [OData.Feed](https://msdn.microsoft.com/en-us/library/mt260868.aspx)
+* A function (TripPinImpl) with an implementation that calls [OData.Feed](https://msdn.microsoft.com/library/mt260868.aspx)
 * A shared function (TripPin.Feed) that sets the parameter type to Uri.Type
 * A Data Source publishing record that will allow the connector to appear in the Power BI Get Data dialog 
 

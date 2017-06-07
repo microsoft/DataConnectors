@@ -3,7 +3,7 @@ This multi-part tutorial covers the creation of a new data source extension for 
 
 In this lesson, you will:
 
-* Create a base function that calls out to a REST API using [Web.Contents](https://msdn.microsoft.com/en-us/library/mt260892.aspx)
+* Create a base function that calls out to a REST API using [Web.Contents](https://msdn.microsoft.com/library/mt260892.aspx)
 * Learn how to set request headers and process a JSON response
 * Use Power BI Desktop to wrangle the response into a user friend format
 
