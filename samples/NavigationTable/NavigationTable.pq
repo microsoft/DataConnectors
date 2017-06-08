@@ -47,7 +47,8 @@ shared NavigationTable.Icons = () as table =>
             "Sheet",
             "Subcube",
             "DefinedName",
-            "Record"
+            "Record",
+            "Function"
         },
 
         asTable = Table.FromList(itemKinds, Splitter.SplitByNothing()),

@@ -71,6 +71,7 @@ Each of the following item kind values provide a different icon in the navigatio
 * Dimension
 * Table
 * Folder
+* Function
 * View
 * Sheet
 * Subcube
