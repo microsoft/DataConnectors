@@ -100,12 +100,13 @@ If you add more transformations to your query, you will see how they impact the 
 > This behavior is important to note. Even though you did not implement explicit folding logic, your connector inherits these capabilities from the [OData.Feed](https://msdn.microsoft.com/en-us/library/mt260868.aspx) function. M statements are compose-able – filter contexts will flow from one function to another, whenever possible. This is similar in concept to the way data source functions used within your connector inherit its authentication context and credentials. In later lessons, we will replace the use of [OData.Feed](https://msdn.microsoft.com/en-us/library/mt260868.aspx), which has native folding capabilities, with [Web.Contents](https://msdn.microsoft.com/en-us/library/mt260892.aspx), which does not. To get the same level of capabilities, we will need to use the Table.View interface and implement our own explicit folding logic.
 
 ## Loading Your Extension in Power BI Desktop
-To use your extension in Power BI Desktop, you'll need to copy your connector project's output file (TripPin.mez) to your `PQ_ExtensionDirectory` folder. 
+To use your extension in Power BI Desktop, you'll need to copy your connector project's output file (TripPin.mez) to your Custom Connectors directory. 
 1. In Visual Studio, select **Build | Build Solution (F6)** from the menu bar. This will generate the .mez file for you project. By default, this will go in your project's bin\Debug folder. 
-2. Copy this file to a subdirectory under your Power BI Desktop's bin folder (i.e. `C:\Program Files\Microsoft Power BI Desktop\bin\Extensions`)
-3. If you haven't already done so, set the `PQ_ExtensionDirectory` environment variable to this folder
-4. Start (or restart) Power BI Desktop
-5. Click **Get Data | More …** to bring up the Get Data dialog
+2. Create a `[My Documents]\Microsoft Power BI Desktop\Custom Connectors` directory
+3. Copy the extension file into this directory
+4. Enable the **Custom data connectors** preview feature in Power BI Desktop (under *File | Options and settings | Custom data connectors*)
+5. Restart Power BI Desktop
+6. Click **Get Data | More …** to bring up the Get Data dialog
 
 You should be able to locate your extension by typing its name into the search box. 
 

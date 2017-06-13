@@ -401,4 +401,4 @@ Run the query again. This time you should get a spinning progress dialog, and a 
 
 ![Graph query results](../../blobs/graph9.png)
 
-You can now build your project in Visual Studio to create a compiled extension file, and deploy it to your `PQ_ExtensionDirectory`. Your new data source should now appear in the Get Data dialog the next time you launch Power BI Desktop. 
+You can now build your project in Visual Studio to create a compiled extension file, and deploy it to your Custom Connectors directory. Your new data source should now appear in the Get Data dialog the next time you launch Power BI Desktop. 
