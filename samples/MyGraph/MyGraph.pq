@@ -76,6 +76,31 @@ MyGraph.Icons = [
 // * https://docs.microsoft.com/en-us/azure/active-directory/active-directory-protocols-oauth-code 
 // * https://graph.microsoft.io/en-us/docs/authorization/app_authorization
 //
+// StartLogin builds a record containing the information needed for the client
+// to initiate an OAuth flow. Note for the AAD flow, the display parameter is
+// not used.
+//
+// resourceUrl: Derived from the required arguments to the data source function
+//              and is used when the OAuth flow requires a specific resource to 
+//              be passed in, or the authorization URL is calculated (i.e. when
+//              the tenant name/ID is included in the URL). In this example, we
+//              are hardcoding the use of the "common" tenant, as specified by
+//              the 'authorize_uri' variable.
+// state:       Client state value we pass through to the service.
+// display:     Used by certain OAuth services to display information to the
+//              user.
+//
+// Returns a record containing the following fields:
+// LoginUri:     The full URI to use to initiate the OAuth flow dialog.
+// CallbackUri:  The return_uri value. The client will consider the OAuth
+//               flow complete when it receives a redirect to this URI. This
+//               generally needs to match the return_uri value that was
+//               registered for your application/client. 
+// WindowHeight: Suggested OAuth window height (in pixels).
+// WindowWidth:  Suggested OAuth window width (in pixels).
+// Context:      Optional context value that will be passed in to the FinishLogin
+//               function once the redirect_uri is reached. 
+//
 StartLogin = (resourceUrl, state, display) =>
     let
         authorizeUrl = authorize_uri & "?" & Uri.BuildQueryString([
@@ -85,7 +110,7 @@ StartLogin = (resourceUrl, state, display) =>
             scope = GetScopeString(scopes, scope_prefix),
             response_type = "code",
             response_mode = "query",
-            login = "login"    
+            login = "login"
         ])
     in
         [
@@ -96,29 +121,49 @@ StartLogin = (resourceUrl, state, display) =>
             Context = null
         ];
 
+// FinishLogin is called when the OAuth flow reaches the specified redirect_uri. 
+// Note for the AAD flow, the context and state parameters are not used. 
+//
+// context:     The value of the Context field returned by StartLogin. Use this to 
+//              pass along information derived during the StartLogin call (such as
+//              tenant ID)
+// callbackUri: The callbackUri containing the authorization_code from the service.
+// state:       State information that was specified during the call to StartLogin. 
 FinishLogin = (context, callbackUri, state) =>
     let
+        // parse the full callbackUri, and extract the Query string
         parts = Uri.Parts(callbackUri)[Query],
+        // if the query string contains an "error" field, raise an error
+        // otherwise call TokenMethod to exchange our code for an access_token
         result = if (Record.HasFields(parts, {"error", "error_description"})) then 
                     error Error.Record(parts[error], parts[error_description], parts)
                  else
-                    TokenMethod("authorization_code", parts[code])
+                    TokenMethod("authorization_code", "code", parts[code])
     in
         result;
 
-Refresh = (resourceUrl, refresh_token) => TokenMethod("refresh_token", refresh_token);
+// Called when the access_token has expired, and a refresh_token is available.
+// 
+Refresh = (resourceUrl, refresh_token) => TokenMethod("refresh_token", "refresh_token", refresh_token);
 
 Logout = (token) => logout_uri;
 
-TokenMethod = (grantType, code) =>
+
+// grantType:  Maps to the "grant_type" query parameter.
+// tokenField: The name of the query parameter to pass in the code.
+// code:       Is the actual code (authorization_code or refresh_token) to send to the service.
+TokenMethod = (grantType, tokenField, code) =>
     let
+        queryString = [
+            client_id = client_id,
+            scope = GetScopeString(scopes, scope_prefix),
+            grant_type = grantType,
+            redirect_uri = redirect_uri
+        ],
+        queryWithCode = Record.AddField(queryString, tokenField, code),
+
         tokenResponse = Web.Contents(token_uri, [
-            Content = Text.ToBinary(Uri.BuildQueryString([
-                client_id = client_id,
-                code = code,
-                scope = GetScopeString(scopes, scope_prefix),
-                grant_type = grantType,
-                redirect_uri = redirect_uri])),
+            Content = Text.ToBinary(Uri.BuildQueryString(queryWithCode)),
             Headers = [
                 #"Content-type" = "application/x-www-form-urlencoded",
                 #"Accept" = "application/json"

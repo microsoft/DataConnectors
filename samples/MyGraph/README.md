@@ -317,7 +317,7 @@ FinishLogin = (context, callbackUri, state) =>
         result = if (Record.HasFields(parts, {"error", "error_description"})) then 
                     error Error.Record(parts[error], parts[error_description], parts)
                  else
-                    TokenMethod("authorization_code", parts[code])
+                    TokenMethod("authorization_code", "code", parts[code])
     in
         result;
 ```
@@ -327,15 +327,18 @@ If the response doesn't contain `error` fields, we pass the `code` query string 
 The `TokenMethod` function converts the `code` to an `access_token`. It is not a direct part of the OAuth interface, but it provides all the heavy lifting for the `FinishLogin` and `Refresh` functions. Its implementation is essentially the tokenResponse logic we created earlier with one small addition – we'll use a grantType variable rather than hardcoding the value to "authorization_code".
 
 ```
-TokenMethod = (grantType, code) =>
+TokenMethod = (grantType, tokenField, code) =>
     let
+        queryString = [
+            client_id = client_id,
+            scope = GetScopeString(scopes, scope_prefix),
+            grant_type = grantType,
+            redirect_uri = redirect_uri
+        ],
+        queryWithCode = Record.AddField(queryString, tokenField, code),
+
         tokenResponse = Web.Contents(token_uri, [
-            Content = Text.ToBinary(Uri.BuildQueryString([
-                client_id = client_id,
-                code = code,
-                scope = GetScopeString(scopes, scope_prefix),
-                grant_type = grantType,
-                redirect_uri = redirect_uri])),
+            Content = Text.ToBinary(Uri.BuildQueryString(queryWithCode)),
             Headers = [
                 #"Content-type" = "application/x-www-form-urlencoded",
                 #"Accept" = "application/json"
@@ -355,7 +358,7 @@ TokenMethod = (grantType, code) =>
 This function is called when the `access_token` expires – Power Query will use the `refresh_token` to retrieve a new `access_token`. The implementation here is just a call to `TokenMethod`, passing in the refresh token value rather than the code.
 
 ```
-Refresh = (resourceUrl, refresh_token) => TokenMethod("refresh_token", refresh_token);
+Refresh = (resourceUrl, refresh_token) => TokenMethod("refresh_token", "refresh_token", refresh_token);
 ```
 
 ### Logout
