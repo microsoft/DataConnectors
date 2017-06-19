@@ -105,3 +105,48 @@ Value.WaitFor = (producer as function, interval as function, optional count as n
         List.Last(list);
 ```
 
+### Table.GenerateByPage
+This function is used when an API returns data in an incremental/paged format, which
+is common for many REST APIs. Its `getNextPage` argument is a function that takes in 
+a single parameter, which will be the result of the previous call to `getNextPage`. 
+The `getNextPage` is called repeatedly until it returns `null`. The function will collate 
+all pages into a single table. When the first call to `getNextPage` is null, an empty table
+is returned.
+
+```
+Table.GenerateByPage = (getNextPage as function) as table =>
+    let
+        listOfPages = List.Generate(
+            () => getNextPage(null),
+            (lastPage) => lastPage <> null,
+            (lastPage) => getNextPage(lastPage)
+        ),
+        tableOfPages = Table.FromList(listOfPages, Splitter.SplitByNothing(), {"Column1"}),
+        firstRow = tableOfPages{0}?
+    in
+        if (firstRow = null) then
+            Table.FromRows({})
+        else
+            Value.ReplaceType(
+                Table.ExpandTableColumn(tableOfPages, "Column1", Table.ColumnNames(firstRow[Column1])),
+                Value.Type(firstRow[Column1])
+            );
+```
+
+An example of using this function can be found in the [Github sample](../samples/Github/). 
+
+```
+Github.PagedTable = (url as text) => Table.GenerateByPage((previous) =>
+    let
+        // If we have a previous page, get its Next link from metadata on the page.
+        next = if (previous <> null) then Value.Metadata(previous)[Next] else null,
+        // If we have a next link, use it, otherwise use the original URL that was passed in.
+        urlToUse = if (next <> null) then next else url,
+        // If we have a previous page, but don't have a next link, then we're done paging.
+        // Otherwise retrieve the next page.
+        current = if (previous <> null and next = null) then null else Github.Contents(urlToUse),
+        // If we got data back from the current page, get the link for the next page
+        link = if (current <> null) then Value.Metadata(current)[Next] else null
+    in
+        current meta [Next=link]);
+```

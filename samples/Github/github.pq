@@ -34,7 +34,7 @@ windowHeight = 1000;
 shared GithubSample.Contents = Value.ReplaceType(Github.Contents, type function (url as Uri.Type) as any);
 
 [DataSource.Kind="GithubSample"]
-shared GithubSample.PagedTable = Value.ReplaceType(Github.PagedTable, type function (url as Uri.Type) as any);
+shared GithubSample.PagedTable = Value.ReplaceType(Github.PagedTable, type function (url as Uri.Type) as nullable table);
 
 //
 // Data Source definition
@@ -65,22 +65,61 @@ GithubSample.Icons = [
     Icon32 = { Extension.Contents("github32.png"), Extension.Contents("github40.png"), Extension.Contents("github48.png"), Extension.Contents("github64.png") }
 ];
 
+//
+// Github.Contents - retrieves a single page of data from github and sets a 
+// Next link value as meta on the returned json response. We parse the json
+// result (which will be a list of records) into a table.
+//
 Github.Contents = (url as text) =>
     let
         content = Web.Contents(url),
-        link = GetNextLink(Value.Metadata(content)[Headers][#"Link"]?),
-        json = Json.Document(content)
+        link = GetNextLink(content),
+        json = Json.Document(content),
+        table = Table.FromList(json, Splitter.SplitByNothing())
     in
-        json meta [Next=link];
+        table meta [Next=link];
 
 Github.PagedTable = (url as text) => Table.GenerateByPage((previous) =>
     let
-        next = if previous = null then null else Value.Metadata(previous)[Next],
-        current = if previous <> null and next = null then null else Github.Contents(if next = null then url else next),
-        link = if current = null then null else Value.Metadata(current)[Next],
-        table = if current = null then null else Table.FromList(current, Splitter.SplitByNothing(), null, null, ExtraValues.Error)
+        // If we have a previous page, get its Next link from metadata on the page.
+        next = if (previous <> null) then Value.Metadata(previous)[Next] else null,
+        // If we have a next link, use it, otherwise use the original URL that was passed in.
+        urlToUse = if (next <> null) then next else url,
+        // If we have a previous page, but don't have a next link, then we're done paging.
+        // Otherwise retrieve the next page.
+        current = if (previous <> null and next = null) then null else Github.Contents(urlToUse),
+        // If we got data back from the current page, get the link for the next page
+        link = if (current <> null) then Value.Metadata(current)[Next] else null
     in
-        table meta [Next=link]);
+        current meta [Next=link]);
+
+// This function returns an absolute URL to the next page of data.
+// 
+// The 'response' parameter typically contains the result of the call to Web.Contents. 
+// The 'request' parameter is optional and contains values to formulate the request.
+// It is typically used when the next link is a relative URL and needs to be 
+// appended to a base URL from the request. Its format is up to the extension author. 
+//
+// The current implementation is specific to Github, which returns its next link 
+// in a "Link" header in the response. The 'request' parameter is not used.
+// You will most likely need to replace the logic below with whatever paging
+// mechanism is used by your data source.
+//
+GetNextLink = (response, optional request) =>
+    let
+        // extract the "Link" header if it exists
+        link = Value.Metadata(response)[Headers][#"Link"]?,
+        links = Text.Split(link, ","),
+        splitLinks = List.Transform(links, each Text.Split(Text.Trim(_), ";")),
+        next = List.Select(splitLinks, each Text.Trim(_{1}) = "rel=""next"""),
+        first = List.First(next),
+        removedBrackets = Text.Range(first{0}, 1, Text.Length(first{0}) - 2)
+    in
+        try removedBrackets otherwise null;
+
+//
+// OAuth2 flow definition
+//
 
 StartLogin = (resourceUrl, state, display) =>
     let
@@ -117,6 +156,15 @@ TokenMethod = (code) =>
     in
         Parts;
 
+//
+// Common code
+//
+
+// Calls the getNextPage function until it returns null. 
+// Each call to getNextPage expects a table of data to be returned.
+// The result of the previous call to getNextPage is passed along to the next call.
+// Appends all pages (tables) together into a single result.
+// Returns an empty table if the first call to getNextPage returns null.
 Table.GenerateByPage = (getNextPage as function) as table =>
     let
         listOfPages = List.Generate(
@@ -135,12 +183,3 @@ Table.GenerateByPage = (getNextPage as function) as table =>
                 Value.Type(firstRow[Column1])
             );
 
-GetNextLink = (link) =>
-    let
-        links = Text.Split(link, ","),
-        splitLinks = List.Transform(links, each Text.Split(Text.Trim(_), ";")),
-        next = List.Select(splitLinks, each Text.Trim(_{1}) = "rel=""next"""),
-        first = List.First(next),
-        removedBrackets = Text.Range(first{0}, 1, Text.Length(first{0}) - 2)
-    in
-        try removedBrackets otherwise null;

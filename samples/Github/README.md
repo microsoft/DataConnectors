@@ -156,7 +156,7 @@ by marking them as `shared`, and associates them with the `GithubSample` Data So
 shared GithubSample.Contents = Value.ReplaceType(Github.Contents, type function (url as Uri.Type) as any);
 
 [DataSource.Kind="GithubSample"]
-shared GithubSample.PagedTable = Value.ReplaceType(Github.PagedTable, type function (url as Uri.Type) as any);
+shared GithubSample.PagedTable = Value.ReplaceType(Github.PagedTable, type function (url as Uri.Type) as nullable table);
 ```
 
 The `GithubSample.Contents` function is also published to the UI (allowing it to appear in the Get Data dialog). The [Value.ReplaceType](https://msdn.microsoft.com/en-us/library/mt260838.aspx)
