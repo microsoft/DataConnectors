@@ -1,2 +1,5 @@
-﻿//Use this file to write queries.
+﻿//
+// Use this file to write test queries to run from Visual Studio.
+// Documentation: https://github.com/Microsoft/DataConnectors/blob/master/docs/m-extensions.md#query-file
+//
 HelloWorld.Contents("hello this is my message")
