@@ -279,7 +279,18 @@ in
 
 #### Implementing an OAuth Flow
 
-Please see the [MyGraph](../samples/MyGraph) and [Github](../samples/github) samples.
+The OAuth authentication type allows an extension to implement custom logic for their service. 
+To do this, an extension will provide functions for `StartLogin` (returning the authorization URI to initiate the OAuth flow) 
+and `FinishLogin` (exchanging the authorization code for an access token).
+Extensions can optionally implement `Refresh` (exchanging a refresh token for a new access token) and `Logout` (expiring the current refresh and access tokens) functions as well.
+
+>**Note:** Power Query extensions are evaluated in applications running on client machines.
+>Data Connectors **should not** use confidential secrets in their OAuth flows, as users may
+>inspect the extension or network traffic to learn the secret.
+>Please see the [OAuth 2.0 for Native Apps](https://tools.ietf.org/html/draft-ietf-oauth-native-apps-12) draft RFC for further details of providing 
+>flows that do not rely on shared secrets. 
+
+Please see the [MyGraph](../samples/MyGraph) and [Github](../samples/github) samples for more details.
 
 ### Data Source Paths
 
