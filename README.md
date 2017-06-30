@@ -9,18 +9,18 @@ Please see the [Data Connector technical reference](docs/m-extensions.md) for mo
 
 ## Quickstart
 
+> **Note:** The steps to enable extensions changed in the June 2017 version of Power BI Desktop. Please see below for instructions for the May 2017 release. 
+
 1. Install the [Power Query SDK](https://aka.ms/powerquerysdk) from the Visual Studio Marketplace
 2. Create a new Data Connector project
 3. Define your connector logic
 4. Build the project to produce an extension file
-5. Create a `C:\Program Files\Microsoft Power BI Desktop\bin\extensions` directory
-6. Create a `PQ_ExtensionDirectory` environment variable, set its value to this directory
+5. Create a `[My Documents]\Microsoft Power BI Desktop\Custom Connectors` directory
 7. Copy the extension file into this directory
+8. Enable the **Custom data connectors** preview feature in Power BI Desktop (under *File | Options and settings | Custom data connectors*)
 8. Restart Power BI Desktop
 
-> **Note:** Creating the extensions directory and setting the environment variable (Steps 5 and 6) are temporary. Data Connector extensibility will be offered as a Preview Feature in Power BI Desktop, starting with the June release.
-
-![VSProject](blobs/vs2017_project.png "Data Connector projects in Visual Studio")
+![Preview Feature](blobs/previewFeature.png)
 
 ## Distribution of Data Connectors
 
@@ -117,3 +117,16 @@ Data Connectors are currently in preview. We plan to incrementally roll out a nu
 - [ ] Development experience improvements
 
 Please report issues and feature requests through our [Github issues page](https://github.com/Microsoft/DataConnectors/issues).
+
+## Instructions for Getting Started with the May 2017 version of Power BI Desktop
+
+> These instructions apply to the May 2017 release of Power BI Desktop only. 
+
+1. Install the [Power Query SDK](https://aka.ms/powerquerysdk) from the Visual Studio Marketplace
+2. Create a new Data Connector project
+3. Define your connector logic
+4. Build the project to produce an extension file
+5. Create a `C:\Program Files\Microsoft Power BI Desktop\bin\extensions` directory
+6. Create a `PQ_ExtensionDirectory` environment variable, set its value to this directory
+7. Copy the extension file into this directory
+8. Restart Power BI Desktop

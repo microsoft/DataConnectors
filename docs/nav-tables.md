@@ -44,20 +44,43 @@ The following table describes the parameters for this function.
 | keyColumns     | List of column names that act as the primary key for your navigation table      |
 | nameColumn     | The name of the column that should be used as the display name in the navigator |
 | dataColumn     | The name of the column that contains the Table or Function to display           |
-| itemKindColumn | The name of the column to use to determine the type of icon to display. Valid values for the column are `Table` and `Function`.    |
-| itemNameColumn | The name of the column to use to determine the type of tooltip to display. Valid values for the column are `Table` and `Function`. |
+| itemKindColumn | The name of the column to use to determine the type of icon to display. See [below for the list of valid values](#values-for-itemkind) for the column.  |
+| itemNameColumn | The name of the column to use to determine the preview behavior. This is typically set to the same value as itemKind. |
 | isLeafColumn   | The name of the column used to determine if this is a leaf node, or if the node can be expanded to contain another navigation table. |
 
 The function adds the following metadata to the table type:
 
-| Field                          | Details         |
+| Field                          | Parameter       |
 |:-------------------------------|:----------------|
-| NavigationTable.NameColumn     | The name of the column to use as the Display Name in the navigation. |
-| NavigationTable.DataColumn     | The name of the column to preview/drill into when the navigator node is selected. |
-| NavigationTable.ItemKindColumn | The name of the column used to determine the default icon type. Possible values for this field are: `Table`, `Record`, and `Function` |
-| NavigationTable.IsLeafColumn   | The name of the column to indicate whether the node can be expanded. When the value is `false`, the "expand" button will be shown before the item's name. When set to `true`, it is expected to be a value that the user would import (usually a table). |
-| Preview.DelayColumn            | The name of the field used to determine the type of “Preview Delay” behavior. The field value is typically set to the same value as the ItemKind column. Possible values for this field are: `Table`, `Record`, and `Function` |
+| NavigationTable.NameColumn     | nameColumn      |
+| NavigationTable.DataColumn     | dataColumn      |
+| NavigationTable.ItemKindColumn | itemKindColumn  |
+| NavigationTable.IsLeafColumn   | isLeafColumn    |
+| Preview.DelayColumn            | itemNameColumn  |
 
+## Values for ItemKind
+Each of the following item kind values provide a different icon in the navigation table. 
+
+* Feed
+* Cube
+* CubeDatabase
+* CubeView
+* CubeViewFolder
+* Database
+* DatabaseServer
+* Dimension
+* Table
+* Folder
+* Function
+* View
+* Sheet
+* Subcube
+* DefinedName
+* Record
+
+The image below shows the icon for item kind in Power BI Desktop. 
+
+![ItemKinds](../blobs/itemKinds.png)
 
 ## Examples
 For the full code listing, please see the [NavigationTable](../samples/NavigationTable) sample.
