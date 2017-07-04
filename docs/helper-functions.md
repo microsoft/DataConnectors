@@ -107,33 +107,53 @@ Value.WaitFor = (producer as function, interval as function, optional count as n
 
 ### Table.GenerateByPage
 This function is used when an API returns data in an incremental/paged format, which
-is common for many REST APIs. Its `getNextPage` argument is a function that takes in 
-a single parameter, which will be the result of the previous call to `getNextPage`. 
-The `getNextPage` is called repeatedly until it returns `null`. The function will collate 
-all pages into a single table. When the first call to `getNextPage` is null, an empty table
-is returned.
+is common for many REST APIs. The `getNextPage` argument is a function that takes in 
+a single parameter, which will be the result of the previous call to `getNextPage`, and
+should return a `nullable table`. 
 
 ```
+getNextPage = (lastPage) as nullable table => ...`
+```
+
+The `getNextPage` is called repeatedly until it returns `null`. The function will collate 
+all pages into a single table. When the result of the first call to `getNextPage` is null,
+an empty table is returned.
+
+```
+// The getNextPage function takes a single argument and is expected to return a nullable table
 Table.GenerateByPage = (getNextPage as function) as table =>
-    let
+    let        
         listOfPages = List.Generate(
-            () => getNextPage(null),
-            (lastPage) => lastPage <> null,
-            (lastPage) => getNextPage(lastPage)
+            () => getNextPage(null),            // get the first page of data
+            (lastPage) => lastPage <> null,     // stop when the function returns null
+            (lastPage) => getNextPage(lastPage) // pass the previous page to the next function call
         ),
+        // concatenate the pages together
         tableOfPages = Table.FromList(listOfPages, Splitter.SplitByNothing(), {"Column1"}),
         firstRow = tableOfPages{0}?
     in
+        // if we didn't get back any pages of data, return an empty table
+        // otherwise set the table type based on the columns of the first page
         if (firstRow = null) then
             Table.FromRows({})
-        else
+        else        
             Value.ReplaceType(
                 Table.ExpandTableColumn(tableOfPages, "Column1", Table.ColumnNames(firstRow[Column1])),
                 Value.Type(firstRow[Column1])
             );
 ```
 
-An example of using this function can be found in the [Github sample](../samples/Github/). 
+Additional notes:
+
+- The `getNextPage` function will need to retrieve the next page URL
+(or page number, or whatever other values are used to implement the paging logic).
+This is generally done by adding `meta` values to the page before returning it.
+- The columns and table type of the combined table (i.e. all pages together) are derived from
+the first page of data. The `getNextPage` function should normalize each page of data. 
+- The first call to `getNextPage` receives a null parameter.
+- `getNextPage` must return null when there are no pages left
+
+An example of using this function can be found in the [Github sample](../samples/Github/), and the [TripPin paging sample](../samples/TripPin/5-Paging/).
 
 ```
 Github.PagedTable = (url as text) => Table.GenerateByPage((previous) =>
@@ -150,3 +170,4 @@ Github.PagedTable = (url as text) => Table.GenerateByPage((previous) =>
     in
         current meta [Next=link]);
 ```
+
