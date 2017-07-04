@@ -1,7 +1,7 @@
 # TripPin Tutorial
 This multi-part tutorial covers the creation of a new data source extension for Power Query. The tutorial is meant to be done sequentially – each lesson builds on the connector created in previous lessons, incrementally adding new capabilities to your connector. 
 
-This tutorial uses a public [OData](http://www.odata.org/documentation/) service ([TripPin](http://services.odata.org/TripPinRESTierService/)) as a reference source. Although this lesson requires the use of the M engine’s OData functions, subsequent lessons will use [Web.Contents](https://msdn.microsoft.com/en-us/library/mt260892.aspx), making it applicable to (most) REST APIs.
+This tutorial uses a public [OData](http://www.odata.org/documentation/) service ([TripPin](http://services.odata.org/v4/TripPinService/)) as a reference source. Although this lesson requires the use of the M engine’s OData functions, subsequent lessons will use [Web.Contents](https://msdn.microsoft.com/en-us/library/mt260892.aspx), making it applicable to (most) REST APIs.
 
 ## Prerequisites
 

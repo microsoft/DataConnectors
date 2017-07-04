@@ -7,14 +7,14 @@ In this lesson, you will:
 * Learn how to set request headers and process a JSON response
 * Use Power BI Desktop to wrangle the response into a user friend format
 
-This lesson converts the OData based connector for the [TripPin service](http://services.odata.org/TripPinRESTierService/) (created in the [previous lesson](../1-OData)) to a connector that resembles something you'd create for any RESTful API. OData is a RESTful API, but one with a fixed set of conventions. The advantage of OData is that it provides a schema, data retrieval protocol, and standard query language. Taking away the use of [OData.Feed](https://msdn.microsoft.com/en-us/library/mt260868.aspx) will require us to build these capabilities into the connector ourselves. 
+This lesson converts the OData based connector for the [TripPin service](http://services.odata.org/v4/TripPinService/) (created in the [previous lesson](../1-OData)) to a connector that resembles something you'd create for any RESTful API. OData is a RESTful API, but one with a fixed set of conventions. The advantage of OData is that it provides a schema, data retrieval protocol, and standard query language. Taking away the use of [OData.Feed](https://msdn.microsoft.com/en-us/library/mt260868.aspx) will require us to build these capabilities into the connector ourselves. 
 
 ## Recap of the OData Connector
 Before we remove the OData functions from our connector, let's do a quick review for what it currently does (mostly behind the scenes) to retrieve data from the service. 
 Open the TripPin connector project from [Part 1](../1-OData) in Visual Studio. Open the Query file and paste in the following query:
 
 ```
-TripPin.Feed("http://services.odata.org/TripPinRESTierService/(S(njbl4y1givihcajsba2xiorr))/Me")
+TripPin.Feed("http://services.odata.org/v4/TripPinService/Me")
 ```
 
 Open Fiddler and then click the Start button. 
@@ -33,7 +33,7 @@ Note the request headers that were sent along with the requests, and the JSON fo
 
 ```json
 {
-  "@odata.context": "http://services.odata.org/TripPinRESTierService/(S(njbl4y1givihcajsba2xiorr))/$metadata#Me",
+  "@odata.context": "http://services.odata.org/v4/TripPinService/$metadata#Me",
   "UserName": "aprilcline",
   "FirstName": "April",
   "LastName": "Cline",
@@ -95,9 +95,9 @@ Of course, we've now lost all the type and schema information, but we won't focu
 
 Update your query to access some of the TripPin Entities/Tables, such as:
 
-* `http://services.odata.org/TripPinRESTierService/(S(njbl4y1givihcajsba2xiorr))/Airlines`
-* `http://services.odata.org/TripPinRESTierService/(S(njbl4y1givihcajsba2xiorr))/Airports`
-* `http://services.odata.org/TripPinRESTierService/(S(njbl4y1givihcajsba2xiorr))/Me/Trips`
+* `http://services.odata.org/v4/TripPinService/Airlines`
+* `http://services.odata.org/v4/TripPinService/Airports`
+* `http://services.odata.org/v4/TripPinService/Me/Trips`
 
 You'll notice that the paths that used to return nicely formatted tables now return a top level "value" field with an embedded [List].
 We'll need to do some transformations on the result to make it usable for BI scenarios.
@@ -111,7 +111,7 @@ Rebuild your solution, copy the new extension file to your Custom Data Connector
 
 Start a new Blank Query, and paste the following into the formula bar: 
 
-`= TripPin.Feed("http://services.odata.org/TripPinRESTierService/(S(njbl4y1givihcajsba2xiorr))/Airlines")`
+`= TripPin.Feed("http://services.odata.org/v4/TripPinService/Airlines")`
 
 Be sure to include the = sign!
 
@@ -123,7 +123,7 @@ The resulting query should look something like this:
 
 ```
 let
-    Source = TripPin.Feed("http://services.odata.org/TripPinRESTierService/(S(njbl4y1givihcajsba2xiorr))/Airlines"),
+    Source = TripPin.Feed("http://services.odata.org/v4/TripPinService/Airlines"),
     value = Source[value],
     toTable = Table.FromList(value, Splitter.SplitByNothing(), null, null, ExtraValues.Error),
     expand = Table.ExpandRecordColumn(toTable, "Column1", {"AirlineCode", "Name"}, {"AirlineCode", "Name"})
@@ -139,7 +139,7 @@ Create a new Blank Query. This time, use the TripPin.Feed function to access the
 
 ```
 let
-    Source = TripPin.Feed("http://services.odata.org/TripPinRESTierService/(S(njbl4y1givihcajsba2xiorr))/Airports"),
+    Source = TripPin.Feed("http://services.odata.org/v4/TripPinService/Airports"),
     value = Source[value],
     #"Converted to Table" = Table.FromList(value, Splitter.SplitByNothing(), null, null, ExtraValues.Error),
     #"Expanded Column1" = Table.ExpandRecordColumn(#"Converted to Table", "Column1", {"Name", "IcaoCode", "IataCode", "Location"}, {"Name", "IcaoCode", "IataCode", "Location"}),

@@ -48,7 +48,7 @@ In this case, to keep your initial connect dialog as simple as possible, only th
 Since the TripPin service has a fixed URL endpoint, we don't need to prompt the user for any values. We will remove the url parameter from our function, and define a BaseUrl variable in our connector. 
 
 ```
-BaseUrl = "http://services.odata.org/TripPinRESTierService/(S(ejvc5qehmzmktnv1xnzzwpv2))/";
+BaseUrl = "http://services.odata.org/v4/TripPinService/";
 
 [DataSource.Kind="TripPin", Publish="TripPin.Publish"]
 shared TripPin.Contents = () => TripPinNavTable(BaseUrl) as table;
