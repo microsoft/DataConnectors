@@ -65,7 +65,7 @@ RemoveComplexColumns = (data as table) as table =>
         ComplexColumnNames = Table.SelectRows(SchemaTable, each Text.Contains([NativeTypeName], "<"))[Name],
         ComplexColumnsRemoved = 
             if List.Count(ComplexColumnNames) = Table.RowCount(SchemaTable) then 
-                error [Reason = "DataSource.Error", Message = Extension.LoadString("NoScalarColumnsError")]
+                error [Reason = "DataSource.Error", Message = "No Scalar Columns available"]
             else Table.RemoveColumns(data, ComplexColumnNames)
     in
         ComplexColumnsRemoved;
@@ -112,7 +112,7 @@ GetAddress = (server as text) as record =>
         Result = [Host=Host, Port=Port]
     in
         if BadServer then 
-            error Extension.LoadString("InvalidServerNameError")
+            error "Invalid server name"
         else Result;
 
 ImpalaODBC = [
@@ -126,6 +126,6 @@ ImpalaODBC = [
 ImpalaODBC.UI = [
     Beta = true,
     Category = "Database",
-    ButtonText = { Extension.LoadString("FormulaTitle"), Extension.LoadString("FormulaHelp") },
+    ButtonText = { "ImpalaODBC Sample", "ImpalaODBC Sample" },
     SupportsDirectQuery = true
 ];
