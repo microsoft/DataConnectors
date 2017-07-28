@@ -193,7 +193,7 @@ RedshiftODBC = [
     SupportsEncryption = true
 ];
 
-RedshiftODBC.Publish = [
+RedshiftODBC.UI = [
     ButtonText = { "RedshiftODBC Sample", "RedshiftODBC Sample" },
     Category = "Database",
     SupportsDirectQuery = true

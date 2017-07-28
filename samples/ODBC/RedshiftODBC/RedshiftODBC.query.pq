@@ -1,4 +1,4 @@
 ﻿let
-    result = RedshiftODBC.Contents("server", "database")
+    result = RedshiftODBC.Database("server", "database")
 in
     result
