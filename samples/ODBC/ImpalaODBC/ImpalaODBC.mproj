@@ -40,9 +40,6 @@
     <Compile Include="ImpalaODBC.pq">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="resources.resx">
-      <SubType>Code</SubType>
-    </Compile>
     <Content Include="ImpalaODBC.query.pq">
       <SubType>Code</SubType>
     </Content>

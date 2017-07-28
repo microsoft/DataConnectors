@@ -117,7 +117,7 @@ GetAddress = (server as text) as record =>
 
 ImpalaODBC = [
     Authentication = [
-        UsernamePassword = [ Label = Extension.LoadString("AuthenticationLabel") ],
+        UsernamePassword = [],
         Implicit = []
     ],
     SupportsEncryption = true
