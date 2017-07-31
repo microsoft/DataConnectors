@@ -196,7 +196,7 @@
         <key>Whitespace</key>
         <dict>
             <key>match</key>
-            <string>\s*</string>
+            <string>\s+</string>
         </dict>
 
 		<key>BlockComment</key>
