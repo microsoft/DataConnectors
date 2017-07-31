@@ -463,7 +463,7 @@
         <key>Operators</key>
         <dict>
 			<key>match</key>
-			<string>(=&gt;)|(=)|(|&lt;&gt;|&lt;|&gt;|&lt;=|&gt;=)|(&amp;)|(\+|-|\*|\/)|(!)|(\?)</string>
+			<string>(=&gt;)|(=)|(&lt;&gt;|&lt;|&gt;|&lt;=|&gt;=)|(&amp;)|(\+|-|\*|\/)|(!)|(\?)</string>
             <key>captures</key>
 			<dict>
 				<key>1</key>
