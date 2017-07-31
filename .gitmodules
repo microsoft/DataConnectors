@@ -1,0 +1,4 @@
+[submodule "editors/Atom"]
+	path = editors/Atom
+	url = https://github.com/acaprojects/language-m
+	branch = master
