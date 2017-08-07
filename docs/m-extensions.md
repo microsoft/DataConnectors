@@ -34,7 +34,7 @@ The general process is:
 8. Enable the **Custom data connectors** preview feature in Power BI Desktop (under *File | Options and settings | Custom data connectors*)
 8. Restart Power BI Desktop
 
-![Preview Feature](blobs/previewFeature.png)
+![Preview Feature](../blobs/previewFeature.png)
 
 We are currently working on enabling a central marketplace/distribution mechanism for Data Connectors. In the meantime, ISVs interested in distributing their connectors with Power BI Desktop can contact DataConnectors@microsoft.com.
 
@@ -293,7 +293,7 @@ Extensions can optionally implement `Refresh` (exchanging a refresh token for a 
 
 >In the future we plan to support data sources that require confidential secrets (using a proxy based mechanism).
 
-Please see the [MyGraph](../samples/MyGraph) and [Github](../samples/github) samples for more details.
+Please see the [MyGraph](../samples/MyGraph) and [Github](../samples/Github) samples for more details.
 
 ### Data Source Paths
 
