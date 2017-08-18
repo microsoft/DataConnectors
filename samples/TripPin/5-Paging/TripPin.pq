@@ -44,7 +44,7 @@ TripPinNavTable = (url as text) as table =>
         entitiesAsTable = Table.FromList(RootEntities, Splitter.SplitByNothing()),
         rename = Table.RenameColumns(entitiesAsTable, {{"Column1", "Name"}}),
         // Add Data as a calculated column
-        withData = Table.AddColumn(rename, "Data", each TripPin.Feed(Uri.Combine(url, [Name])), Uri.Type),
+        withData = Table.AddColumn(rename, "Data", each TripPin.Feed(Uri.Combine(url, [Name])), type table),
         // Add ItemKind and ItemName as fixed text values
         withItemKind = Table.AddColumn(withData, "ItemKind", each "Table", type text),
         withItemName = Table.AddColumn(withItemKind, "ItemName", each "Table", type text),
