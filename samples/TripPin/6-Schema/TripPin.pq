@@ -60,7 +60,7 @@ SchemaTable = #table({"Entity", "SchemaTable"}, {
     })}
 });
         
-GetSchema = (obj as text) as table => try SchemaTable{[Entity=obj]}[SchemaTable] otherwise error "Couldn't find entity: '" & obj &"'";
+GetSchemaForEntity = (entity as text) as table => try SchemaTable{[Entity=entity]}[SchemaTable] otherwise error "Couldn't find entity: '" & entity &"'";
 
 [DataSource.Kind="TripPin", Publish="TripPin.Publish"]
 shared TripPin.Contents = () => TripPinNavTable(BaseUrl) as table;
@@ -70,7 +70,7 @@ TripPinNavTable = (url as text) as table =>
         entitiesAsTable = Table.FromList(RootEntities, Splitter.SplitByNothing()),
         rename = Table.RenameColumns(entitiesAsTable, {{"Column1", "Name"}}),
         // Add Data as a calculated column
-        withData = Table.AddColumn(rename, "Data", each TripPin.Feed(Uri.Combine(url, [Name]), GetSchema([Name])), type table),
+        withData = Table.AddColumn(rename, "Data", each GetEntity(url, [Name]), type table),
         // Add ItemKind and ItemName as fixed text values
         withItemKind = Table.AddColumn(withData, "ItemKind", each "Table", type text),
         withItemName = Table.AddColumn(withItemKind, "ItemName", each "Table", type text),
@@ -81,23 +81,31 @@ TripPinNavTable = (url as text) as table =>
     in
         navTable;
 
-TripPin.Feed = (url as text, schema as table) as table => GetAllPagesByNextLink(url, schema);
+TripPin.Feed = (url as text, optional schema as table) as table => GetAllPagesByNextLink(url, schema);
 
-GetPage = (url as text, schema as table) as table =>
+GetEntity = (url as text, entity as text) as table => 
+    let
+        fullUrl = Uri.Combine(url, entity),
+        schemaTable = GetSchemaForEntity(entity),
+        result = TripPin.Feed(fullUrl, schemaTable)
+    in
+        result;
+
+GetPage = (url as text, optional schema as table) as table =>
     let
         response = Web.Contents(url, [ Headers = DefaultRequestHeaders ]),        
         body = Json.Document(response),
         nextLink = GetNextLink(body),
         data = Table.FromRecords(body[value]),
         // enforce the schema
-        withSchema = SchemaTransformTable(data, schema)
+        withSchema = if (schema <> null) then SchemaTransformTable(data, schema) else data
     in
         withSchema meta [NextLink = nextLink];
 
 // Read all pages of data.
 // After every page, we check the "NextLink" record on the metadata of the previous request.
 // Table.GenerateByPage will keep asking for more pages until we return null.
-GetAllPagesByNextLink = (url as text, schema as table) as table =>
+GetAllPagesByNextLink = (url as text, optional schema as table) as table =>
     Table.GenerateByPage((previous) => 
         let
             // if previous is null, then this is our first page of data
