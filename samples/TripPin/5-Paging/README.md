@@ -46,9 +46,9 @@ we've read all of our data.
   "odata.context": "...",
   "odata.count": 37,
   "value": [
-    { ... },
-    { ... },
-    { ... }
+    { },
+    { },
+    { }
   ],
   "odata.nextLink": "...?$skiptoken=342r89"
 }
@@ -85,9 +85,9 @@ indicating that there are more pages of data available.
   "@odata.context": "http://services.odata.org/V4/TripPinService/$metadata#People",
   "@odata.nextLink": "http://services.odata.org/v4/TripPinService/People?%24skiptoken=8",
   "value": [
-    { ... },
-    { ... },
-    { ... }
+    { },
+    { },
+    { }
   ]
 }
 ```
