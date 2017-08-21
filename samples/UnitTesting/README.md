@@ -14,7 +14,7 @@ shared UnitTesting.Returns123 = () => "123";
 shared UnitTesting.ReturnsTableWithFiveRows = () => Table.Repeat(#table({"a"},{{1}}), 5);
 ```
 
-Our unit test code is made up of a number of Facts, and a bunch of common code for the unit test framework (`ValueToText`, `Fact`, `Facts`, `Facts.Summarize`). The following code provides an example set of Facts - please see the [UnitTesting.query.pq](UnitTesting.Query.pq) file for the common code.
+Our unit test code is made up of a number of Facts, and a bunch of common code for the unit test framework (`ValueToText`, `Fact`, `Facts`, `Facts.Summarize`). The following code provides an example set of Facts - please see the [UnitTesting.query.pq](UnitTesting.query.pq) file for the common code.
 
 ```
 section UnitTestingUnitTests;
