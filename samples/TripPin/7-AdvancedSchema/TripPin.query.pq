@@ -1,32 +1,23 @@
-﻿section UnitTestingUnitTests;
+﻿section TripPinUnitTests;
 
-shared MyExtension.UnitTest =
+shared TripPin.UnitTest =
 [
     // Put any common variables here if you only want them to be evaluated once
+    RootTable = TripPin.Contents(),
+    Airlines = RootTable{[Name="Airlines"]}[Data],
+    Airports = RootTable{[Name="Airports"]}[Data],
+    People = RootTable{[Name="People"]}[Data],
 
     // Fact(<Name of the Test>, <Expected Value>, <Actual Value>)
     // <Expected Value> and <Actual Value> can be a literal or let statement
     facts =
-    {        
-        Fact("Check that this function returns 'ABC'",  // name of the test
-             "ABC",                                     // expected value
-             UnitTesting.ReturnsABC()                   // expression to evaluate (let or single statement)
-        ),
-        Fact("Check that this function returns '123'",
-             "124",                                   
-             UnitTesting.Returns123()
-        ),
-        Fact("Result should contain 5 rows",
-            5,
-            Table.RowCount(UnitTesting.ReturnsTableWithFiveRows())
-        ),
-        Fact("Values should be equal (using a let statement)",
-            "Hello World",
-            let
-                a = "Hello World"
-            in
-                a
-        )
+    {
+        Fact("Check that we have three entries in our nav table", 3, Table.RowCount(RootTable)),
+        Fact("We have Airline data?", true, not Table.IsEmpty(Airlines)),
+        Fact("We have People data?", true, not Table.IsEmpty(People)),
+        Fact("We have Airport data?", true, not Table.IsEmpty(Airports)),
+        Fact("Airlines only has 2 columns", 2, List.Count(Table.ColumnNames(Airlines))),
+        Fact("Emails is properly typed", type text, Type.ListItem(Value.Type(People{0}[Emails])))
     },
 
     report = Facts.Summarize(facts)

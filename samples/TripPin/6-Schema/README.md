@@ -17,7 +17,7 @@ In these cases, you'll need to include schema definitions within your connector.
 In this lesson we'll define a simple, hardcoded schema for each of our tables, and enforce the schema on the data we read from the service. 
 
 >**Note:** The approach described here should work for many REST services.
->Future lessons will build upon this approach by recursively enforcing schemas on structured columns (record, list, table), 
+>[Future lessons](../7-AdvancedSchema/) will build upon this approach by recursively enforcing schemas on structured columns (record, list, table), 
 >and provide sample implementations which can programmatically generate a schema table from CSDL or [JSON Schema](http://json-schema.org/) documents.
 
 Overall, enforcing a schema on the data returned by your connector has multiple benefits, such as:
@@ -26,7 +26,7 @@ Overall, enforcing a schema on the data returned by your connector has multiple 
 3. Ensuring that each page of data has the same shape by adding any columns that might be missing from a response (a common way for REST APIs to indicate a field should be null)
 
 ## Viewing the Existing Schema with Table.Schema
-The connector created in the [previous lesson](../TripPin/5-Paging/) displays three tables from the TripPin service - `Airlines`, `Airports`, and `People`. 
+The connector created in the [previous lesson](../5-Paging/) displays three tables from the TripPin service - `Airlines`, `Airports`, and `People`. 
 Run the following query to view the `Airlines` table:
 
 ```
