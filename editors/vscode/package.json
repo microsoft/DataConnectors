@@ -2,8 +2,8 @@
     "name": "powerquerymlanguage",
     "displayName": "Power Query M Language",
     "description": "Support for Power Query M Language",
-    "version": "0.0.1",
-    "publisher": "Microsoft",
+    "version": "1.0.0",
+    "publisher": "sea1jxr",
     "engines": {
         "vscode": "^1.16.0"
     },
@@ -11,16 +11,28 @@
         "Languages"
     ],
     "contributes": {
-        "languages": [{
-            "id": "powerquerymlanguage",
-            "aliases": ["powerquerymlanguage", "powerquerymlanguage"],
-            "extensions": [".pq",".PQ",".m",".M"],
-            "configuration": "./language-configuration.json"
-        }],
-        "grammars": [{
-            "language": "powerquerymlanguage",
-            "scopeName": "source.powerquerymlanguage",
-            "path": "./syntaxes/powerqueryexpression.tmLanguage"
-        }]
+        "languages": [
+            {
+                "id": "powerquerymlanguage",
+                "aliases": [
+                    "powerquerymlanguage",
+                    "powerquerymlanguage"
+                ],
+                "extensions": [
+                    ".pq",
+                    ".PQ",
+                    ".m",
+                    ".M"
+                ],
+                "configuration": "./language-configuration.json"
+            }
+        ],
+        "grammars": [
+            {
+                "language": "powerquerymlanguage",
+                "scopeName": "source.powerquerymlanguage",
+                "path": "./syntaxes/powerqueryexpression.tmLanguage"
+            }
+        ]
     }
 }
