@@ -11,8 +11,8 @@
     <AllowNativeQuery>False</AllowNativeQuery>
     <AsAction>False</AsAction>
     <FastCombine>False</FastCombine>
-    <ClearLog>False</ClearLog>
-    <ShowEngineTraces>False</ShowEngineTraces>
+    <ClearLog>True</ClearLog>
+    <ShowEngineTraces>True</ShowEngineTraces>
     <ShowUserTraces>False</ShowUserTraces>
     <LegacyRedirects>False</LegacyRedirects>
     <SuppressRowErrors>False</SuppressRowErrors>
@@ -40,9 +40,18 @@
     <Compile Include="TripPin.pq">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Table.ChangeType.pqm">
+      <SubType>Content</SubType>
+    </Compile>
+    <Compile Include="Table.ToNavigationTable.pqm">
+      <SubType>Content</SubType>
+    </Compile>
     <Content Include="README.md">
       <SubType>Content</SubType>
     </Content>
+    <Compile Include="Table.GenerateByPage.pqm">
+      <SubType>Content</SubType>
+    </Compile>
     <Content Include="TripPin.query.pq">
       <SubType>Code</SubType>
     </Content>
