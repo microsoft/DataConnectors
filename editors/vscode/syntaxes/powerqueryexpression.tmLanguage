@@ -2,25 +2,25 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>fileTypes</key>
-	<array>
-		<string>pq</string>
-		<string>PQ</string>
-		<string>m</string>
-		<string>M</string>
-	</array>
+    <key>fileTypes</key>
+    <array>
+        <string>pq</string>
+        <string>PQ</string>
+        <string>m</string>
+        <string>M</string>
+    </array>
 
-	<key>name</key>
-	<string>powerqueryexpression</string>
+    <key>name</key>
+    <string>powerquerymlanguage</string>
 
     <key>scopeName</key>
-	<string>source.powerqueryexpression</string>
+    <string>source.powerquerymlanguage</string>
 
-	<key>uuid</key>
-	<string>41968B57-12E6-4AC5-92A4-A837010E8B0A</string>
+    <key>uuid</key>
+    <string>41968B57-12E6-4AC5-92A4-A837010E8B0A</string>
 
-	<key>patterns</key>
-	<array>
+    <key>patterns</key>
+    <array>
         <dict>
             <key>include</key>
             <string>#Noise</string>
@@ -55,7 +55,7 @@
         </dict>
         <dict>
             <key>include</key>
-            <string>source.powerqueryexpression.stdlibrary.function</string>
+            <string>source.powerquerymlanguage.stdlibrary.function</string>
         </dict>
         <dict>
             <key>include</key>
@@ -77,51 +77,51 @@
             <key>include</key>
             <string>#Identifier</string>
         </dict>
-	</array>
+    </array>
 
-	<key>repository</key>
-	<dict>
+    <key>repository</key>
+    <dict>
 
         <key>Keywords</key>
         <dict>
             <key>match</key>
             <string>\b(?:(and|or|not)|(if|then|else)|(try|error|otherwise)|(as|each|in|is|let|meta|type)|(section|shared))\b</string>
             <key>captures</key>
-			<dict>
-				<key>1</key>
-				<dict>
-					<key>name</key>
-					<string>keyword.operator.word.logical.powerquery</string>
-				</dict>
-				<key>2</key>
-				<dict>
-					<key>name</key>
-					<string>keyword.control.conditional.powerquery</string>
-				</dict>
-				<key>3</key>
-				<dict>
-					<key>name</key>
-					<string>keyword.control.exception.powerquery</string>
-				</dict>
-				<key>4</key>
-				<dict>
-					<key>name</key>
-					<string>keyword.other.powerquery</string>
-				</dict>
-				<key>5</key>
-				<dict>
-					<key>name</key>
-					<string>invalid.illegal.keyword-in-wrong-context.powerquery</string>
-				</dict>
-			</dict>
+            <dict>
+                <key>1</key>
+                <dict>
+                    <key>name</key>
+                    <string>keyword.operator.word.logical.powerquery</string>
+                </dict>
+                <key>2</key>
+                <dict>
+                    <key>name</key>
+                    <string>keyword.control.conditional.powerquery</string>
+                </dict>
+                <key>3</key>
+                <dict>
+                    <key>name</key>
+                    <string>keyword.control.exception.powerquery</string>
+                </dict>
+                <key>4</key>
+                <dict>
+                    <key>name</key>
+                    <string>keyword.other.powerquery</string>
+                </dict>
+                <key>5</key>
+                <dict>
+                    <key>name</key>
+                    <string>invalid.illegal.keyword-in-wrong-context.powerquery</string>
+                </dict>
+            </dict>
         </dict>
 
-		<key>TypeName</key>
-		<dict>
-			<key>match</key>
-			<string>\b(?:(optional|nullable)|(any|anynonnull|binary|date|datetime|datetimezone|duration|function|list|logical|none|null|number|record|table|text|type))\b</string>
-			<key>captures</key>
-			<dict>
+        <key>TypeName</key>
+        <dict>
+            <key>match</key>
+            <string>\b(?:(optional|nullable)|(any|anynonnull|binary|date|datetime|datetimezone|duration|function|list|logical|none|null|number|record|table|text|type))\b</string>
+            <key>captures</key>
+            <dict>
                 <key>1</key>
                 <dict>
                     <key>name</key>
@@ -133,7 +133,7 @@
                     <string>storage.type.powerquery</string>
                 </dict>
             </dict>
-		</dict>
+        </dict>
 
         <key>LiteralExpression</key>
         <dict>
@@ -199,103 +199,103 @@
             <string>\s+</string>
         </dict>
 
-		<key>BlockComment</key>
-		<dict>
-			<key>begin</key>
-			<string>/\*</string>
-			<key>end</key>
-			<string>\*/</string>
-			<key>name</key>
-			<string>comment.block.powerquery</string>
-		</dict>
+        <key>BlockComment</key>
+        <dict>
+            <key>begin</key>
+            <string>/\*</string>
+            <key>end</key>
+            <string>\*/</string>
+            <key>name</key>
+            <string>comment.block.powerquery</string>
+        </dict>
 
-		<key>LineComment</key>
-		<dict>
-			<key>match</key>
-			<string>//.*</string>
-			<key>name</key>
-			<string>comment.line.double-slash.powerquery</string>
-		</dict>
+        <key>LineComment</key>
+        <dict>
+            <key>match</key>
+            <string>//.*</string>
+            <key>name</key>
+            <string>comment.line.double-slash.powerquery</string>
+        </dict>
 
-		<key>String</key>
-		<dict>
-			<key>begin</key>
-			<string>"</string>
-			<key>beginCaptures</key>
-			<dict>
-				<key>0</key>
-				<dict>
-					<key>name</key>
-					<string>punctuation.definition.string.begin.powerquery</string>
-				</dict>
-			</dict>
-			<key>end</key>
-			<string>"(?!")</string>
-			<key>endCaptures</key>
-			<dict>
-				<key>0</key>
-				<dict>
-					<key>name</key>
-					<string>punctuation.definition.string.end.powerquery</string>
-				</dict>
-			</dict>
-			<key>patterns</key>
-			<array>
-				<dict>
-					<key>match</key>
-					<string>""</string>
-					<key>name</key>
-					<string>constant.character.escape.quote.powerquery</string>
-				</dict>
+        <key>String</key>
+        <dict>
+            <key>begin</key>
+            <string>"</string>
+            <key>beginCaptures</key>
+            <dict>
+                <key>0</key>
+                <dict>
+                    <key>name</key>
+                    <string>punctuation.definition.string.begin.powerquery</string>
+                </dict>
+            </dict>
+            <key>end</key>
+            <string>"(?!")</string>
+            <key>endCaptures</key>
+            <dict>
+                <key>0</key>
+                <dict>
+                    <key>name</key>
+                    <string>punctuation.definition.string.end.powerquery</string>
+                </dict>
+            </dict>
+            <key>patterns</key>
+            <array>
+                <dict>
+                    <key>match</key>
+                    <string>""</string>
+                    <key>name</key>
+                    <string>constant.character.escape.quote.powerquery</string>
+                </dict>
                 <dict>
                     <key>include</key>
                     <string>#EscapeSequence</string>
                 </dict>
-			</array>
-			<key>name</key>
-			<string>string.quoted.double.powerquery</string>
-		</dict>
+            </array>
+            <key>name</key>
+            <string>string.quoted.double.powerquery</string>
+        </dict>
 
-		<key>QuotedIdentifier</key>
-		<dict>
-			<key>begin</key>
-			<string>#"</string>
-			<key>beginCaptures</key>
-			<dict>
-				<key>0</key>
-				<dict>
-					<key>name</key>
-					<string>punctuation.definition.quotedidentifier.begin.powerquery</string>
-				</dict>
-			</dict>
-			<key>end</key>
-			<string>"(?!")</string>
-			<key>endCaptures</key>
-			<dict>
-				<key>0</key>
-				<dict>
-					<key>name</key>
-					<string>punctuation.definition.quotedidentifier.end.powerquery</string>
-				</dict>
-			</dict>
-			<key>patterns</key>
-			<array>
-				<dict>
-					<key>match</key>
-					<string>""</string>
-					<key>name</key>
-					<string>constant.character.escape.quote.powerquery</string>
-				</dict>
+        <key>QuotedIdentifier</key>
+        <dict>
+            <key>begin</key>
+            <string>#"</string>
+            <key>beginCaptures</key>
+            <dict>
+                <key>0</key>
+                <dict>
+                    <key>name</key>
+                    <string>punctuation.definition.quotedidentifier.begin.powerquery</string>
+                </dict>
+            </dict>
+            <key>end</key>
+            <string>"(?!")</string>
+            <key>endCaptures</key>
+            <dict>
+                <key>0</key>
+                <dict>
+                    <key>name</key>
+                    <string>punctuation.definition.quotedidentifier.end.powerquery</string>
+                </dict>
+            </dict>
+            <key>patterns</key>
+            <array>
+                <dict>
+                    <key>match</key>
+                    <string>""</string>
+                    <key>name</key>
+                    <string>constant.character.escape.quote.powerquery</string>
+                </dict>
                 <dict>
                     <key>include</key>
                     <string>#EscapeSequence</string>
                 </dict>
-			</array>
-			<key>name</key>
-			<string>entity.name.powerquery</string>
-		</dict>
+            </array>
+            <key>name</key>
+            <string>entity.name.powerquery</string>
+        </dict>
 
-		<key>EscapeSequence</key>
+        <key>EscapeSequence</key>
         <dict>
             <key>begin</key>
             <string>#\(</string>
@@ -334,73 +334,73 @@
             <string>constant.character.escapesequence.powerquery</string>
         </dict>
 
-		<key>LogicalConstant</key>
-		<dict>
-			<key>match</key>
-			<string>\b(true|false)\b</string>
-			<key>name</key>
-			<string>constant.language.logical.powerquery</string>
-		</dict>
+        <key>LogicalConstant</key>
+        <dict>
+            <key>match</key>
+            <string>\b(true|false)\b</string>
+            <key>name</key>
+            <string>constant.language.logical.powerquery</string>
+        </dict>
 
-		<key>NullConstant</key>
-		<dict>
-			<key>match</key>
-			<string>\b(null)\b</string>
-			<key>name</key>
-			<string>constant.language.null.powerquery</string>
-		</dict>
+        <key>NullConstant</key>
+        <dict>
+            <key>match</key>
+            <string>\b(null)\b</string>
+            <key>name</key>
+            <string>constant.language.null.powerquery</string>
+        </dict>
 
-		<key>NumericConstant</key>
-		<dict>
-			<key>match</key>
-			<string>(?&lt;![\d\w])(#infinity|#nan)\b</string>
-			<key>captures</key>
-			<dict>
+        <key>NumericConstant</key>
+        <dict>
+            <key>match</key>
+            <string>(?&lt;![\d\w])(#infinity|#nan)\b</string>
+            <key>captures</key>
+            <dict>
                 <key>1</key>
                 <dict>
                     <key>name</key>
                     <string>constant.language.numeric.float.powerquery</string>
                 </dict>
             </dict>
-		</dict>
+        </dict>
 
-		<key>HexNumber</key>
-		<dict>
-			<key>match</key>
-			<string>0(x|X)\h+</string>
+        <key>HexNumber</key>
+        <dict>
+            <key>match</key>
+            <string>0(x|X)\h+</string>
             <key>name</key>
             <string>constant.numeric.integer.hexadecimal.powerquery</string>
-		</dict>
+        </dict>
 
-		<key>IntNumber</key>
-		<dict>
-			<key>match</key>
-			<string>\b(\d+)\b</string>
-			<key>captures</key>
-			<dict>
+        <key>IntNumber</key>
+        <dict>
+            <key>match</key>
+            <string>\b(\d+)\b</string>
+            <key>captures</key>
+            <dict>
                 <key>1</key>
                 <dict>
                     <key>name</key>
                     <string>constant.numeric.integer.powerquery</string>
                 </dict>
             </dict>
-		</dict>
+        </dict>
 
-		<key>DecimalNumber</key>
-		<dict>
-			<key>match</key>
-			<string>(?&lt;![\d\w])(\d*\.\d+)\b</string>
+        <key>DecimalNumber</key>
+        <dict>
+            <key>match</key>
+            <string>(?&lt;![\d\w])(\d*\.\d+)\b</string>
             <key>name</key>
             <string>constant.numeric.decimal.powerquery</string>
-		</dict>
+        </dict>
 
-		<key>FloatNumber</key>
-		<dict>
-			<key>match</key>
-			<string>(\d*\.)?\d+(e|E)(\+|-)?\d+</string>     
+        <key>FloatNumber</key>
+        <dict>
+            <key>match</key>
+            <string>(\d*\.)?\d+(e|E)(\+|-)?\d+</string>     
             <key>name</key>
             <string>constant.numeric.float.powerquery</string>
-		</dict>
+        </dict>
 
         <key>InclusiveIdentifier</key>
         <dict>
@@ -462,89 +462,89 @@
 
         <key>Operators</key>
         <dict>
-			<key>match</key>
-			<string>(=&gt;)|(=)|(&lt;&gt;|&lt;|&gt;|&lt;=|&gt;=)|(&amp;)|(\+|-|\*|\/)|(!)|(\?)</string>
+            <key>match</key>
+            <string>(=&gt;)|(=)|(&lt;&gt;|&lt;|&gt;|&lt;=|&gt;=)|(&amp;)|(\+|-|\*|\/)|(!)|(\?)</string>
             <key>captures</key>
-			<dict>
-				<key>1</key>
-				<dict>
-					<key>name</key>
-					<string>keyword.operator.function.powerquery</string>
-				</dict>
-				<key>2</key>
-				<dict>
-					<key>name</key>
-					<string>keyword.operator.assignment-or-comparison.powerquery</string>
-				</dict>
-				<key>3</key>
-				<dict>
-					<key>name</key>
-					<string>keyword.operator.comparison.powerquery</string>
-				</dict>
-				<key>4</key>
-				<dict>
-					<key>name</key>
-					<string>keyword.operator.combination.powerquery</string>
-				</dict>
-				<key>5</key>
-				<dict>
-					<key>name</key>
-					<string>keyword.operator.arithmetic.powerquery</string>
-				</dict>
-				<key>6</key>
-				<dict>
-					<key>name</key>
-					<string>keyword.operator.sectionaccess.powerquery</string>
-				</dict>
-				<key>7</key>
-				<dict>
-					<key>name</key>
-					<string>keyword.operator.optional.powerquery</string>
-				</dict>
-			</dict>
-		</dict>
+            <dict>
+                <key>1</key>
+                <dict>
+                    <key>name</key>
+                    <string>keyword.operator.function.powerquery</string>
+                </dict>
+                <key>2</key>
+                <dict>
+                    <key>name</key>
+                    <string>keyword.operator.assignment-or-comparison.powerquery</string>
+                </dict>
+                <key>3</key>
+                <dict>
+                    <key>name</key>
+                    <string>keyword.operator.comparison.powerquery</string>
+                </dict>
+                <key>4</key>
+                <dict>
+                    <key>name</key>
+                    <string>keyword.operator.combination.powerquery</string>
+                </dict>
+                <key>5</key>
+                <dict>
+                    <key>name</key>
+                    <string>keyword.operator.arithmetic.powerquery</string>
+                </dict>
+                <key>6</key>
+                <dict>
+                    <key>name</key>
+                    <string>keyword.operator.sectionaccess.powerquery</string>
+                </dict>
+                <key>7</key>
+                <dict>
+                    <key>name</key>
+                    <string>keyword.operator.optional.powerquery</string>
+                </dict>
+            </dict>
+        </dict>
 
         <key>DotOperators</key>
         <dict>
-			<key>match</key>
-			<string>(?&lt;!\.)(?:(\.\.\.)|(\.\.))(?!\.)</string>
+            <key>match</key>
+            <string>(?&lt;!\.)(?:(\.\.\.)|(\.\.))(?!\.)</string>
             <key>captures</key>
-			<dict>
-				<key>1</key>
-				<dict>
-					<key>name</key>
-					<string>keyword.operator.ellipsis.powerquery</string>
-				</dict>
-				<key>2</key>
-				<dict>
-					<key>name</key>
-					<string>keyword.operator.list.powerquery</string>
-				</dict>
-			</dict>
+            <dict>
+                <key>1</key>
+                <dict>
+                    <key>name</key>
+                    <string>keyword.operator.ellipsis.powerquery</string>
+                </dict>
+                <key>2</key>
+                <dict>
+                    <key>name</key>
+                    <string>keyword.operator.list.powerquery</string>
+                </dict>
+            </dict>
         </dict>
 
         <key>RecordExpression</key>
         <dict>
-			<key>begin</key>
-			<string>\[</string>
+            <key>begin</key>
+            <string>\[</string>
             <key>beginCaptures</key>
-			<dict>
-				<key>0</key>
-				<dict>
-					<key>name</key>
-					<string>punctuation.section.brackets.begin.powerquery</string>
-				</dict>
-			</dict>
-			<key>end</key>
-			<string>\]</string>
+            <dict>
+                <key>0</key>
+                <dict>
+                    <key>name</key>
+                    <string>punctuation.section.brackets.begin.powerquery</string>
+                </dict>
+            </dict>
+            <key>end</key>
+            <string>\]</string>
             <key>endCaptures</key>
-			<dict>
-				<key>0</key>
-				<dict>
-					<key>name</key>
-					<string>punctuation.section.brackets.end.powerquery</string>
-				</dict>
-			</dict>
+            <dict>
+                <key>0</key>
+                <dict>
+                    <key>name</key>
+                    <string>punctuation.section.brackets.end.powerquery</string>
+                </dict>
+            </dict>
             <key>patterns</key>
             <array>
                 <dict>
@@ -558,59 +558,59 @@
 
         <key>Punctuation</key>
         <dict>
-			<key>match</key>
-			<string>(,)|(\()|(\))|({)|(})</string>
+            <key>match</key>
+            <string>(,)|(\()|(\))|({)|(})</string>
             <key>captures</key>
-			<dict>
-				<key>1</key>
-				<dict>
-					<key>name</key>
-					<string>punctuation.separator.powerquery</string>
-				</dict>
-				<key>2</key>
-				<dict>
-					<key>name</key>
-					<string>punctuation.section.parens.begin.powerquery</string>
-				</dict>
-				<key>3</key>
-				<dict>
-					<key>name</key>
-					<string>punctuation.section.parens.end.powerquery</string>
-				</dict>
-				<key>4</key>
-				<dict>
-					<key>name</key>
-					<string>punctuation.section.braces.begin.powerquery</string>
-				</dict>
-				<key>5</key>
-				<dict>
-					<key>name</key>
-					<string>punctuation.section.braces.end.powerquery</string>
-				</dict>
-			</dict>
+            <dict>
+                <key>1</key>
+                <dict>
+                    <key>name</key>
+                    <string>punctuation.separator.powerquery</string>
+                </dict>
+                <key>2</key>
+                <dict>
+                    <key>name</key>
+                    <string>punctuation.section.parens.begin.powerquery</string>
+                </dict>
+                <key>3</key>
+                <dict>
+                    <key>name</key>
+                    <string>punctuation.section.parens.end.powerquery</string>
+                </dict>
+                <key>4</key>
+                <dict>
+                    <key>name</key>
+                    <string>punctuation.section.braces.begin.powerquery</string>
+                </dict>
+                <key>5</key>
+                <dict>
+                    <key>name</key>
+                    <string>punctuation.section.braces.end.powerquery</string>
+                </dict>
+            </dict>
         </dict>
-				
+                
         <key>ImplicitVariable</key>
-		<dict>
-			<key>match</key>
-			<string>\b_\b</string>
-			<key>name</key>
-			<string>keyword.operator.implicitvariable.powerquery</string>
-		</dict>
+        <dict>
+            <key>match</key>
+            <string>\b_\b</string>
+            <key>name</key>
+            <string>keyword.operator.implicitvariable.powerquery</string>
+        </dict>
 
         <key>IntrinsicVariable</key>
-		<dict>
-			<key>match</key>
-			<string>(?&lt;![\d\w])(#sections|#shared)\b</string>
-			<key>captures</key>
-			<dict>
+        <dict>
+            <key>match</key>
+            <string>(?&lt;![\d\w])(#sections|#shared)\b</string>
+            <key>captures</key>
+            <dict>
                 <key>1</key>
                 <dict>
                     <key>name</key>
                     <string>constant.language.intrinsicvariable.powerquery</string>
                 </dict>
             </dict>
-		</dict>	
+        </dict>    
 
         <key>BuiltInFunctions</key>
         <dict>
@@ -1382,6 +1382,6 @@
             </array>
         </dict>
 
-	</dict>
+    </dict>
 </dict>
 </plist>
