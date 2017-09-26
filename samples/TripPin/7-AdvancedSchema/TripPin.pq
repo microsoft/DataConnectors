@@ -103,20 +103,33 @@ GetEntity = (url as text, entity as text) as table =>
     let
         fullUrl = Uri.Combine(url, entity),
         schema = GetSchemaForEntity(entity),
-        result = TripPin.Feed(fullUrl, schema)
+        result = TripPin.Feed(fullUrl, schema),
+        appliedSchema = Table.ChangeType(result, schema)
     in
-        result;
+        appliedSchema;
 
 GetPage = (url as text, optional schema as type) as table =>
     let
         response = Web.Contents(url, [ Headers = DefaultRequestHeaders ]),        
         body = Json.Document(response),
         nextLink = GetNextLink(body),
-        data = Table.FromRecords(body[value]),
-        // enforce the schema
-        withSchema = if (schema <> null) then Table.ChangeType(data, schema) else data
+        
+        // If we have no schema, use Table.FromRecords() instead
+        // (and hope that our results all have the same fields).
+        // If we have a schema, expand the record using its field names
+        data =
+            if (schema <> null) then
+                Table.FromRecords(body[value])
+            else
+                let
+                    // convert the list of records into a table (single column of records)
+                    asTable = Table.FromList(body[value], Splitter.SplitByNothing(), {"Column1"}),
+                    fields = Record.FieldNames(Type.RecordFields(Type.TableRow(schema))),
+                    expanded = Table.ExpandRecordColumn(asTable, fields)
+                in
+                    expanded
     in
-        withSchema meta [NextLink = nextLink];
+        data meta [NextLink = nextLink];
 
 // Read all pages of data.
 // After every page, we check the "NextLink" record on the metadata of the previous request.
@@ -139,7 +152,7 @@ GetNextLink = (response) as nullable text => Record.FieldOrDefault(response, "@o
 // 
 // Load common library functions
 // 
-
+// TEMPORARY WORKAROUND until we're able to reference other M modules
 Extension.LoadFunction = (name as text) =>
     let
         binary = Extension.Contents(name),
