@@ -68,7 +68,7 @@ In the function, create an AuthorizeUrl that concatenates the Github authorize u
 * `client_id`: You get the client id after you register your extension with Github from the Github application page.
 * `scope`: Set scope to "`user, repo`". This sets the authorization scope (i.e. what your app wants to access) for the user.
 * `state`: An internal value that the M engine passes in.
-* `redirect_uri`: Set to https://preview.powerbi.com/views/oauthredirect.html
+* `redirect_uri`: Set to https://oauth.powerbi.com/views/oauthredirect.html
 
 ```
 StartLogin = (resourceUrl, state, display) =>

@@ -2,7 +2,7 @@
 In this sample we will create a basic data source connector for [Microsoft Graph](https://graph.microsoft.io/en-us/). It is written as a walk-through that you can follow step by step.
 
 To access Graph, you will first need to register your own Azure Active Directory client application. If you do not have an application ID already, you can create one through the [Getting Started with Microsoft Graph](https://graph.microsoft.io/en-us/getting-started) site.
-Click the "Universal Windows" option, and then the "Let's go" button. Follow the steps and receive an App ID. As described in the steps below, use `https://preview.powerbi.com/views/oauthredirect.html` as your redirect URI when registering your app. 
+Click the "Universal Windows" option, and then the "Let's go" button. Follow the steps and receive an App ID. As described in the steps below, use `https://oauth.powerbi.com/views/oauthredirect.html` as your redirect URI when registering your app. 
 Client ID value, use it to replace the existing value in the `client_id` file in the code sample.
 
 ## Writing an OAuth v2 Flow with Power BI Desktop
@@ -27,7 +27,7 @@ Define the following variables that will be used in your OAuth flow:
 ```
 let
     client_id = "<your app id>",
-    redirect_uri = "https://preview.powerbi.com/views/oauthredirect.html",
+    redirect_uri = "https://oauth.powerbi.com/views/oauthredirect.html",
     token_uri = "https://login.microsoftonline.com/common/oauth2/v2.0/token",
     authorize_uri = "https://login.microsoftonline.com/common/oauth2/v2.0/authorize",
     logout_uri = "https://login.microsoftonline.com/logout.srf"
