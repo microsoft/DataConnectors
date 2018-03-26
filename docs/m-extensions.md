@@ -359,6 +359,6 @@ shared GithubSample.Contents = Value.ReplaceType(Github.Contents, type function 
 * [Using navigation tables](nav-tables.md)
 * [Adding documentation to your functions](function-docs.md)
 * [Data Connector tutorial](https://github.com/Microsoft/DataConnectors/tree/master/samples/TripPin)
-* Enabling Direct Query for an ODBC based connector (coming soon)
+* [Developing an ODBC based custom connector](odbc.md)
 * Advanced connector scenarios with Table.View (coming soon)
 * [Other topics](other-topics.md)
