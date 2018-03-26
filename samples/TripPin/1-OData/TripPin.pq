@@ -11,9 +11,13 @@ TripPinImpl = (url as text) =>
 
 // Data Source Kind description
 TripPin = [
+    // Declares the supported type(s) of authentication.
+    // In this case, Implicit = Anonymous web access
     Authentication = [
         Implicit = []
     ],
+    // Assigns a label to the data source credential.
+    // This will be displayed in the "Manage Data Sources" dialog.
     Label = "TripPin Part 1 - OData"
 ];
 

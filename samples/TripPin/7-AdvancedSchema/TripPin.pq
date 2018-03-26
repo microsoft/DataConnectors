@@ -118,14 +118,14 @@ GetPage = (url as text, optional schema as type) as table =>
         // (and hope that our results all have the same fields).
         // If we have a schema, expand the record using its field names
         data =
-            if (schema <> null) then
+            if (schema = null) then
                 Table.FromRecords(body[value])
             else
                 let
                     // convert the list of records into a table (single column of records)
                     asTable = Table.FromList(body[value], Splitter.SplitByNothing(), {"Column1"}),
                     fields = Record.FieldNames(Type.RecordFields(Type.TableRow(schema))),
-                    expanded = Table.ExpandRecordColumn(asTable, fields)
+                    expanded = Table.ExpandRecordColumn(asTable, "Column1", fields)
                 in
                     expanded
     in
