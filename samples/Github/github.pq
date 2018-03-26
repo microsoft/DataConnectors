@@ -17,7 +17,7 @@
 
 client_id = Text.FromBinary(Extension.Contents("client_id"));
 client_secret = Text.FromBinary(Extension.Contents("client_secret"));
-redirect_uri = "https://preview.powerbi.com/views/oauthredirect.html";
+redirect_uri = "https://oauth.powerbi.com/views/oauthredirect.html";
 windowWidth = 1200;
 windowHeight = 1000;
 

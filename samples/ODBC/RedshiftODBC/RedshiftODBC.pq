@@ -55,7 +55,7 @@ SQLGetTypeInfo = #table(
 shared RedshiftODBC.Database = (server as text, database as text, optional options as record) as table =>
     let
         ConnectionString = GetAddress(server) & [
-            Driver = "Amazon Redshift (x64)",
+            Driver = "Amazon Redshift (x86)",
             UseUnicode = "yes",
             Database = database
         ],
@@ -70,7 +70,6 @@ shared RedshiftODBC.Database = (server as text, database as text, optional optio
                 MaxVarchar = 65535
             ],
             ClientConnectionPooling = true,
-            UseEmbeddedDriver = true,
             OnError = OnError
         ],
         OdbcDataSource = Odbc.DataSource(ConnectionString, Options & [
