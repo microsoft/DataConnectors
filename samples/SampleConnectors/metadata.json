@@ -1,0 +1,35 @@
+{
+  "lastModified": "tonight",
+  "dataSources": [
+    {
+      "fileName": "TripPin.mez",
+      "url": "https://github.com/Microsoft/DataConnectors/blob/master/samples/SampleConnectors/TripPin.mez?raw=true",
+
+      "name": "TripPin",
+      "moduleName": "TripPin",
+      "version": "1.0",
+      "category": "Other",
+      "description": "TripPin Example",
+      "id": "formulaTripPin.Contents",
+      "publisher": "TripPin",
+
+      "icon16": [ "iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAAZdEVYdFNvZnR3YXJlAEFkb2JlIEltYWdlUmVhZHlxyWU8AAACb0lEQVQ4T4WTO2gUURSGvzuv3dnd7OZBYkSx8YEIQSKCImoQU0REJIWQLo0GwdoujSiWgpWFSGxEtNJGtIjEqNhoIdgERCIIkWjMvjfZnZnruTO7iVrEH+7cO3fu+c/5z/1HFd9kNLYPyGRBpGUVyet/EWF5/Vhahyh5yQvPajXEUppCL/hpQyhs8s0Mpf4e8b5kUquv07pQyHD7QYOHz5ts67HQCibPeZw87DCwwyaqaBrrEIQmM0IgsZLYcgcSgu7BLMPjReZmuih0Wywuhsy+bfHiXcC37yFnR1wmxlLsPmBDBWp1LWQJgahOkPUVlZKm9kvTn7eYPJ/i8a0cs/fyHBlyuHG3wZ7jRaauVamtaVKulCHYIPgTocirNaBc1kRS9ugpj5mbOT7PdzM95XPoQplA61jKBkGzldyA2TQj7UFOLsdxNPtHS3wRWbUfml37bHr7oFTT0vAOQVNzdMimS2SY60yn4NWHFjtPF/n6U7MgwR8XAlxHPksiORInMYgJ6nWYvuTT06eYuFpj7HKFFWnU0oqmHpirBM+NJ4lsz22YKshk4OB4iYvX66yFmuWViLTxVufAFrBixiQJ61KeKdOxt4iSs+3jMcQ18ZN8VrFdJJSrUG1sHumsDKVnetSrYv1R2+7SY/FGGT49KeDmFPcfrcmOYlX0G3T+Cz9ncUU8sFTUhFJpX5dC1CZOtBxpguSSqyUnS1sMt7Qc8XSuxfioy+BIiWd3spw54fHyfcDwXluMJESq/28Cg+QppUn3/HRiqnkJOjbsEATSIyEPZC+MrWwI5mytbHcj8F8Y7Skx1XpzkzyGaLO8AX4DW/r3DD5XTZEAAAAASUVORK5CYII=" ],
+      "icon32": [ "" ]
+    },
+    {
+      "fileName": "PQExtensionBlank.mez",
+      "url": "https://github.com/Microsoft/DataConnectors/blob/master/samples/SampleConnectors/PQExtensionBlank.mez?raw=true",
+
+      "name": "PQExtensionBlank",
+      "moduleName": "PQExtensionBlank",
+      "version": "1.0",
+      "category": "Other",
+      "description": "PQExtensionBlank Example",
+      "id": "formulaPQExtensionBlank.Contents",
+      "publisher": "Monkey",
+
+      "icon16": [ "iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAE0SURBVDhPY9xZFf6fgQSw/8Jtho5t58Ds////MzCBWSQARwNVhgovIyiPAWGAW+sKBhkTJzBGB7jEQYAFRIAkK72NwQIgALIFGSyeMxPKwgTgMED2FwiAnIhsiHvbSjANczpILYyNEgagQMEGZs2aBWUhAMiC2JR0VAMYGRmhLFSQlpYGZSEAyFVPzuwjPRZgYGpbMDhKwQagBxo6HxuIiosF0+BYAAFgYEJZmAAWYDCDkQOcoBeQ4x/kZBjoTGsCG4RhwB2eP2AMUgwKKO2gdKgMBMAMgbmCEeg8cNzJ2ijC/QUDgjIBDO+fbGBYtmgxw+Mj98FiMI2wKMfqhazcZrBmGBsG0DWDACjiwTxQQIFcgQ1kV62FsjATGyNQACwCSkSRgYj8sHz9WSgLAtA1QgADAwDwN3TP1T1HcgAAAABJRU5ErkJggg==" ],
+      "icon32": [ "" ]
+    }
+  ]
+}
