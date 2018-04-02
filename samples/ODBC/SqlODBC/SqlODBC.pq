@@ -4,13 +4,16 @@
 // 
 section SqlODBC;
 
+// When set to true, additional trace information will be written out to the User log. 
+// This should be set to false before release. Tracing is done through a call to 
+// Diagnostics.LogValue(). When EnableTraceOutput is set to false, the call becomes a 
+// no-op and simply returns the original value.
+EnableTraceOutput = true;
+
 // TODO
-// handle credentials
 // add and handle common options record properties
 // add handling for LIMIT/OFFSET vs. TOP 
 // add handling for SSL
-// add handling for windows auth
-
 
 /****************************
  * ODBC Driver Configuration
@@ -36,7 +39,7 @@ Config_DriverName = "SQL Server Native Client 11.0";
 //
 // Set to null to determine the value from the driver.
 // 
-Config_SqlConformance = 8;  // null, 1, 2, 4, 8
+Config_SqlConformance = ODBC[SQL_SC][SQL_SC_SQL92_FULL];  // null, 1, 2, 4, 8
 
 // Set this option to true if your ODBC supports the standard username/password 
 // handling through the UN and PWD connection string parameters. If the user 
@@ -85,13 +88,34 @@ Config_EnableDirectQuery = true;    // true, false
 [DataSource.Kind="SqlODBC", Publish="SqlODBC.Publish"]
 shared SqlODBC.Contents = (server as text) =>
     let
+        //
+        // Connection string settings
+        //
         ConnectionString = [
             Driver = Config_DriverName,
 
             // set all connection string properties
-            Server = server
+            Server = server,
+            ApplicationIntent = "readonly"
         ],
 
+        //
+        // Handle credentials
+        //
+        Credential = Extension.CurrentCredential(),
+		CredentialConnectionString =
+            if Credential[AuthenticationKind]? = "UsernamePassword" then
+                // set connection string parameters used for basic authentication
+                [ UID = Credential[Username], PWD = Credential[Password] ]
+            else if (Credential[AuthenticationKind]? = "Windows") then
+                // set connection string parameters used for windows/kerberos authentication
+                [ Trusted_Connection="Yes" ]
+            else
+                error Error.Record("Error", "Unhandled authentication kind: " & Credential[AuthenticationKind]?),
+        
+        //
+        // Configuration options for the call to Odbc.DataSource
+        //
         defaultConfig = BuildOdbcConfig(),
 
         SqlCapabilities = defaultConfig[SqlCapabilities] & [
@@ -103,9 +127,55 @@ shared SqlODBC.Contents = (server as text) =>
         // https://github.com/Microsoft/ODBC-Specification/blob/master/Windows/inc/sqlext.h
         SQLGetInfo = defaultConfig[SQLGetInfo] & [
             // place custom overrides here
-            SQL_SQL92_PREDICATES = 0x0000FFFF,  /* All */
-            SQL_AGGREGATE_FUNCTIONS = 0xFF      /* All */
+            SQL_SQL92_PREDICATES = ODBC[SQL_SP][All],
+            SQL_AGGREGATE_FUNCTIONS = ODBC[SQL_AF][All]
         ],
+
+        // SQLGetTypeInfo can be specified in two ways:
+        // 1. A #table() value that returns the same type information as an ODBC
+        //    call to SQLGetTypeInfo.
+        // 2. A function that accepts a table argument, and returns a table. The 
+        //    argument will contain the original results of the ODBC call to SQLGetTypeInfo.
+        //    Your function implementation can modify/add to this table.
+        //
+        // For details of the format of the types table parameter and expected return value,
+        // please see: https://docs.microsoft.com/en-us/sql/odbc/reference/syntax/sqlgettypeinfo-function
+        //
+        // The sample implementation provided here will simply output the original table
+        // to the user trace log, without any modification. 
+        SQLGetTypeInfo = (types) => 
+            if (EnableTraceOutput <> true) then types else
+            let
+                // Outputting the entire table might be too large, and result in the value being truncated.
+                // We can output a row at a time instead with Table.TransformRows()
+                rows = Table.TransformRows(types, each Diagnostics.LogValue("SQLGetTypeInfo " & _[TYPE_NAME], _)),
+                toTable = Table.FromRecords(rows)
+            in
+                Value.ReplaceType(toTable, Value.Type(types)),                
+
+        // SQLColumns is a function handler that receives the results of an ODBC call
+        // to SQLColumns(). The source parameter contains a table with the data type 
+        // information. This override is typically used to fix up data type mismatches
+        // between calls to SQLGetTypeInfo and SQLColumns. 
+        //
+        // For details of the format of the source table parameter, please see:
+        // https://docs.microsoft.com/en-us/sql/odbc/reference/syntax/sqlcolumns-function
+        //
+        // The sample implementation provided here will simply output the original table
+        // to the user trace log, without any modification. 
+        SQLColumns = (catalogName, schemaName, tableName, columnName, source) =>
+            if (EnableTraceOutput <> true) then source else
+            // the if statement conditions will force the values to evaluated/written to diagnostics
+            if (Diagnostics.LogValue("SQLColumns.TableName", tableName) <> "***" and Diagnostics.LogValue("SQLColumns.ColumnName", columnName) <> "***") then
+                let
+                    // Outputting the entire table might be too large, and result in the value being truncated.
+                    // We can output a row at a time instead with Table.TransformRows()
+                    rows = Table.TransformRows(source, each Diagnostics.LogValue("SQLColumns", _)),
+                    toTable = Table.FromRecords(rows)
+                in
+                    Value.ReplaceType(toTable, Value.Type(source))
+            else
+                source,
 
         // This record allows you to customize the generated SQL for certain
         // operations. The most common usage is to define syntax for LIMIT/OFFSET operators 
@@ -130,18 +200,23 @@ shared SqlODBC.Contents = (server as text) =>
             HideNativeQuery = true,
             SoftNumbers = true,
             ClientConnectionPooling = true,
+            CredentialConnectionString = CredentialConnectionString,
 
             // These values should be set by previous steps
             //AstVisitor = AstVisitor
             SqlCapabilities = SqlCapabilities,
-            SQLGetInfo = SQLGetInfo
+            SQLColumns = SQLColumns,
+            SQLGetInfo = SQLGetInfo,
+            SQLGetTypeInfo = SQLGetTypeInfo                
         ])
     in
         OdbcDatasource;  
 
 // Data Source Kind description
 SqlODBC = [
+    // Set supported types of authentication
     Authentication = [
+        Windows = [],
         UsernamePassword = []
     ],
     Label = Extension.LoadString("DataSourceLabel")
@@ -220,7 +295,7 @@ BuildOdbcConfig = () as record =>
                 withEscape & caps,
 
         withCastOrConvert = 
-            if (Config_UseCastInsteadOfConvert) then
+            if (Config_UseCastInsteadOfConvert = true) then
                 let
                     caps = withTop[SQLGetFunctions] & [ 
                         SQLGetFunctions = [
@@ -246,3 +321,22 @@ BuildOdbcConfig = () as record =>
                 withCastOrConvert
     in
         withSqlConformance;
+
+// 
+// Load common library functions
+// 
+Extension.LoadFunction = (name as text) =>
+    let
+        binary = Extension.Contents(name),
+        asText = Text.FromBinary(binary)
+    in
+        Expression.Evaluate(asText, #shared);
+
+// Diagnostics module contains multiple functions. We can take the ones we need.
+Diagnostics = Extension.LoadFunction("Diagnostics.pqm");
+Diagnostics.LogValue = if (EnableTraceOutput) then Diagnostics[LogValue] else (prefix, value, optional delayed) => value;
+
+// OdbcConstants contains numeric constants from the ODBC header files, and a 
+// helper function to create bitfield values.
+ODBC = Extension.LoadFunction("OdbcConstants.pqm");
+Odbc.Flags = ODBC[Flags];

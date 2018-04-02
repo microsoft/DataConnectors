@@ -11,15 +11,16 @@
     <AllowNativeQuery>False</AllowNativeQuery>
     <AsAction>False</AsAction>
     <FastCombine>False</FastCombine>
-    <ClearLog>False</ClearLog>
+    <ClearLog>True</ClearLog>
     <ShowEngineTraces>False</ShowEngineTraces>
-    <ShowUserTraces>False</ShowUserTraces>
+    <ShowUserTraces>True</ShowUserTraces>
     <LegacyRedirects>False</LegacyRedirects>
     <SuppressRowErrors>False</SuppressRowErrors>
     <SuppressCellErrors>False</SuppressCellErrors>
     <MaxRows>1000</MaxRows>
     <ExtensionProject>Yes</ExtensionProject>
     <Name>SqlODBC</Name>
+    <ThrowOnFoldingFailure>False</ThrowOnFoldingFailure>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>false</DebugSymbols>
@@ -66,6 +67,12 @@
     </Compile>
     <Compile Include="resources.resx">
       <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Diagnostics.pqm">
+      <SubType>Content</SubType>
+    </Compile>
+    <Compile Include="OdbcConstants.pqm">
+      <SubType>Content</SubType>
     </Compile>
     <Content Include="SqlODBC.query.pq">
       <SubType>Code</SubType>
