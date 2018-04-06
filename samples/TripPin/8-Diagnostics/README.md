@@ -17,7 +17,7 @@ Once enabled, any subsequent queries will cause the M engine to emit trace infor
 
 When running M queries from within the Power Query SDK, tracing is enabled at the project level. On the project properties page, there are three settings related to tracing:
 
-1. **Clear Log**: when this is set to `true`, the log will be reset when you run your queries. I recommend you keep this set to `true`.
+1. **Clear Log**: when this is set to `true`, the log will be reset/cleared when you run your queries. I recommend you keep this set to `true`.
 2. **Show Engine Traces**: this setting controls the output of built-in traces from the M engine. These traces are generally only useful to members of the Power Query team, so you'll typically want to keep this set to `false`.
 3. **Show User Traces**: this setting controls trace information output by your connector. You'll want to set this to `true`.
 
@@ -33,7 +33,7 @@ The [Diagnostics.Trace](https://msdn.microsoft.com/query-bi/m/diagnostics-trace)
 Diagnostics.Trace = (traceLevel as number, message as text, value as any, optional delayed as nullable logical as any) => ...
 ```
 
->*An important note*: M is a functional languge with lazy evaluation. When using `Diagnostics.Trace`, keep in mind that the function will only be called
+>*An important note*: M is a functional language with lazy evaluation. When using `Diagnostics.Trace`, keep in mind that the function will only be called
 > if the expression its a part of is actually evaluated. Examples of this can be found later in this tutorial.
 
 The `traceLevel` parameter can be one of the following values (in descending order):
@@ -86,7 +86,7 @@ TripPinNavTable = (url as text) as table =>
         navTable;
 ```
 
-[Enable tracing](#enabling_diagnostics) for your project, and run your test queries. On the `Errors` table you should see the text of the error you raised:
+[Enable tracing](#enabling_diagnostics) for your project, and run your test queries. On the `Errors` tab you should see the text of the error you raised:
 
 ![Error message](../../../blobs/trippin8Error.png)
 
@@ -175,7 +175,7 @@ The `Diagnostics.LogFailure` function can be used to wrap function calls, and wi
 Diagnostics.LogFailure = (text as text, function as function) as any => ...
 ```
 
-Internally, `Diagnostics.LogFailure` adds a `try` operator to the `function` call. If the call fails, the `text` value is written to the trace before returning the original `error`. If the `function` call succeeds, the result is returned without writting anything to the trace. Since M errors don't contain a full stack trace (i.e. you typically only see the message of the error), this can be useful when you want to pinpoint where the error was actually raised.
+Internally, `Diagnostics.LogFailure` adds a `try` operator to the `function` call. If the call fails, the `text` value is written to the trace before returning the original `error`. If the `function` call succeeds, the result is returned without writing anything to the trace. Since M errors don't contain a full stack trace (i.e. you typically only see the message of the error), this can be useful when you want to pinpoint where the error was actually raised.
 
 As a (poor) example, we'll modify the `withData` line of the `TripPinNavTable` function to force an error once again:
 
