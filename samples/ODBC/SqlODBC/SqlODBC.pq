@@ -334,7 +334,7 @@ Extension.LoadFunction = (name as text) =>
 
 // Diagnostics module contains multiple functions. We can take the ones we need.
 Diagnostics = Extension.LoadFunction("Diagnostics.pqm");
-Diagnostics.LogValue = if (EnableTraceOutput) then Diagnostics[LogValue] else (prefix, value, optional delayed) => value;
+Diagnostics.LogValue = if (EnableTraceOutput) then Diagnostics[LogValue] else (prefix, value) => value;
 
 // OdbcConstants contains numeric constants from the ODBC header files, and a 
 // helper function to create bitfield values.
