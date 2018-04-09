@@ -20,7 +20,7 @@
     <MaxRows>1000</MaxRows>
     <ExtensionProject>Yes</ExtensionProject>
     <Name>SqlODBC</Name>
-    <ThrowOnFoldingFailure>False</ThrowOnFoldingFailure>
+    <ThrowOnFoldingFailure>True</ThrowOnFoldingFailure>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>false</DebugSymbols>

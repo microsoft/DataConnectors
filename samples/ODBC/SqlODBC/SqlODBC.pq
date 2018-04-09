@@ -101,6 +101,10 @@ shared SqlODBC.Contents = (server as text) =>
 
         //
         // Handle credentials
+        // Credentials are not persisted with the query and are set through a separate 
+        // record field - CredentialConnectionString. The base Odbc.DataSource function
+        // will handle UsernamePassword authentication automatically, but it is explictly
+        // handled here as an example. 
         //
         Credential = Extension.CurrentCredential(),
 		CredentialConnectionString =
@@ -197,17 +201,22 @@ shared SqlODBC.Contents = (server as text) =>
         OdbcDatasource = Odbc.DataSource(ConnectionString, [
             // A logical (true/false) that sets whether to view the tables grouped by their schema names
             HierarchicalNavigation = true, 
+            // Prevents execution of native SQL statements. Extensions should set this to true.
             HideNativeQuery = true,
+            // Allows upconversion of numeric types
             SoftNumbers = true,
+            // Allow upconversion / resizing of numeric and string types
+            TolerateConcatOverflow = true,
+            // Enables connection pooling via the system ODBC manager
             ClientConnectionPooling = true,
-            CredentialConnectionString = CredentialConnectionString,
 
             // These values should be set by previous steps
-            //AstVisitor = AstVisitor
+            CredentialConnectionString = CredentialConnectionString,
+            //AstVisitor = AstVisitor,
             SqlCapabilities = SqlCapabilities,
             SQLColumns = SQLColumns,
             SQLGetInfo = SQLGetInfo,
-            SQLGetTypeInfo = SQLGetTypeInfo                
+            SQLGetTypeInfo = SQLGetTypeInfo
         ])
     in
         OdbcDatasource;  
