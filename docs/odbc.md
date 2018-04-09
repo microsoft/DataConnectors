@@ -244,8 +244,8 @@ are described in subsequent sections.
 </tr>
 <tr class="even">
 <td>TolerateConcatOverflow</td>
-<td><p>Allows conversion of numeric types to larger types if an operation would cause the value to fall out of range of the original type.</p>
-<p>For example, when adding Int32.Max + Int32.Max, the engine will cast the result to Int64 when this setting is set to true.</p>
+<td><p>Allows conversion of numeric and text types to larger types if an operation would cause the value to fall out of range of the original type.</p>
+<p>For example, when adding Int32.Max + Int32.Max, the engine will cast the result to Int64 when this setting is set to true. When adding a VARCHAR(4000) and a VARCHAR(4000) field on a system that supports a maximize VARCHAR size of 4000, the engine will cast the result into a CLOB type.</p>
 <p>Default: false</p></td>
 </tr>
 <tr class="odd">
@@ -660,3 +660,14 @@ use of sub-selects, COALESCE statements, and aggregations).
 - In query editor, filter on each data type
 - Filter on missing data types -- SEARCHABLE
 - Filter on date -- timestamp precision incorrect
+
+### Concatenation of strings in Direct Query mode
+
+The M engine does basic type size limit validation as part of its query folding logic. If you are receiving a folding error when trying to concatenate two strings that potentially overflow the maximum size of the underlying database type:
+
+1. Ensure that your database can support up-conversion to CLOB types when string concat overflow occurs
+2. Set the `TolerateConcatOverflow` [option]((#parameters-for-odbcdatasource)) for Odbc.DataSource to `true`
+
+> The [DAX CONCATENATE function](https://msdn.microsoft.com/query-bi/dax/concatenate-function-dax) is currently not supported by Power Query/ODBC extensions.
+> Extension authors should ensure string concatenation works through the query editor by adding calculated columns (`[stringCol1] & [stringCol2]`).
+> When the capability to fold the CONCATENATE operation is added in the future, it should work seamlessly with existing extensions.
