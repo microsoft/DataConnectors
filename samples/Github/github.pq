@@ -40,14 +40,14 @@ shared GithubSample.PagedTable = Value.ReplaceType(Github.PagedTable, type funct
 // Data Source definition
 //
 GithubSample = [
+    TestConnection = (dataSourcePath) => {"GithubSample.Contents", dataSourcePath},
     Authentication = [
         OAuth = [
             StartLogin = StartLogin,
             FinishLogin = FinishLogin,
             Label = Extension.LoadString("AuthenticationLabel")
         ]
-    ],
-    Label = Extension.LoadString("DataSourceLabel")
+    ]
 ];
 
 //

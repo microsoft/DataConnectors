@@ -120,9 +120,6 @@
   <data name="AuthenticationLabel" xml:space="preserve">
     <value>Github Auth</value>
   </data>
-  <data name="DataSourceLabel" xml:space="preserve">
-    <value>Github Sample</value>
-  </data>
   <data name="FormulaHelp" xml:space="preserve">
     <value>Github.Contents</value>
   </data>
