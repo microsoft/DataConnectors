@@ -157,10 +157,11 @@ The following table lists the fields for your Data Source definition record.
 | Authentication     | record   | Specifies one or more types of authentication supported by your data source. At least one kind is required. Each kind will be displayed as an option in the Power Query credential prompt. For more information, see [Authentication Kinds](#authentication-kinds) below. |
 | Label              | text     | **(optional)** Friendly display name for this extension in credential dialogs.                                                                                                                                                                                            |
 | SupportsEncryption | logical  | **(optional)** When true, the UI will present the option to connect to the data source using an encrypted connection. This is typically used for data sources with a non-encrypted fallback mechanism (generally ODBC or ADO.NET based sources).                          |
+| TestConnection     | function | **(optional)** Function used to validate credentials for your extension. Required for Gateway support. See [Test Connection](#implementing-testconnection-for-gateway-support) below for more information.                                                                |
 
 ### Publish to UI
 
-Similar to the (Data Source)[#data-source-kind] definition record, the Publish record provides the Power Query UI the information it needs to expose this extension in the Get Data dialog.
+Similar to the [Data Source](#data-source-kind) definition record, the Publish record provides the Power Query UI the information it needs to expose this extension in the Get Data dialog.
 
 **Example:**
 
@@ -289,7 +290,7 @@ Extensions can optionally implement `Refresh` (exchanging a refresh token for a 
 >Data Connectors **should not** use confidential secrets in their OAuth flows, as users may
 >inspect the extension or network traffic to learn the secret.
 >Please see the [OAuth 2.0 for Native Apps](https://tools.ietf.org/html/draft-ietf-oauth-native-apps-12) draft RFC for further details on providing 
->flows that do not rely on shared secrets. 
+>flows that do not rely on shared secrets.
 
 >In the future we plan to support data sources that require confidential secrets (using a proxy based mechanism).
 
@@ -314,6 +315,7 @@ You can see an example of how credentials are stored in the *Data source setting
 >**Note:** If you change your data source function's required parameters during development, previously stored credentials will no longer work (because the path values no longer match). You should delete any stored credentials any time you change your data source function parameters. If incompatible credentials are found, you may receive an error at runtime.
 
 #### Data Source Path Format
+
 The _Path_ value for a data source is derived from the data source function's required parameters. 
 
 By default, you can see the actual string value in the Data source settings dialog in Power BI Desktop, and in the credential prompt.
@@ -327,7 +329,7 @@ HelloWorldWithDocs.Contents = (message as text, optional count as number) as tab
 
 The function has a single required parameter (`message`) of type `text`, and will be used to calculate the data source path. The optional parameter (`count`) would be ignored. The path would be displayed 
 
-Credential prompt: 
+Credential prompt:
 
 ![DataSourceCredentials](../blobs/credentialPromptWithPath.png)
 
@@ -342,6 +344,7 @@ When a Label value is defined, the data source path value would not be shown:
 >**Note:** We currently recommend you _do not_ include a Label for your data source if your function has required parameters, as users will not be able to distinguish between the different credentials they have entered. We are hoping to improve this in the future (i.e. allowing data connectors to display their own custom data source paths).
 
 #### Functions with an Uri parameter
+
 Because data sources with an Uri based identifier are so common, there is special handling in the Power Query UI when dealing with Uri based data source paths.
 When an Uri-based data source is encountered, the credential dialog provides a drop down allowing the user to select the base path, rather than the full path (and all paths in between).
 
@@ -353,12 +356,54 @@ As `Uri.Type` is an _ascribed type_ rather than a _primitive type_ in the M lang
 shared GithubSample.Contents = Value.ReplaceType(Github.Contents, type function (url as Uri.Type) as any);
 ```
 
+### Implementing TestConnection for Gateway Support
+
+> Custom Connector support was added to the April 2018 release of the [Personal On-Premises Data Gateway](https://docs.microsoft.com/en-us/power-bi/service-gateway-onprem#install-the-gateway-in-personal-mode).
+> When running in Personal mode, the gateway can be used to support scheduled data refresh for sources that use an Import mode.
+> Note that Direct Query sources require the use of an Enterprise Gateway, which will be supported in a subsequent release.
+
+> The method for implementing TestConnection functionality is likely to change prior while the Power BI Custom Data Connector functionality is in preview.
+
+To support scheduled refresh through the on-premises data gateway, your connector **must** implement a TestConnection handler.
+The function is called when the user is configuring credentials for your source, and used to ensure they are valid.
+The TestConnection handler is set in the [Data Source Kind](#data-source-kind) record, and has the following signature:
+
+```
+(dataSourcePath) as list => ...
+```
+
+Where `dataSourcePath` is the [Data Source Path](#data-source-paths) value for your function, and the return value is a list composed of:
+
+1. The name of the function to call (this function must be marked as `#shared`, and is usually your primary data source function)
+2. One or more arguments to pass to your function
+
+If the invocation of the function results in an error, TestConnection is considered to have failed, and the credential will not be persisted.
+
+> **Note:** As stated above, the function name provided by TestConnection must be a `shared` member.
+
+#### Example: Connector with no required arguments
+
+The code snippet below implements TestConnection for a data source with no required parameters (such as the one found in the [TripPin tutorial](../samples/TripPin)).
+Connectors with no required parameters (referred to as 'Singletons') do not need any user provided input to test a connection (other than credentials).
+In this case, the `dataSourcePath` value would be equal to the name of the Data Source Kind, and can be ignored.
+The `TripPin.Contents` function is invoked with no additional parameters.
+
+```
+TripPin = [
+    TestConnection = (dataSourcePath) => { "TripPin.Contents" },
+    Authentication = [
+        Implicit = []
+    ],
+    Label = "TripPin"
+];
+```
+
 ## Next Steps
 
 * [Samples and walkthroughs](../samples)
 * [Using navigation tables](nav-tables.md)
 * [Adding documentation to your functions](function-docs.md)
-* [Data Connector tutorial](https://github.com/Microsoft/DataConnectors/tree/master/samples/TripPin)
+* [TripPin connector tutorial](../samples/TripPin)
 * [Developing an ODBC based custom connector](odbc.md)
-* Advanced connector scenarios with Table.View (coming soon)
+* [Using Table.View to implement query folding](table-view.md)
 * [Other topics](other-topics.md)
