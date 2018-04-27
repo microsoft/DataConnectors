@@ -39,7 +39,7 @@ HelloWorldImpl = (message as text, optional count as number) as table =>
 // Data Source Kind description
 HelloWorldWithDocs = [
     Authentication = [
-        Implicit = []
+        Anonymous = []
     ]//,
     //Label = "Hello World With Docs"
 ];

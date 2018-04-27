@@ -8,8 +8,9 @@ shared HelloWorld.Contents = (optional message as text) =>
         message;
 
 HelloWorld = [
+    TestConnection = (dataSourcePath) => {"HelloWorld.Contents"},
     Authentication = [
-        Implicit = []
+        Anonymous = []
     ],
     Label = Extension.LoadString("DataSourceLabel")
 ];
