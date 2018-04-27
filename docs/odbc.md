@@ -444,7 +444,11 @@ LimitClause = (skip, take) =>
 
 ### Overriding SQLColumns
 
-**TODO**
+`SQLColumns` is a function handler that receives the results of an ODBC call
+to [SQLColumns](https://docs.microsoft.com/en-us/sql/odbc/reference/syntax/sqlcolumns-function). The source parameter contains a table with the data type information. This override is typically used to fix up data type mismatches between calls to `SQLGetTypeInfo` and `SQLColumns`.
+
+For details of the format of the source table parameter, please see:
+https://docs.microsoft.com/en-us/sql/odbc/reference/syntax/sqlcolumns-function
 
 ### Overriding SQLGetFunctions
 
@@ -570,18 +574,110 @@ Flags = (flags as list) =>
 1. A fixed `table` value that contains the same type information as an ODBC call to `SQLGetTypeInfo`
 2. A function that accepts a table argument, and returns a table. The argument will contain the original results of the ODBC call to `SQLGetTypeInfo`. Your function implementation can modify/add to this table.
 
-The first approach is used to completely override the values returned by the ODBC driver. The second approach is used if you want to add to or modify these values. 
+The first approach is used to completely override the values returned by the ODBC driver. The second approach is used if you want to add to or modify these values.
 
 For details of the format of the types table parameter and expected return value,
 please see: https://docs.microsoft.com/en-us/sql/odbc/reference/syntax/sqlgettypeinfo-function
 
+#### SQLGetTypeInfo using a static table
+
+The following code snippet provides a static implementation for SQLGetTypeInfo.
+
+```
+SQLGetTypeInfo = #table(
+    { "TYPE_NAME",      "DATA_TYPE", "COLUMN_SIZE", "LITERAL_PREF", "LITERAL_SUFFIX", "CREATE_PARAS",           "NULLABLE", "CASE_SENSITIVE", "SEARCHABLE", "UNSIGNED_ATTRIBUTE", "FIXED_PREC_SCALE", "AUTO_UNIQUE_VALUE", "LOCAL_TYPE_NAME", "MINIMUM_SCALE", "MAXIMUM_SCALE", "SQL_DATA_TYPE", "SQL_DATETIME_SUB", "NUM_PREC_RADIX", "INTERNAL_PRECISION", "USER_DATA_TYPE" }, {
+
+    { "char",           1,          65535,          "'",            "'",              "max. length",            1,          1,                3,            null,                 0,                  null,                "char",            null,            null,            -8,              null,               null,             0,                    0                }, 
+    { "int8",           -5,         19,             "'",            "'",              null,                     1,          0,                2,            0,                    10,                 0,                   "int8",            0,               0,               -5,              null,               2,                0,                    0                },
+    { "bit",            -7,         1,              "'",            "'",              null,                     1,          1,                3,            null,                 0,                  null,                "bit",             null,            null,            -7,              null,               null,             0,                    0                },
+    { "bool",           -7,         1,              "'",            "'",              null,                     1,          1,                3,            null,                 0,                  null,                "bit",             null,            null,            -7,              null,               null,             0,                    0                },
+    { "date",           9,          10,             "'",            "'",              null,                     1,          0,                2,            null,                 0,                  null,                "date",            null,            null,            9,               1,                  null,             0,                    0                }, 
+    { "numeric",        3,          28,             null,           null,             null,                     1,          0,                2,            0,                    0,                   0,                  "numeric",         0,               0,               2,               null,               10,               0,                    0                },
+    { "float8",         8,          15,             null,           null,             null,                     1,          0,                2,            0,                    0,                   0,                  "float8",          null,            null,            6,               null,               2,                0,                    0                },
+    { "float8",         6,          17,             null,           null,             null,                     1,          0,                2,            0,                    0,                   0,                  "float8",          null,            null,            6,               null,               2,                0,                    0                },
+    { "uuid",           -11,        37,             null,           null,             null,                     1,          0,                2,            null,                 0,                  null,                "uuid",            null,            null,            -11,             null,               null,             0,                    0                },
+    { "int4",           4,          10,             null,           null,             null,                     1,          0,                2,            0,                    0,                   0,                  "int4",            0,               0,               4,               null,               2,                0,                    0                },
+    { "text",           -1,         65535,          "'",            "'",              null,                     1,          1,                3,            null,                 0,                  null,                "text",            null,            null,            -10,             null,               null,             0,                    0                },
+    { "lo",             -4,         255,            "'",            "'",              null,                     1,          0,                2,            null,                 0,                  null,                "lo",              null,            null,            -4,              null,               null,             0,                    0                }, 
+    { "numeric",        2,          28,             null,           null,             "precision, scale",       1,          0,                2,            0,                    10,                 0,                   "numeric",         0,               6,               2,               null,               10,               0,                    0                },
+    { "float4",         7,          9,              null,           null,             null,                     1,          0,                2,            0,                    10,                 0,                   "float4",          null,            null,            7,               null,               2,                0,                    0                }, 
+    { "int2",           5,          19,             null,           null,             null,                     1,          0,                2,            0,                    10,                 0,                   "int2",            0,               0,               5,               null,               2,                0,                    0                }, 
+    { "int2",           -6,         5,              null,           null,             null,                     1,          0,                2,            0,                    10,                 0,                   "int2",            0,               0,               5,               null,               2,                0,                    0                }, 
+    { "timestamp",      11,         26,             "'",            "'",              null,                     1,          0,                2,            null,                 0,                  null,                "timestamp",       0,               38,              9,               3,                  null,             0,                    0                }, 
+    { "date",           91,         10,             "'",            "'",              null,                     1,          0,                2,            null,                 0,                  null,                "date",            null,            null,            9,               1,                  null,             0,                    0                }, 
+    { "timestamp",      93,         26,             "'",            "'",              null,                     1,          0,                2,            null,                 0,                  null,                "timestamp",       0,               38,              9,               3,                  null,             0,                    0                }, 
+    { "bytea",          -3,         255,            "'",            "'",              null,                     1,          0,                2,            null,                 0,                  null,                "bytea",           null,            null,            -3,              null,               null,             0,                    0                }, 
+    { "varchar",        12,         65535,          "'",            "'",              "max. length",            1,          0,                2,            null,                 0,                  null,                "varchar",         null,            null,           -9,               null,               null,             0,                    0                }, 
+    { "char",           -8,         65535,          "'",            "'",              "max. length",            1,          1,                3,            null,                 0,                  null,                "char",            null,            null,           -8,               null,               null,             0,                    0                }, 
+    { "text",           -10,        65535,          "'",            "'",              "max. length",            1,          1,                3,            null,                 0,                  null,                "text",            null,            null,           -10,              null,               null,             0,                    0                }, 
+    { "varchar",        -9,         65535,          "'",            "'",              "max. length",            1,          1,                3,            null,                 0,                  null,                "varchar",         null,            null,           -9,               null,               null,             0,                    0                },
+    { "bpchar",         -8,         65535,           "'",            "'",              "max. length",            1,          1,                3,            null,                 0,                  null,                "bpchar",          null,            null,            -9,               null,               null,            0,                    0                } }
+);
+```
+
+#### SQLGetTypeInfo using a function
+
+The following code snippets append the `bpchar` type to the existing types returned by the driver.
+
+```
+SQLGetTypeInfo = (types as table) as table =>
+   let
+       newTypes = #table(
+           {
+               "TYPE_NAME",
+               "DATA_TYPE",
+               "COLUMN_SIZE",
+               "LITERAL_PREF",
+               "LITERAL_SUFFIX",
+               "CREATE_PARAS",
+               "NULLABLE",
+               "CASE_SENSITIVE",
+               "SEARCHABLE",
+               "UNSIGNED_ATTRIBUTE",
+               "FIXED_PREC_SCALE",
+               "AUTO_UNIQUE_VALUE",
+               "LOCAL_TYPE_NAME",
+               "MINIMUM_SCALE",
+               "MAXIMUM_SCALE",
+               "SQL_DATA_TYPE",
+               "SQL_DATETIME_SUB",
+               "NUM_PREC_RADIX",
+               "INTERNAL_PRECISION",
+               "USER_DATA_TYPE"
+            },
+            // we add a new entry for each type we want to add
+            {
+                {
+                    "bpchar",
+                    -8,
+                    65535,
+                    "'",
+                    "'",
+                    "max. length",
+                    1,
+                    1,
+                    3,
+                    null,
+                    0,
+                    null,
+                    "bpchar",
+                    null,
+                    null,
+                    -9,
+                    null,
+                    null,
+                    0,
+                    0
+                }
+            }),
+        append = Table.Combine({types, newTypes})
+    in
+        append;
+```
+
 ### Overriding SQLTables
 
-`SQLColumns` is a function handler that receives the results of an ODBC call
-to [SQLColumns](https://docs.microsoft.com/en-us/sql/odbc/reference/syntax/sqlcolumns-function). The source parameter contains a table with the data type information. This override is typically used to fix up data type mismatches between calls to `SQLGetTypeInfo` and `SQLColumns`.
-
-For details of the format of the source table parameter, please see:
-https://docs.microsoft.com/en-us/sql/odbc/reference/syntax/sqlcolumns-function
+**TODO**
 
 ## Creating Your Connector
 
