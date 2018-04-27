@@ -392,9 +392,50 @@ The `TripPin.Contents` function is invoked with no additional parameters.
 TripPin = [
     TestConnection = (dataSourcePath) => { "TripPin.Contents" },
     Authentication = [
-        Implicit = []
+        Anonymous = []
     ],
     Label = "TripPin"
+];
+```
+
+#### Example: Connector with a URL parameter
+
+If your data source function has a single required parameter of the type `Uri.Type`, its `dataSourcePath` will be equal to the URL provided by the user. The snippet below 
+shows the TestConnection implementation from the [Github Sample](../samples/Github).
+
+```
+GithubSample = [
+    TestConnection = (dataSourcePath) => {"GithubSample.Contents", dataSourcePath},
+    Authentication = [
+        OAuth = [
+            StartLogin = StartLogin,
+            FinishLogin = FinishLogin,
+            Label = Extension.LoadString("AuthenticationLabel")
+        ]
+    ]
+];
+```
+
+#### Example: Connector with required parameters 
+
+If your data source function has multiple parameters, or a single non-URL parameter,
+then the `dataSourcePath` value will be a json string containing the parameters. The snippet
+below comes from the [DirectQueryForSQL](../samples/DirectQueryForSQL) sample. 
+
+```
+DirectSQL = [
+    TestConnection = (dataSourcePath) =>
+        let
+            json = Json.Document(dataSourcePath),
+            server = json[server],
+            database = json[database]
+        in
+            { "DirectSQL.Database", server, database },
+    Authentication = [
+        Windows = [],
+        UsernamePassword = []
+    ],
+    Label = "Direct Query for SQL"
 ];
 ```
 

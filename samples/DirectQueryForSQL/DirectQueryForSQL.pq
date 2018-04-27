@@ -72,6 +72,13 @@ shared DirectSQL.Database = (server as text, database as text) as table =>
 
 // Data Source definition
 DirectSQL = [
+    TestConnection = (dataSourcePath) => 
+        let
+            json = Json.Document(dataSourcePath),
+            server = json[server],
+            database = json[database]
+        in
+            { "DirectSQL.Database", server, database }, 
     Authentication = [
         Windows = [],
         UsernamePassword = []
