@@ -565,11 +565,23 @@ Flags = (flags as list) =>
 
 ### Overriding SQLGetTypeInfo
 
-**TODO**
+`SQLGetTypeInfo` can be specified in two ways:
+
+1. A fixed `table` value that contains the same type information as an ODBC call to `SQLGetTypeInfo`
+2. A function that accepts a table argument, and returns a table. The argument will contain the original results of the ODBC call to `SQLGetTypeInfo`. Your function implementation can modify/add to this table.
+
+The first approach is used to completely override the values returned by the ODBC driver. The second approach is used if you want to add to or modify these values. 
+
+For details of the format of the types table parameter and expected return value,
+please see: https://docs.microsoft.com/en-us/sql/odbc/reference/syntax/sqlgettypeinfo-function
 
 ### Overriding SQLTables
 
-**TODO**
+`SQLColumns` is a function handler that receives the results of an ODBC call
+to [SQLColumns](https://docs.microsoft.com/en-us/sql/odbc/reference/syntax/sqlcolumns-function). The source parameter contains a table with the data type information. This override is typically used to fix up data type mismatches between calls to `SQLGetTypeInfo` and `SQLColumns`.
+
+For details of the format of the source table parameter, please see:
+https://docs.microsoft.com/en-us/sql/odbc/reference/syntax/sqlcolumns-function
 
 ## Creating Your Connector
 
@@ -602,7 +614,7 @@ shared SqlODBC.Contents = (server as text) =>
         ],
         OdbcDatasource = Odbc.DataSource(ConnectionString)
     in
-        OdbcDatasource;  
+        OdbcDatasource;
 ```
 
 ### Setting credentials
