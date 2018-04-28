@@ -42,7 +42,7 @@ The following handlers can be implemented without handling M `RowExpression` val
 |OnDistinct     |`(columns as list)`                                    |Called when as a result of `Table.Distinct`. |
 |OnRenameColumns|`(renames as list)`                                    |Called when renaming columns (`Table.RenameColumns`).|
 |OnSelectColumns|`(columns as list)`                                    |Called when selecting specific columns. |
-|OnSkip         |`(count as number)`                                    |Called when as a result of `Table.Skip`.|
+|OnSkip         |`(count as number)`                                    |Called when using `Table.Skip`.|
 |OnSort         |`(order as list)`                                      |Called when table is sorted (`Table.Sort`).|
 |OnTake         |`(count as number)`                                    |Called when limiting the number of rows being retrieved (`Table.FirstN`).|
 
