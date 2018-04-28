@@ -16,14 +16,15 @@ Reviewing the [M Extensibility documentation](../../docs/m-extensions.md) before
 
 ## Parts
 
-|Part|Lesson                             |Details|
-|----|:----------------------------------|:----------------------------------------------------|
-|1   |[OData](1-OData)                   |Create a simple Data Connector over an OData service |
-|2   |[Rest](2-Rest)                     |Connect to a REST API that returns a JSON response   |
-|3   |[Nav Tables](3-NavTables)          |Providing a navigation experience for your source    |
-|4   |[Data Source Paths](4-Paths)       |How credentials are identified for your data source  |
-|5   |[Paging](5-Paging)                 |Read with a paged response from a web service        |
-|6   |[Enforcing Schema](6-Schema)       |Enforce table structure and column data types        |
-|7   |[Advanced Schema](7-AdvancedSchema)|Dynamically enforce table structure using M types and external metadata |
-|8   |[Diagnostics](8-Diagnostics)       |Add detailed tracing to the connector                |
-|9   |[Test Connection](9-TestConnection)|Implement a TestConnection handler to enable refresh through the gateway |
+|Part|Lesson                               |Details|
+|----|:------------------------------------|:----------------------------------------------------|
+|1   |[OData](1-OData)                     |Create a simple Data Connector over an OData service |
+|2   |[Rest](2-Rest)                       |Connect to a REST API that returns a JSON response   |
+|3   |[Nav Tables](3-NavTables)            |Providing a navigation experience for your source    |
+|4   |[Data Source Paths](4-Paths)         |How credentials are identified for your data source  |
+|5   |[Paging](5-Paging)                   |Read with a paged response from a web service        |
+|6   |[Enforcing Schema](6-Schema)         |Enforce table structure and column data types        |
+|7   |[Advanced Schema](7-AdvancedSchema)  |Dynamically enforce table structure using M types and external metadata |
+|8   |[Diagnostics](8-Diagnostics)         |Add detailed tracing to the connector                |
+|9   |[Test Connection](9-TestConnection)  |Implement a TestConnection handler to enable refresh through the gateway |
+|10  |[Query Folding part 1](10-TableView1)|Implement basic query folding handlers               |

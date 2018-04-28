@@ -36,7 +36,7 @@ TripPinImpl = (url as text) =>
 // Data Source Kind description
 TripPin = [
     Authentication = [
-        Implicit = []
+        Anonymous = []
     ],
     Label = "TripPin Part 1 - OData"
 ];

@@ -7,7 +7,7 @@
 // Data Source Kind description
 TripPin = [
     Authentication = [
-        Implicit = []
+        Anonymous = []
     ],
     Label = "TripPin Part 3 - Navigator"
 ];

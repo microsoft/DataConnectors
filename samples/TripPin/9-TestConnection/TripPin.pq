@@ -5,7 +5,7 @@ TripPin = [
     // TestConnection is required to enable the connector through the Gateway
     TestConnection = (dataSourcePath) => { "TripPin.Contents" },
     Authentication = [
-        Implicit = []
+        Anonymous = []
     ],
     Label = "TripPin Part 9 - TestConnection"
 ];

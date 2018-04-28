@@ -14,7 +14,7 @@ TripPin = [
     // Declares the supported type(s) of authentication.
     // In this case, Implicit = Anonymous web access
     Authentication = [
-        Implicit = []
+        Anonymous = []
     ],
     // Assigns a label to the data source credential.
     // This will be displayed in the "Manage Data Sources" dialog.
