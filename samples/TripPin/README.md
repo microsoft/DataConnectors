@@ -27,4 +27,4 @@ Reviewing the [M Extensibility documentation](../../docs/m-extensions.md) before
 |7   |[Advanced Schema](7-AdvancedSchema)  |Dynamically enforce table structure using M types and external metadata |
 |8   |[Diagnostics](8-Diagnostics)         |Add detailed tracing to the connector                |
 |9   |[Test Connection](9-TestConnection)  |Implement a TestConnection handler to enable refresh through the gateway |
-|10  |[Query Folding part 1](10-TableView1)|Implement basic query folding handlers               |
+|10  |[Query Folding (part 1)](10-TableView1)|Implement basic query folding handlers               |
