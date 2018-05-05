@@ -99,6 +99,6 @@ DirectSQL.UI = [
 ];
 
 DirectSQL.Icons = [
-    Icon16 = { Extension.Contents("DirectSQL_ODBC16.png"), Extension.Contents("DirectSQL_ODBC20.png"), Extension.Contents("DirectSQL_ODBC24.png"), Extension.Contents("DirectSQL_ODBC32.png") },
-    Icon32 = { Extension.Contents("DirectSQL_ODBC32.png"), Extension.Contents("DirectSQL_ODBC40.png"), Extension.Contents("DirectSQL_ODBC48.png"), Extension.Contents("DirectSQL_ODBC64.png") }
+    Icon16 = { Extension.Contents("DirectQueryForSQL16.png"), Extension.Contents("DirectQueryForSQL20.png"), Extension.Contents("DirectQueryForSQL24.png"), Extension.Contents("DirectQueryForSQL32.png") },
+    Icon32 = { Extension.Contents("DirectQueryForSQL32.png"), Extension.Contents("DirectQueryForSQL40.png"), Extension.Contents("DirectQueryForSQL48.png"), Extension.Contents("DirectQueryForSQL64.png") }
 ];
