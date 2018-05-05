@@ -1,4 +1,5 @@
 # Getting Started with Data Connectors
+
 Data Connectors for Power BI enables users to connect to and access data from your application, service, or data source, providing them with rich business intelligence and robust analytics over multiple data sources. By integrating seamlessly into the Power Query connectivity experience in Power BI Desktop, Data Connectors make it easy for power users to query, shape and mashup data from your app to build reports and dashboards that meet the needs of their organization.
 
 ![PBIGetData](blobs/helloworld1.png "Hello World in Get Data")
@@ -16,11 +17,15 @@ Please see the [Data Connector technical reference](docs/m-extensions.md), and [
 3. Define your connector logic
 4. Build the project to produce an extension file
 5. Create a `[My Documents]\Power BI Desktop\Custom Connectors` directory
-7. Copy the extension file into this directory
-8. Enable the **Custom data connectors** preview feature in Power BI Desktop (under *File | Options and settings | Custom data connectors*)
+6. Copy the extension file into this directory
+7. Enable the **Custom data connectors** preview feature in Power BI Desktop (under *File | Options and settings | Custom data connectors*)
 8. Restart Power BI Desktop
 
 ![Preview Feature](blobs/previewFeature.png)
+
+## Gateway Support
+
+Custom Connector support was added to the April 2018 release of the [Personal On-Premises Gateway](https://docs.microsoft.com/en-us/power-bi/service-gateway-onprem#install-the-gateway-in-personal-mode). Please see the [technical documentation](docs/m-extensions.md) for more information on the [TestConnection handler](docs/m-extensions.md#implementing-testconnection-for-gateway-support), and the [TripPin Sample](samples/TripPin/9-TestConnection) for an example of how to add gateway support to your connector.
 
 ## Distribution of Data Connectors
 
@@ -96,7 +101,6 @@ Data Connectors are currently in preview. We plan to incrementally roll out a nu
 - [ ] Versioning of extensions, and support for dependencies
 - [ ] Improved support for Library extensions (for reusable utility functions)
 - [ ] Integration and support for API Connectors for Microsoft Flow and PowerApps
-- [ ] Support for Scheduled Refresh via the [On-Premises Data Gateway](https://powerbi.microsoft.com/documentation/powerbi-gateway-onprem/)
 - [ ] Integration with the Office Store
 - [ ] Development experience improvements
 
