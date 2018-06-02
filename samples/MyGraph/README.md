@@ -3,7 +3,7 @@ In this sample we will create a basic data source connector for [Microsoft Graph
 
 To access Graph, you will first need to register your own Azure Active Directory client application. If you do not have an application ID already, you can create one through the [Getting Started with Microsoft Graph](https://graph.microsoft.io/en-us/getting-started) site.
 Click the "Universal Windows" option, and then the "Let's go" button. Follow the steps and receive an App ID. As described in the steps below, use `https://oauth.powerbi.com/views/oauthredirect.html` as your redirect URI when registering your app. 
-Client ID value, use it to replace the existing value in the `client_id` file in the code sample.
+Client ID value, use it to replace the existing value in the `client_id` file in the code sample. Also create a password and replace the existing value in the `client_secret` file with it. You can then jump straight to section [Creating your Graph Connector](https://github.com/ImkeF/DataConnectors/tree/master/samples/MyGraph#creating-your-graph-connector) to quickly set this up.
 
 ## Writing an OAuth v2 Flow with Power BI Desktop
 There are three parts to implementing your OAuth Flow:
@@ -37,7 +37,7 @@ in
 
 Set the `client_id` with the app id you received when you registered your Graph application.
 
-Graph has an extensive list of permission scopes that your application can request. For this sample, the app will request all scopes that do not require admin consent. We will define two more variables – a list of the scopes we want, and the prefix string that graph uses. We'll also add a couple of helper functions to convert the scope list into the expected format.
+Graph has an extensive list of permission scopes that your application can request. For this sample, the app will request all scopes that do not require admin consent. We will define two more variables â€“ a list of the scopes we want, and the prefix string that graph uses. We'll also add a couple of helper functions to convert the scope list into the expected format.
 
 ```
 scope_prefix = "https://graph.microsoft.com/",
@@ -135,7 +135,7 @@ You'll be interested in the lines with a status of 302 and a host value of login
 Click on the request to `/login.srf` and view the Headers of the Response.
 Under Transport, you will find a location header with the `redirect_uri` value you specified in your code, and a query string containing a very long code value.\
 Extract the code value only, and paste it into your M query as a new variable.
-Note, the header value will also contain a `&session_state=xxxx` query string value at the end – remove this part from the code.
+Note, the header value will also contain a `&session_state=xxxx` query string value at the end â€“ remove this part from the code.
 Also, be sure to include double quotes around the value after you paste it into the advanced query editor. 
 
 To exchange the code for an auth token we will need to create a POST request to the token endpoint.
@@ -163,7 +163,7 @@ When you return the jsonResponse, Power Query will likely prompt you for credent
 
 ![Authentication prompt](../../blobs/graph3.png)
 
-The authentication code returned by AAD has a short timeout – probably shorter than the time it took you to do the previous steps.
+The authentication code returned by AAD has a short timeout â€“ probably shorter than the time it took you to do the previous steps.
 If your code has expired, you will see a response like this:
 
 ![Error for expired code](../../blobs/graph4.png)
@@ -272,7 +272,7 @@ It is expected to return a record with all the fields that Power BI will need to
 Since our data source function has no required parameters, we won't be making use of the `resourceUrl` value. If our data source function required a user supply URL or sub-domain name, then this is where it would be passed to us.
 The `State` parameter includes a blob of state information that we're expected to include in the URL.
 We will not need to use the `display` value at all.
-The body of the function will look a lot like the `authorizeUrl` variable you created earlier in this sample – 
+The body of the function will look a lot like the `authorizeUrl` variable you created earlier in this sample â€“ 
 the main difference will be the inclusion of the `state` parameter (which is used to prevent [replay attacks](https://docs.microsoft.com/en-us/azure/active-directory/develop/active-directory-v2-protocols-oauth-code)).
 
 ```
@@ -306,7 +306,7 @@ FinishLogin = (context, callbackUri, state) as record
 The `context` parameter will contain any value set in the Context field of the record returned by `StartLogin`.
 Typically this will be a tenant ID or other identifier that was extracted from the original resource URL.
 The `callbackUri` parameter contains the redirect value in the `Location` header, which we'll parse to extract the code value.
-The third parameter (`state`) can be used to round-trip state information to the service – we won't need to use it for AAD. 
+The third parameter (`state`) can be used to round-trip state information to the service â€“ we won't need to use it for AAD. 
 
 We will use the `Uri.Parts` function to break apart the `callbackUri` value. For the AAD auth flow, all we'll care about is the code parameter in the query string. 
 
@@ -324,7 +324,7 @@ FinishLogin = (context, callbackUri, state) =>
 
 If the response doesn't contain `error` fields, we pass the `code` query string parameter from the `Location` header to the `TokenMethod` function.
 
-The `TokenMethod` function converts the `code` to an `access_token`. It is not a direct part of the OAuth interface, but it provides all the heavy lifting for the `FinishLogin` and `Refresh` functions. Its implementation is essentially the tokenResponse logic we created earlier with one small addition – we'll use a grantType variable rather than hardcoding the value to "authorization_code".
+The `TokenMethod` function converts the `code` to an `access_token`. It is not a direct part of the OAuth interface, but it provides all the heavy lifting for the `FinishLogin` and `Refresh` functions. Its implementation is essentially the tokenResponse logic we created earlier with one small addition â€“ we'll use a grantType variable rather than hardcoding the value to "authorization_code".
 
 ```
 TokenMethod = (grantType, tokenField, code) =>
@@ -355,14 +355,14 @@ TokenMethod = (grantType, tokenField, code) =>
 ```
 
 ### Refresh
-This function is called when the `access_token` expires – Power Query will use the `refresh_token` to retrieve a new `access_token`. The implementation here is just a call to `TokenMethod`, passing in the refresh token value rather than the code.
+This function is called when the `access_token` expires â€“ Power Query will use the `refresh_token` to retrieve a new `access_token`. The implementation here is just a call to `TokenMethod`, passing in the refresh token value rather than the code.
 
 ```
 Refresh = (resourceUrl, refresh_token) => TokenMethod("refresh_token", "refresh_token", refresh_token);
 ```
 
 ### Logout
-The last function we need to implement is Logout. The logout implementation for AAD is very simple – we just return a fixed URL. 
+The last function we need to implement is Logout. The logout implementation for AAD is very simple â€“ we just return a fixed URL. 
 
 ```
 Logout = (token) => logout_uri;
@@ -382,7 +382,7 @@ MyGraph.Feed = () =>
 
 Once your function is updated, make sure there are no syntax errors in your code (look for red squiggles). Also be sure to update your `client_id` file with your own AAD app ID. If there are no errors, open the MyGraph.query.m file. 
 
-The `<project>.query.m` file lets you test out your extension. You (currently) don’t get the same navigation table / query building experience you get in Power BI Desktop, but does provide a quick way to test out your code. 
+The `<project>.query.m` file lets you test out your extension. You (currently) donâ€™t get the same navigation table / query building experience you get in Power BI Desktop, but does provide a quick way to test out your code. 
 
 A query to test your data source function would be:
 
