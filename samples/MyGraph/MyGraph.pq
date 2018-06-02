@@ -1,4 +1,4 @@
-﻿section MyGraph;
+section MyGraph;
 
 //
 // OAuth configuration settings
@@ -161,7 +161,8 @@ TokenMethod = (grantType, tokenField, code) =>
             client_id = client_id,
             scope = GetScopeString(scopes, scope_prefix),
             grant_type = grantType,
-            redirect_uri = redirect_uri
+            redirect_uri = redirect_uri,
+            client_secret = "client_secret" 
         ],
         queryWithCode = Record.AddField(queryString, tokenField, code),
 
@@ -193,4 +194,3 @@ GetScopeString = (scopes as list, optional scopePrefix as text) as text =>
         asText = Text.Combine(addPrefix, " ")
     in
         asText;
-
