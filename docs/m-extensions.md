@@ -77,12 +77,12 @@ The Power Query SDK provides basic query execution capabilities, allowing you to
 
 Building your project will produce your .pqx file.
 
-Data Connector projects do not support custom post build steps to copy the extension file to your `[Documents]\Microsoft Power BI Desktop\Custom Connectors` directory. If this is something you want to do, you may want to use a third party visual studio extension, such as [Auto Deploy](https://visualstudiogallery.msdn.microsoft.com/9f7165ab-eef6-4576-8733-b630db1a59c0?SRC=VSIDE).
+Data Connector projects do not support custom post build steps to copy the extension file to your `[Documents]\Power BI Desktop\Custom Connectors` directory. If this is something you want to do, you may want to use a third party visual studio extension, such as [Auto Deploy](https://visualstudiogallery.msdn.microsoft.com/9f7165ab-eef6-4576-8733-b630db1a59c0?SRC=VSIDE).
 
 ### Extension Files
 
 PQ extensions are bundled in a zip file and given a .mez file extension.
-At runtime, PBI Desktop will load extensions from the `[Documents]\Microsoft Power BI Desktop\Custom Connectors`.
+At runtime, PBI Desktop will load extensions from the `[Documents]\Power BI Desktop\Custom Connectors`.
 
 > **Note:** in an upcoming change the default extension will be changed from .mez to .pqx
 
