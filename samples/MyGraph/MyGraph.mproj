@@ -12,8 +12,8 @@
     <AllowNativeQuery>False</AllowNativeQuery>
     <AsAction>False</AsAction>
     <FastCombine>False</FastCombine>
-    <ClearLog>False</ClearLog>
-    <ShowEngineTraces>False</ShowEngineTraces>
+    <ClearLog>True</ClearLog>
+    <ShowEngineTraces>True</ShowEngineTraces>
     <ShowUserTraces>False</ShowUserTraces>
     <LegacyRedirects>False</LegacyRedirects>
     <SuppressRowErrors>False</SuppressRowErrors>
@@ -21,6 +21,7 @@
     <MaxRows>1000</MaxRows>
     <ExtensionProject>Yes</ExtensionProject>
     <Name>MyGraph</Name>
+    <ThrowOnFoldingFailure>False</ThrowOnFoldingFailure>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>false</DebugSymbols>
@@ -89,8 +90,7 @@
       <Reference Include="System.IO.Compression.FileSystem" />
       <Using Namespace="System.Globalization" />
       <Using Namespace="System.IO.Compression " />
-      <Code Type="Fragment" Language="cs">
-        <![CDATA[    
+      <Code Type="Fragment" Language="cs"><![CDATA[    
     using(FileStream fileStream = File.Create(OutputFile))
     using(ZipArchive archiveOut = new ZipArchive(fileStream, ZipArchiveMode.Create, false))
     {
@@ -101,8 +101,7 @@
             archiveOut.CreateEntryFromFile(fullPath, filename, CompressionLevel.Optimal);
         }
     }
-]]>
-      </Code>
+]]></Code>
     </Task>
   </UsingTask>
   <Target Name="BuildExtension" DependsOnTargets="ExtensionClean">

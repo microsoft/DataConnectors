@@ -7,8 +7,8 @@
 // TODO: set AAD client ID value in the client_id file
 client_id = Text.FromBinary(Extension.Contents("client_id")); 
 redirect_uri = "https://oauth.powerbi.com/views/oauthredirect.html";
-token_uri = "https://login.microsoftonline.com/common/oauth2/v2.0/token";
-authorize_uri = "https://login.microsoftonline.com/common/oauth2/v2.0/authorize";
+token_uri = "https://login.microsoftonline.com/organizations/oauth2/v2.0/token";
+authorize_uri = "https://login.microsoftonline.com/organizations/oauth2/v2.0/authorize";
 logout_uri = "https://login.microsoftonline.com/logout.srf";
 
 windowWidth = 720;
