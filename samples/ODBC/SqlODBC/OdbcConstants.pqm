@@ -908,7 +908,7 @@ SQL_CVT =
         SQL_FN_CVT_CAST        = 0x00000002
     ],
 
-    SQL_FUN_NUM = 
+    SQL_FN_NUM = 
     [
         //None = 0,
 
