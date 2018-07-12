@@ -1,12 +1,13 @@
 // values from https://github.com/Microsoft/ODBC-Specification/blob/master/Windows/inc/sqlext.h
 [
     Flags = (flags as list) => 
+        if (List.IsEmpty(flags)) then 0 else
         let
-            Loop = List.Generate(()=> [i = 0, Combined = 0],
+            Loop = List.Generate(()=> [i = 0, Combined = flags{0}],
                                     each [i] < List.Count(flags),
-                                    each [i = [i]+1, Combined = Number.BitwiseOr([Combined], flags{i})],
+                                    each [Combined = Number.BitwiseOr([Combined], flags{i}), i = [i]+1],
                                     each [Combined]),
-            Result = List.Last(Loop, 0)
+            Result = List.Last(Loop)
         in
             Result,
 
