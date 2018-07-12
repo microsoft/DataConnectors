@@ -39,8 +39,8 @@ shared HiveSample.Contents = (host as text, port as number) =>
             // set all connection string properties
             host = host,
             port = port,
-            authmech = 3,
-            thrifttransport=1
+            authmech = 3,       // UsernamePassword
+            thrifttransport=1   // SASL
         ],
 
         //
