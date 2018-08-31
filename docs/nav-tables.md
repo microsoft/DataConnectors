@@ -1,5 +1,5 @@
 # Using Navigation Tables
-Navigation Tables (or nav tables) are a core part of providing a user friendly experience for you connector. The Power Query experience displays them to the user after they have entered any required parameters for your data source function, and have authenticated with the data source. 
+Navigation Tables (or nav tables) are a core part of providing a user friendly experience for your connector. The Power Query experience displays them to the user after they have entered any required parameters for your data source function, and have authenticated with the data source. 
 
 ![NavTable](../blobs/navtable.png)
 
