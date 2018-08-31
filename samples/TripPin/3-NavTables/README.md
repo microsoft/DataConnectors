@@ -123,7 +123,7 @@ Running our test query again will give us a similar result as last time - with a
 
 > **Note:** You will not see the Navigator window appear in Visual Studio. The `M Query Output` window will always display the underlying table. 
 
-If we copy our extension over to our Power BI Desktop custom connector and invoke the new function from the Get Data dialog, we will see our navigator appear.
+Now rebuild, and then copy our extension over to the Power BI Desktop Custom Connectors folder and restart Power BI Desktop. After invoking the new function from the Get Data dialog using `http://services.odata.org/v4/TripPinService/`, we will see our navigator appear:
 
 ![TripPin Navigator](../../../blobs/trippin3Nav.png)
 

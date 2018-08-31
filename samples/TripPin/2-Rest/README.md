@@ -71,7 +71,7 @@ We'll do this by defining a common set of headers as a new variable in our conne
 ```
 DefaultRequestHeaders = [
     #"Accept" = "application/json;odata.metadata=minimal",  // column name and values only
-    #"OData-MaxVersion" = "4.0"                             // we only support v4
+    #"OData-MaxVersion" = "4.0"                             // we only support up to v4
 ];
 ```
 
