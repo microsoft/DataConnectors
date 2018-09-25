@@ -916,22 +916,27 @@ SQL_CVT =
         SQL_FN_NUM_ACOS        = 0x00000002,
         SQL_FN_NUM_ASIN        = 0x00000004,
         SQL_FN_NUM_ATAN        = 0x00000008,
+
         SQL_FN_NUM_ATAN2    = 0x00000010,
         SQL_FN_NUM_CEILING    = 0x00000020,
         SQL_FN_NUM_COS        = 0x00000040,
         SQL_FN_NUM_COT        = 0x00000080,
+
         SQL_FN_NUM_EXP        = 0x00000100,
         SQL_FN_NUM_FLOOR    = 0x00000200,
         SQL_FN_NUM_LOG        = 0x00000400,
         SQL_FN_NUM_MOD        = 0x00000800,
+
         SQL_FN_NUM_SIGN        = 0x00001000,
         SQL_FN_NUM_SIN        = 0x00002000,
         SQL_FN_NUM_SQRT        = 0x00004000,
         SQL_FN_NUM_TAN      = 0x00008000,
+
         SQL_FN_NUM_PI       = 0x00010000,
         SQL_FN_NUM_RAND     = 0x00020000,
         SQL_FN_NUM_DEGREES    = 0x00040000,
         SQL_FN_NUM_LOG10    = 0x00080000,
+
         SQL_FN_NUM_POWER    = 0x00100000,
         SQL_FN_NUM_RADIANS    = 0x00200000,
         SQL_FN_NUM_ROUND    = 0x00400000,

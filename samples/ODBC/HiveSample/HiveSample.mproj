@@ -1,5 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="BuildExtension" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project DefaultTargets="BuildExtension" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <SchemaVersion>2.0</SchemaVersion>
@@ -14,14 +13,14 @@
     <FastCombine>False</FastCombine>
     <ClearLog>True</ClearLog>
     <ShowEngineTraces>True</ShowEngineTraces>
-    <ShowUserTraces>False</ShowUserTraces>
+    <ShowUserTraces>True</ShowUserTraces>
     <LegacyRedirects>False</LegacyRedirects>
     <SuppressRowErrors>False</SuppressRowErrors>
     <SuppressCellErrors>False</SuppressCellErrors>
     <MaxRows>1000</MaxRows>
     <ExtensionProject>Yes</ExtensionProject>
-    <Name>MyGraph</Name>
-    <ThrowOnFoldingFailure>False</ThrowOnFoldingFailure>
+    <Name>HiveSample</Name>
+    <ThrowOnFoldingFailure>True</ThrowOnFoldingFailure>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>false</DebugSymbols>
@@ -39,45 +38,45 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <!--<Compile Include="AssemblyInfo.cs">
-      <SubType>Code</SubType>
-    </Compile>-->
-    <Compile Include="MyGraph.pq">
+    <Compile Include="HiveSample.pq">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="MyGraph16.png">
+    <Compile Include="HiveSample16.png">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="MyGraph20.png">
+    <Compile Include="HiveSample20.png">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="MyGraph24.png">
+    <Compile Include="HiveSample24.png">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="MyGraph32.png">
+    <Compile Include="HiveSample32.png">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="MyGraph40.png">
+    <Compile Include="HiveSample40.png">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="MyGraph48.png">
+    <Compile Include="HiveSample48.png">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="MyGraph64.png">
+    <Compile Include="HiveSample64.png">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="MyGraph80.png">
+    <Compile Include="HiveSample80.png">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="resources.resx">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="client_id">
+    <Compile Include="Diagnostics.pqm">
       <SubType>Content</SubType>
     </Compile>
-    <Content Include="MyGraph.query.pq">
+    <Content Include="HiveSample.query.pq">
       <SubType>Code</SubType>
     </Content>
+    <Compile Include="OdbcConstants.pqm">
+      <SubType>Content</SubType>
+    </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <UsingTask TaskName="BuildExtension" TaskFactory="CodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.v12.0.dll">

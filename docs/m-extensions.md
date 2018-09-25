@@ -17,6 +17,7 @@
   * [3.3 - Data Source Functions](#data-source-functions)
   * [3.4 - Authentication and Credentials](#authentication-and-credentials)
   * [3.5 - Data Source Paths](#data-source-paths)
+  * [3.6 - Gateway Support](#implementing-testconnection-for-gateway-support)
 * [4 - Next Steps](#next-steps)
 
 ## Overview
@@ -358,9 +359,8 @@ shared GithubSample.Contents = Value.ReplaceType(Github.Contents, type function 
 
 ### Implementing TestConnection for Gateway Support
 
-> Custom Connector support was added to the April 2018 release of the [Personal On-Premises Data Gateway](https://docs.microsoft.com/en-us/power-bi/service-gateway-onprem#install-the-gateway-in-personal-mode).
-> When running in Personal mode, the gateway can be used to support scheduled data refresh for sources that use an Import mode.
-> Note that Direct Query sources require the use of an Enterprise Gateway, which will be supported in a subsequent release.
+> Custom Connector support is now available in both Personal and Enterprise modes of the [On-Premises Data Gateway](https://powerbi.microsoft.com/en-us/blog/on-premises-data-gateway-july-update-is-now-available/).
+> Both gateway modes support **Import** - **Direct Query** support in the Enterprise mode is targeted at an upcoming release.
 
 > The method for implementing TestConnection functionality is likely to change prior while the Power BI Custom Data Connector functionality is in preview.
 
@@ -416,7 +416,7 @@ GithubSample = [
 ];
 ```
 
-#### Example: Connector with required parameters 
+#### Example: Connector with required parameters
 
 If your data source function has multiple parameters, or a single non-URL parameter,
 then the `dataSourcePath` value will be a json string containing the parameters. The snippet

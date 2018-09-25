@@ -359,13 +359,14 @@ The following code snippet provides a LimitClause implementation for a
 driver that supports LIMIT, but not OFFSET. Format: `LIMIT <row_count>`.
 
 ```
-LimitClause = (skip, take) =>
-    if (skip > 0) then error "Skip/Offset not supported"
-    else
-    [
-        Text = Text.Format("LIMIT #{0}", {take}),
-        Location = "AfterQuerySpecification"
-    ]
+LimitClause = (skip, take) =>
+    if (skip > 0) then error "Skip/Offset not supported"
+    else if (take <> null) then
+    [
+        Text = Text.Format("LIMIT #{0}", {take}),
+        Location = "AfterQuerySpecification"
+    ]
+    else ""
 ```
 
 ### Overriding ImplicitTypeConversions

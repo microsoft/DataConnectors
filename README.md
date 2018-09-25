@@ -29,7 +29,7 @@ Custom Connector support was added to the April 2018 release of the [Personal On
 
 Power BI Desktop users can download extension files and place them in a known directory (steps described above). Power BI Desktop will automatically load the extensions on restart.
 
-_We are hard at work on Office Store integration to make it easy for users to discover and install data connectors you build. During this preview phase, developers interested in distributing their connectors for use with Power BI can contact us at DataConnectors (at) microsoft.com._
+_We are hard at work on Office Store integration to make it easy for users to discover and install data connectors you build. During this preview phase, developers interested in distributing their connectors for use with Power BI can contact us at DataConnectors (at) microsoft.com. Currently, we are only distributing connectors by vendors and by third party developers acting with permission and on behalf of vendors, not unrelated third party developers._
 
 ## Additional Links and Resources
 
