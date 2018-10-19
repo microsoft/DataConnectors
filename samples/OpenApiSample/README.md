@@ -51,7 +51,7 @@ Will only work with the operations that support anonymous authentication.
 2. Calls the `listAPIs` function defined in the swagger
 3. Converts the results of `listAPIs` to nested navigation tables
 
-![apis.guru navigation table](../../../blobs/openapi_apiguru.png)
+![apis.guru navigation table](../../blobs/openapi_apiguru.png)
 
 Note, given the [limitations] described above, the majority of the APIs found here will not work without additional processing from a custom connector.
 
