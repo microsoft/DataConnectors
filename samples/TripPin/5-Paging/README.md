@@ -1,5 +1,5 @@
 # TripPin Part 5 - Paging
-This multi-part tutorial covers the creation of a new data source extension for Power Query. The tutorial is meant to be done sequentially – each lesson builds on the connector created in previous lessons, incrementally adding new capabilities to your connector. 
+This multi-part tutorial covers the creation of a new data source extension for Power Query. The tutorial is meant to be done sequentially â€“ each lesson builds on the connector created in previous lessons, incrementally adding new capabilities to your connector. 
 
 In this lesson, you will:
 
@@ -43,14 +43,14 @@ we've read all of our data.
 
 ```json
 {
-  "odata.context": "...",
-  "odata.count": 37,
-  "value": [
-    { },
-    { },
-    { }
-  ],
-  "odata.nextLink": "...?$skiptoken=342r89"
+Â  "odata.context": "...",
+Â  "odata.count": 37,
+Â  "value": [
+Â Â Â  { },
+Â Â Â  { },
+Â Â Â  { }
+Â  ],
+Â  "odata.nextLink": "...?$skiptoken=342r89"
 }
 ```
 
@@ -85,9 +85,9 @@ indicating that there are more pages of data available.
   "@odata.context": "http://services.odata.org/V4/TripPinService/$metadata#People",
   "@odata.nextLink": "http://services.odata.org/v4/TripPinService/People?%24skiptoken=8",
   "value": [
-    { },
-    { },
-    { }
+Â Â Â  { },
+Â Â Â  { },
+Â Â Â  { }
   ]
 }
 ```
@@ -218,7 +218,7 @@ If we look at the requests in fiddler, we should now see separate requests for e
 > **Note:** You'll notice duplicate requests for the first page of data from the service,
 > which is not ideal. The extra request is a result of the M engine's schema checking behavior.
 > We will ignore this issue for now and resolve it in the [next tutorial](../6-Schema)
-> where we will apply an explict schema.
+> where we will apply an explicit schema.
 
 ## Conclusion
 This lesson showed you how to implement pagination support for a Rest API. While the logic will 
