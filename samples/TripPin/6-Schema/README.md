@@ -1,5 +1,5 @@
 # TripPin Part 6 - Schema
-This multi-part tutorial covers the creation of a new data source extension for Power Query. The tutorial is meant to be done sequentially – each lesson builds on the connector created in previous lessons, incrementally adding new capabilities to your connector. 
+This multi-part tutorial covers the creation of a new data source extension for Power Query. The tutorial is meant to be done sequentially â€“ each lesson builds on the connector created in previous lessons, incrementally adding new capabilities to your connector. 
 
 In this lesson, you will:
 
@@ -252,7 +252,7 @@ GetPage = (url as text, optional schema as table) as table =>
 
 >**Note:** This GetPage implementation uses [Table.FromRecords](https://msdn.microsoft.com/library/mt260768.aspx) to convert the list of records in the json response to a table.
 >A major downside to use Table.FromRecords is that it assumes all records in the list have the same set of fields.
->This works for the TripPin service, since the OData records are guarenteed to contain the same fields, but this might not be the case for all REST APIs. 
+>This works for the TripPin service, since the OData records are guaranteed to contain the same fields, but this might not be the case for all REST APIs. 
 >A more robust implementation would use a combination of [Table.FromList](https://msdn.microsoft.com/library/mt260762.aspx) and [Table.ExpandRecordColumn](https://msdn.microsoft.com/library/mt260752.aspx).
 >Later tutorials will change the implementation to get the column list from the schema table, ensuring that no columns are lost/missing during the json -> M translation. 
 
