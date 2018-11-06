@@ -6,7 +6,7 @@ Data Connectors for Power BI enables users to connect to and access data from yo
 
 Data Connectors are created using the [M language](https://msdn.microsoft.com/library/mt211003.aspx). This is the same language used by the Power Query user experience found in Power BI Desktop and Excel 2016. Extensions allow you to define new functions for the M language, and can be used to enable connectivity to new data sources. While this document will focus on defining new connectors, much of the same process applies to defining general purpose M functions. Extensions can vary in complexity, from simple wrappers that essentially just provide "branding" over existing data source functions, to rich connectors that support Direct Query.
 
-Please see the [Data Connector technical reference](docs/m-extensions.md), and [TripPin tutorial samples](samples/TripPin) for more information.
+Please see the [Power Query Connector Developer Reference](https://docs.microsoft.com/en-us/power-query/handlingauthentication) for more details.
 
 ## Quickstart
 
@@ -14,22 +14,27 @@ Please see the [Data Connector technical reference](docs/m-extensions.md), and [
 2. Create a new Data Connector project
 3. Define your connector logic
 4. Build the project to produce an extension file
-5. Create a `[My Documents]\Power BI Desktop\Custom Connectors` directory
-6. Copy the extension file into this directory
-7. Enable the **Custom data connectors** preview feature in Power BI Desktop (under *File | Options and settings | Custom data connectors*)
-8. Restart Power BI Desktop
+5. Copy the extension file into the `[Documents]\Power BI Desktop\Custom Connectors` directory
+6. Open Power BI Desktop
 
-![Preview Feature](blobs/previewFeature.png)
+Note, to load extensions during development, you will need to lower the security level for extensions in Power BI Desktop to enable loading unsigned/uncertified connectors.
+
+1. Go to File | Options and settings | Options
+2. Go the Security tab
+3. Under *Data Extensions*, select *Allow any extension to load without warning or validation*
+4. Restart Power BI Desktop
 
 ## Gateway Support
 
-Custom Connector support was added to the April 2018 release of the [Personal On-Premises Gateway](https://docs.microsoft.com/en-us/power-bi/service-gateway-onprem#install-the-gateway-in-personal-mode). Please see the [technical documentation](docs/m-extensions.md) for more information on the [TestConnection handler](docs/m-extensions.md#implementing-testconnection-for-gateway-support), and the [TripPin Sample](samples/TripPin/9-TestConnection) for an example of how to add gateway support to your connector.
+The Power BI On-Premises Gateway now supports loading custom connectors.
+Please see the [technical documentation](https://docs.microsoft.com/en-us/power-query/handlinggatewaysupport) for more information, and the [TripPin Sample](samples/TripPin/9-TestConnection) for an example of how to add gateway support to your connector.
 
 ## Distribution of Data Connectors
 
 Power BI Desktop users can download extension files and place them in a known directory (steps described above). Power BI Desktop will automatically load the extensions on restart.
 
-_We are hard at work on Office Store integration to make it easy for users to discover and install data connectors you build. During this preview phase, developers interested in distributing their connectors for use with Power BI can contact us at DataConnectors (at) microsoft.com. Currently, we are only distributing connectors by vendors and by third party developers acting with permission and on behalf of vendors, not unrelated third party developers._
+Please see the [Connector Certification](https://docs.microsoft.com/en-us/power-query/connectorcertification) documentation
+for details on the certification process and requirements.
 
 ## Additional Links and Resources
 
