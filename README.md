@@ -46,7 +46,7 @@ for details on the certification process and requirements.
 
 The recording of the [Creating a Custom Data Connector session](https://www.youtube.com/watch?v=ecfRTEoYadI) from the [Microsoft Data Insights Summit 2017](https://powerbi.microsoft.com/en-us/blog/microsoft-data-insights-summit-2017-day-1-recap/) can be found by clicking the image below:
 
-[![Deep Dive intop the M Language](blobs/deepDiveVideo.png)](http://www.youtube.com/watch?v=ecfRTEoYadI)
+[![Deep Dive into the M Language](blobs/deepDiveVideo.png)](http://www.youtube.com/watch?v=ecfRTEoYadI)
 
 ## Hello World Sample
 
@@ -96,7 +96,7 @@ Data Connectors allow you to create new data sources, or customize and extend an
 
 ### Upcoming Changes
 
-Data Connectors are currently in preview. We plan to incrementally roll out a number of enhancements prior to general availability, including:
+Custom Connectors for Power BI has reached general availability, but further improvements are planned within the next twelve months, including:
 
 - [ ] File extension changes (.mez to .pqx)
 - [ ] Improved tracing and diagnostics for developing Direct Query capable connectors
