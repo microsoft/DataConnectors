@@ -10,8 +10,6 @@ Please see the [Data Connector technical reference](docs/m-extensions.md), and [
 
 ## Quickstart
 
-> **Note:** The steps to enable extensions changed in the June 2017 version of Power BI Desktop.
-
 1. Install the [Power Query SDK](https://aka.ms/powerquerysdk) from the Visual Studio Marketplace
 2. Create a new Data Connector project
 3. Define your connector logic
@@ -84,16 +82,15 @@ The following code sample defines a simple "Hello World" data source. See the [f
 
 Data Connectors allow you to create new data sources, or customize and extend an existing source. Common use cases include:
 
-- Creating a business analyst friendly view for a REST API
-- Providing branding for a source that Power Query supports with an existing connector (such as an OData service, or ODBC driver)
-- Implementing an OAuth v2 authentication flow for a SaaS offering
-- Exposing a limited/filtered view over your data source to improve usability
-- Supporting different authentication modes when creating a [Power BI Content Pack](https://powerbi.microsoft.com/documentation/powerbi-developer-content-pack-overview/)
-- Enabling Direct Query for a data source via an ODBC driver
-
-Currently, Data Connectors are only supported in Power BI Desktop.
+* Creating a business analyst friendly view for a REST API
+* Providing branding for a source that Power Query supports with an existing connector (such as an OData service, or ODBC driver)
+* Implementing an OAuth v2 authentication flow for a SaaS offering
+* Exposing a limited/filtered view over your data source to improve usability
+* Supporting different authentication modes when creating a [Power BI Content Pack](https://powerbi.microsoft.com/documentation/powerbi-developer-content-pack-overview/)
+* Enabling Direct Query for a data source via an ODBC driver
 
 ### Upcoming Changes
+
 Data Connectors are currently in preview. We plan to incrementally roll out a number of enhancements prior to general availability, including:
 
 - [ ] File extension changes (.mez to .pqx)

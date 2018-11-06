@@ -4,3 +4,5 @@ This multi-part tutorial covers the creation of a new data source extension for 
 In this lesson, you will:
 
 * Add paging support to the connector
+
+Please follow the tutorial at Microsoft Docs for Power Query [here](https://docs.microsoft.com/en-us/power-query/samples/trippin/5-paging/readme).

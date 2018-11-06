@@ -7,3 +7,5 @@ In this lesson, you will:
 * Dynamically set data types for columns
 * Enforce a table structure to avoid transformation errors due to missing columns
 * Hide columns from the result set
+
+Please follow the tutorial at Microsoft Docs for Power Query [here](https://docs.microsoft.com/en-us/power-query/samples/trippin/6-schema/readme).

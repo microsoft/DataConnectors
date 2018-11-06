@@ -7,4 +7,4 @@ In this lesson, you will:
 * Test your connector in Visual Studio
 * Register your connector in Power BI Desktop
 
-Please follow the tutorial at Microsoft Docs for Power Query here.
+Please follow the tutorial at Microsoft Docs for Power Query [here](https://docs.microsoft.com/en-us/power-query/samples/trippin/1-odata/readme).
