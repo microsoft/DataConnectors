@@ -7,3 +7,5 @@ In this lesson, you will:
 * Enforce a table schema using [M Types](https://msdn.microsoft.com/library/mt809131.aspx)
 * Set types for nested records and lists
 * Refactor code for reuse and unit testing
+
+Please follow the tutorial at Microsoft Docs for Power Query [here](https://docs.microsoft.com/en-us/power-query/samples/trippin/7-advancedschema/readme.
