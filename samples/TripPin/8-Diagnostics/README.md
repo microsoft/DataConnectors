@@ -7,3 +7,5 @@ In this lesson, you will:
 * Learn about the [Diagnostics.Trace](https://msdn.microsoft.com/query-bi/m/diagnostics-trace) function
 * Use the Diagnostics helper functions to add trace information to help debug your connector
 Please follow the tutorial at Microsoft Docs for Power Query [here](https://docs.microsoft.com/en-us/power-query/samples/trippin/8-diagnostics/readme).
+
+Please follow the tutorial at Microsoft Docs for Power Query [here](https://docs.microsoft.com/en-us/power-query/samples/trippin/8-diagnostics/readme).
