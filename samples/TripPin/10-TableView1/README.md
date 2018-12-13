@@ -12,3 +12,5 @@ In this lesson, you will:
   * `$count`
   * `$select`
   * `$orderby`
+  
+Please follow the tutorial at Microsoft Docs for Power Query [here](https://docs.microsoft.com/en-us/power-query/samples/trippin/10-tableview1/readme).
