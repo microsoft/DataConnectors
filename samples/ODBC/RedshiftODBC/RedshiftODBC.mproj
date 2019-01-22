@@ -40,6 +40,12 @@
     <Compile Include="RedshiftODBC.pq">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Diagnostics.pqm">
+      <SubType>Content</SubType>
+    </Compile>
+    <Compile Include="OdbcConstants.pqm">
+      <SubType>Content</SubType>
+    </Compile>
     <Content Include="RedshiftODBC.query.pq">
       <SubType>Code</SubType>
     </Content>
