@@ -65,13 +65,21 @@ shared RedshiftODBC.Database = (server as text, database as text, optional optio
                             rows = Table.TransformRows(types, each Diagnostics.LogValue("SQLGetTypeInfo " & _[TYPE_NAME], _)),
                             toTable = Table.FromRecords(rows)
                         in
-                            toTable,
-                // add the missing bpchar type by copying the 'char' entry and modifying the relevant values
-                charRecord = original{[TYPE_NAME="char",DATA_TYPE=-8]},
-                bpChar = charRecord & [TYPE_NAME = "bpchar",LOCAL_TYPE_NAME = "bpchar"],
-                finalTable = original & Table.FromRecords({bpChar})
+                            toTable,                
+                modified = 
+                    // older versions of the driver were missing an entry for 'bpchar'
+                    if (Table.IsEmpty(Table.SelectRows(original, each [TYPE_NAME] = "bpchar"))) then 
+                        let
+                            // add the missing bpchar type by copying the 'char' entry and modifying the relevant values
+                            charRecord = original{[TYPE_NAME="char",DATA_TYPE=-8]},
+                            bpChar = charRecord & [TYPE_NAME = "bpchar",LOCAL_TYPE_NAME = "bpchar"],
+                            finalTable = original & Table.FromRecords({bpChar})
+                        in
+                            finalTable
+                    else
+                        original
             in
-                Value.ReplaceType(finalTable, Value.Type(types)),
+                Value.ReplaceType(modified, Value.Type(types)),
 
         SQLColumns = (catalogName, schemaName, tableName, columnName, source) =>
             if (EnableTraceOutput <> true) then source else
