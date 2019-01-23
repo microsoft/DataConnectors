@@ -53,33 +53,45 @@ shared RedshiftODBC.Database = (server as text, database as text, optional optio
 
         ],
 
-        SQLGetTypeInfo = (types) => 
-            let
-                original =
-                    if (EnableTraceOutput <> true) then
-                        types 
-                    else
-                        let 
-                            // Outputting the entire table might be too large, and result in the value being truncated.
-                            // We can output a row at a time instead with Table.TransformRows()
-                            rows = Table.TransformRows(types, each Diagnostics.LogValue("SQLGetTypeInfo " & _[TYPE_NAME], _)),
-                            toTable = Table.FromRecords(rows)
-                        in
-                            toTable,
-                modified = 
-                    // older versions of the driver were missing an entry for 'bpchar'
-                    if (Table.IsEmpty(Table.SelectRows(original, each [TYPE_NAME] = "bpchar"))) then 
-                        let
-                            // add the missing bpchar type by copying the 'char' entry and modifying the relevant values
-                            charRecord = original{[TYPE_NAME="char",DATA_TYPE=-8]},
-                            bpChar = charRecord & [TYPE_NAME = "bpchar",LOCAL_TYPE_NAME = "bpchar"],
-                            finalTable = original & Table.FromRecords({bpChar})
-                        in
-                            finalTable
-                    else
-                        original
-            in
-                Value.ReplaceType(modified, Value.Type(types)),
+SQLGetTypeInfo = (types) => 
+    let
+        original =
+            if (EnableTraceOutput <> true) then
+                types 
+            else
+                let 
+                    // Outputting the entire table might be too large, and result in the value being truncated.
+                    // We can output a row at a time instead with Table.TransformRows()
+                    rows = Table.TransformRows(types, each Diagnostics.LogValue("SQLGetTypeInfo " & _[TYPE_NAME], _)),
+                    toTable = Table.FromRecords(rows)
+                in
+                    toTable,
+        modified = 
+            // older versions of the driver were missing an entry for 'bpchar'
+            if (Table.IsEmpty(Table.SelectRows(original, each [TYPE_NAME] = "bpchar"))) then 
+                let
+                    // add the missing bpchar type by copying the 'char' entry and modifying the relevant values
+                    charRecord = original{[TYPE_NAME="char",DATA_TYPE=-8]},
+                    bpChar = charRecord & [TYPE_NAME = "bpchar",LOCAL_TYPE_NAME = "bpchar"],
+                    finalTable = original & Table.FromRecords({bpChar})
+                in
+                    finalTable
+            else
+                original,
+
+        modified2 = 
+            // use of Redshift spectrum/external tables can add a "float" type
+            if (Table.IsEmpty(Table.SelectRows(modified, each [TYPE_NAME] = "float"))) then 
+                let
+                    origRecord = modified{[TYPE_NAME="float8",DATA_TYPE=6]},
+                    newRecord = origRecord & [TYPE_NAME = "float",LOCAL_TYPE_NAME = "float"],
+                    finalTable = modified & Table.FromRecords({newRecord})
+                in
+                    finalTable
+            else
+                modified
+    in
+        Value.ReplaceType(modified2, Value.Type(types)),
 
         SQLColumns = (catalogName, schemaName, tableName, columnName, source) =>
             if (EnableTraceOutput <> true) then source else
