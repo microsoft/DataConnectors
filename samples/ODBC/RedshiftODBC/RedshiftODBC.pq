@@ -65,7 +65,7 @@ shared RedshiftODBC.Database = (server as text, database as text, optional optio
                             rows = Table.TransformRows(types, each Diagnostics.LogValue("SQLGetTypeInfo " & _[TYPE_NAME], _)),
                             toTable = Table.FromRecords(rows)
                         in
-                            toTable,                
+                            toTable,
                 modified = 
                     // older versions of the driver were missing an entry for 'bpchar'
                     if (Table.IsEmpty(Table.SelectRows(original, each [TYPE_NAME] = "bpchar"))) then 
@@ -195,6 +195,13 @@ FixNavigationTable = (table) =>
         ReplaceType;
 
 RedshiftODBC = [
+    TestConnection = (dataSourcePath) => 
+        let
+            json = Json.Document(dataSourcePath),
+            server = json[server],
+            database = json[database]
+        in
+            { "RedshiftODBC.Database", server, database },
     Authentication = [
         UsernamePassword = [
         ]
