@@ -4,13 +4,17 @@
 shared SnowflakeODBC.Databases = (server as text, warehouse as text, options as nullable record) as table =>
     let
         Host = GetHost(server),
-        ConnectionTimeoutOption = TimeoutOption(options, "ConnectionTimeout"),
-        QueryTimeoutOption = TimeoutOption(options, "CommandTimeout"),
+        ConnectionTimeoutOption = GetTimeoutOption(options, "ConnectionTimeout"),
+        QueryTimeoutOption = GetTimeoutOption(options, "CommandTimeout"),
         BaseConnectionString =
             if options <> null and List.Count(List.Difference(Record.FieldNames(options), ValidOptions)) > 0 then
-                error Error.Record("Expression.Error", "Unexpected options field")
+                error Error.Record("Expression.Error", Extension.LoadString("InvalidOptionsKey"))
             else
-                [ driver = "SnowflakeDSIIDriver", server = Host, warehouse = warehouse ],
+                [
+                    driver = "SnowflakeDSIIDriver",
+                    server = Host,
+                    warehouse = warehouse
+                ],
         WithLoginTimeoutOption = AddConnectionStringOption(BaseConnectionString, "login_timeout", ConnectionTimeoutOption),
         WithNetworkTimeoutOption = AddConnectionStringOption(WithLoginTimeoutOption, "network_timeout", ConnectionTimeoutOption),
         ConnectionString = AddConnectionStringOption(WithNetworkTimeoutOption, "query_timeout", QueryTimeoutOption),
@@ -43,9 +47,9 @@ shared SnowflakeODBC.Databases = (server as text, warehouse as text, options as 
                             FLOAT = each Cast(_, "FLOAT"),
                             REAL = each Cast(_, "REAL"),
                             DOUBLE = each Cast(_, "DOUBLE"),
-                            TYPE_DATE = each Cast(Quote(Date.ToText(_, "yyyy-MM-dd")), "DATE"),
-                            TYPE_TIMESTAMP = each Cast(Quote(DateTime.ToText(_, "yyyy-MM-dd HH:mm:ss.sssssss")), "TIMESTAMP"),
-                            TYPE_TIME = each Cast(Quote(Time.ToText(_, "HH:mm:ss.sssssss")), "TIME")
+                            DATE = each Cast(Quote(Date.ToText(_, "yyyy-MM-dd")), "DATE"),
+                            TIMESTAMP = each Cast(Quote(DateTime.ToText(_, "yyyy-MM-dd HH:mm:ss.sssssss")), "TIMESTAMP"),
+                            TIME = each Cast(Quote(Time.ToText(_, "HH:mm:ss.sssssss")), "TIME")
                         ]
                     in
                         (typeInfo, ast) => Record.FieldOrDefault(Visitor, typeInfo[TYPE_NAME], each null)(ast[Value])
@@ -92,19 +96,11 @@ shared SnowflakeODBC.Databases = (server as text, warehouse as text, options as 
                             OdbcSqlType.TYPE_TIMESTAMP
                         else
                             dataType,
-                    FixDataTypeName = (dataTypeName) =>
-                        if dataTypeName = "TIMESTAMP" then
-                            "TYPE_TIMESTAMP"
-                        else if dataTypeName = "DATE" then
-                            "TYPE_DATE"
-                        else if dataTypeName = "TIME" then
-                            "TYPE_TIME"
-                        else
-                            dataTypeName,
-                    Transform = Table.TransformColumns(source, { { "DATA_TYPE", FixDataType }, { "TYPE_NAME", FixDataTypeName } })
+                    Transform = Table.TransformColumns(source, { { "DATA_TYPE", FixDataType } })
                 in
                     Transform,
-            HierarchicalNavigation = true
+            HierarchicalNavigation = true,
+            HideNativeQuery = true
         ],
         Databases = Odbc.DataSource(ConnectionString, Options),
         Metadata = Value.Metadata(Value.Type(Databases)),
@@ -155,17 +151,23 @@ shared SnowflakeODBC.Databases = (server as text, warehouse as text, options as 
     in
         WithMetadata;
 
-TimeoutOption = (options as nullable record, name as text) as nullable record =>
+GetOption = (options as nullable record, name as text) =>
     if options <> null and Record.HasFields(options, name) then
-        let
-            Field = Record.Field(options, name)
-        in
-            if Field is number and Field >= 0 and NumberIsInteger(Field) then
-                Field
-            else
-                error Error.Record("Expression.Error", "Invalid timeout option")
+        Record.Field(options, name)
     else
         null;
+
+GetTimeoutOption = (options as nullable record, name as text) =>
+    let
+        option = GetOption(options, name)
+    in
+        if option <> null then
+            if option is number and option >= 0 and NumberIsInteger(option) then
+                option
+            else
+                error Error.Record("Expression.Error", Text.Format(Extension.LoadString("InvalidTimeoutOptionError"), { name }))
+        else
+            null;
 
 GetHost = (server as text) as text =>
     let
@@ -193,7 +195,10 @@ AddConnectionStringOption = (options as record, name as text, value as any) as r
 
 NumberIsInteger = (x as number) => Number.RoundDown(x) = x;
 DriverDownloadUrl = "http://go.microsoft.com/fwlink/?LinkID=823762";
-ValidOptions = { "ConnectionTimeout", "CommandTimeout" };
+ValidOptions = {
+    "ConnectionTimeout",
+    "CommandTimeout"
+};
 DataSourceMissingClientLibrary = "DataSource.MissingClientLibrary";
 DataSourceError = "DataSource.Error";
 
