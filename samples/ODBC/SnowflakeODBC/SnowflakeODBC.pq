@@ -1,14 +1,20 @@
 ﻿section SnowflakeODBC;
 
+// When set to true, additional trace information will be written out to the User log. 
+// This should be set to false before release. Tracing is done through a call to 
+// Diagnostics.LogValue(). When EnableTraceOutput is set to false, the call becomes a 
+// no-op and simply returns the original value.
+EnableTraceOutput = true;
+
 [DataSource.Kind="SnowflakeODBC", Publish="SnowflakeODBC.UI"]
-shared SnowflakeODBC.Databases = (server as text, warehouse as text, options as nullable record) as table =>
+shared SnowflakeODBC.Databases = (server as text, warehouse as text, optional options as nullable record) as table =>
     let
         Host = GetHost(server),
         ConnectionTimeoutOption = GetTimeoutOption(options, "ConnectionTimeout"),
         QueryTimeoutOption = GetTimeoutOption(options, "CommandTimeout"),
         BaseConnectionString =
             if options <> null and List.Count(List.Difference(Record.FieldNames(options), ValidOptions)) > 0 then
-                error Error.Record("Expression.Error", Extension.LoadString("InvalidOptionsKey"))
+                error Error.Record("Expression.Error", "InvalidOptionsKey")
             else
                 [
                     driver = "SnowflakeDSIIDriver",
@@ -74,6 +80,28 @@ shared SnowflakeODBC.Databases = (server as text, warehouse as text, options as 
                 else
                     error errorRecord,
 
+            // SQLGetTypeInfo can be specified in two ways:
+            // 1. A #table() value that returns the same type information as an ODBC
+            //    call to SQLGetTypeInfo.
+            // 2. A function that accepts a table argument, and returns a table. The 
+            //    argument will contain the original results of the ODBC call to SQLGetTypeInfo.
+            //    Your function implementation can modify/add to this table.
+            //
+            // For details of the format of the types table parameter and expected return value,
+            // please see: https://docs.microsoft.com/en-us/sql/odbc/reference/syntax/sqlgettypeinfo-function
+            //
+            // The sample implementation provided here will simply output the original table
+            // to the user trace log, without any modification. 
+            SQLGetTypeInfo = (types) => 
+                if (EnableTraceOutput <> true) then types else
+                let
+                    // Outputting the entire table might be too large, and result in the value being truncated.
+                    // We can output a row at a time instead with Table.TransformRows()
+                    rows = Table.TransformRows(types, each Diagnostics.LogValue("SQLGetTypeInfo " & _[TYPE_NAME], _)),
+                    toTable = Table.FromRecords(rows)
+                in
+                    Value.ReplaceType(toTable, Value.Type(types)),         
+
             // This is to work around the driver returning the deprecated
             // TIMESTAMP, DATE and TIME instead of TYPE_TIMESTAMP, TYPE_DATE and TYPE_TIME
             // for column metadata returned by SQLColumns. The column types also don't
@@ -98,7 +126,19 @@ shared SnowflakeODBC.Databases = (server as text, warehouse as text, options as 
                             dataType,
                     Transform = Table.TransformColumns(source, { { "DATA_TYPE", FixDataType } })
                 in
-                    Transform,
+                    if (EnableTraceOutput <> true) then Transform else
+                    // the if statement conditions will force the values to evaluated/written to diagnostics
+                    if (Diagnostics.LogValue("SQLColumns.TableName", tableName) <> "***" and Diagnostics.LogValue("SQLColumns.ColumnName", columnName) <> "***") then
+                        let
+                            // Outputting the entire table might be too large, and result in the value being truncated.
+                            // We can output a row at a time instead with Table.TransformRows()
+                            rows = Table.TransformRows(Transform, each Diagnostics.LogValue("SQLColumns", _)),
+                            toTable = Table.FromRecords(rows)
+                        in
+                            Value.ReplaceType(toTable, Value.Type(Transform))
+                    else
+                        Transform,
+
             HierarchicalNavigation = true,
             HideNativeQuery = true
         ],
@@ -165,7 +205,7 @@ GetTimeoutOption = (options as nullable record, name as text) =>
             if option is number and option >= 0 and NumberIsInteger(option) then
                 option
             else
-                error Error.Record("Expression.Error", Text.Format(Extension.LoadString("InvalidTimeoutOptionError"), { name }))
+                error Error.Record("Expression.Error", Text.Format("InvalidTimeoutOptionError: #{0}"), { name })
         else
             null;
 
@@ -213,3 +253,22 @@ SnowflakeODBC.UI = [
     Category = "Database",
     SupportsDirectQuery = true
 ];
+
+// 
+// Load common library functions
+// 
+Extension.LoadFunction = (name as text) =>
+    let
+        binary = Extension.Contents(name),
+        asText = Text.FromBinary(binary)
+    in
+        Expression.Evaluate(asText, #shared);
+
+// Diagnostics module contains multiple functions. We can take the ones we need.
+Diagnostics = Extension.LoadFunction("Diagnostics.pqm");
+Diagnostics.LogValue = if (EnableTraceOutput) then Diagnostics[LogValue] else (prefix, value) => value;
+
+// OdbcConstants contains numeric constants from the ODBC header files, and a 
+// helper function to create bitfield values.
+ODBC = Extension.LoadFunction("OdbcConstants.pqm");
+Odbc.Flags = ODBC[Flags];
