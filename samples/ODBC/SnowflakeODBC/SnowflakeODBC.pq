@@ -4,7 +4,7 @@
 // This should be set to false before release. Tracing is done through a call to 
 // Diagnostics.LogValue(). When EnableTraceOutput is set to false, the call becomes a 
 // no-op and simply returns the original value.
-EnableTraceOutput = true;
+EnableTraceOutput = false;
 
 [DataSource.Kind="SnowflakeODBC", Publish="SnowflakeODBC.UI"]
 shared SnowflakeODBC.Databases = (server as text, warehouse as text, optional options as nullable record) as table =>
@@ -140,7 +140,8 @@ shared SnowflakeODBC.Databases = (server as text, warehouse as text, optional op
                         Transform,
 
             HierarchicalNavigation = true,
-            HideNativeQuery = true
+            HideNativeQuery = true,
+            SoftNumbers = true
         ],
         Databases = Odbc.DataSource(ConnectionString, Options),
         Metadata = Value.Metadata(Value.Type(Databases)),
