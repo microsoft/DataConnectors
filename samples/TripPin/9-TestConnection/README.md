@@ -7,3 +7,5 @@ In this lesson, you will:
 * Add a TestConnection handler
 * Configure the Power BI On-Premises Data Gateway (Personal mode)
 * Test scheduled refresh through the Power BI service
+
+Please follow the tutorial at Microsoft Docs for Power Query [here](https://docs.microsoft.com/en-us/power-query/samples/trippin/9-testconnection/readme).
