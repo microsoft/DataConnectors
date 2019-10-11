@@ -38,7 +38,9 @@ shared DirectSQL.Database = (server as text, database as text) as table =>
         // 
         // The second argument is the options record which allows us to set the credential
         // connection string properties, and override default behaviors.  
-        OdbcDataSource = Odbc.DataSource(ConnectionString, CredentialConnectionString & [
+        OdbcDataSource = Odbc.DataSource(ConnectionString, [
+            // Pass the credential-specific part of the connection string
+            CredentialConnectionString = CredentialConnectionString,
             // Enables client side connection pooling for the ODBC driver.
             // Most drivers will want to set this value to true.
             ClientConnectionPooling = true,
