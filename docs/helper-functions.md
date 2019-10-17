@@ -129,7 +129,9 @@ Table.GenerateByPage = (getNextPage as function) as table =>
             (lastPage) => getNextPage(lastPage) // pass the previous page to the next function call
         ),
         // concatenate the pages together
-        tableOfPages = Table.FromList(listOfPages, Splitter.SplitByNothing(), {"Column1"}),
+        // the two optional parameters will allow paged responses that might have inconsistent
+        // schemas to be converted to a table that can be processed further in the calling function(s)
+        tableOfPages = Table.FromList(listOfPages, Splitter.SplitByNothing(), {"Column1"}, null, ExtraValues.Ignore),
         firstRow = tableOfPages{0}?
     in
         // if we didn't get back any pages of data, return an empty table
