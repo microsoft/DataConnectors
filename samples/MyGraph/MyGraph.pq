@@ -14,7 +14,12 @@ logout_uri = "https://login.microsoftonline.com/logout.srf";
 windowWidth = 720;
 windowHeight = 1024;
 
-// See https://developer.microsoft.com/en-us/graph/docs/authorization/permission_scopes 
+// The "offline_access" scope is required to receive a refresh token value. It is added
+// separately from the Graph scopes. Please see
+// https://docs.microsoft.com/en-us/azure/active-directory/develop/v2-permissions-and-consent#offline_access
+//
+// For more information on available Graph scopes, please see 
+// https://developer.microsoft.com/en-us/graph/docs/authorization/permission_scopes 
 scope_prefix = "https://graph.microsoft.com/";
 scopes = {
     "User.ReadWrite",
@@ -110,7 +115,7 @@ StartLogin = (resourceUrl, state, display) =>
             client_id = client_id,  
             redirect_uri = redirect_uri,
             state = state,
-            scope = GetScopeString(scopes, scope_prefix),
+            scope = "offline_access " & GetScopeString(scopes, scope_prefix),
             response_type = "code",
             response_mode = "query",
             login = "login"
@@ -159,7 +164,7 @@ TokenMethod = (grantType, tokenField, code) =>
     let
         queryString = [
             client_id = client_id,
-            scope = GetScopeString(scopes, scope_prefix),
+            scope = "offline_access " & GetScopeString(scopes, scope_prefix),
             grant_type = grantType,
             redirect_uri = redirect_uri
         ],
