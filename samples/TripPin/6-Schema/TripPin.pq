@@ -96,7 +96,7 @@ GetPage = (url as text, optional schema as table) as table =>
         response = Web.Contents(url, [ Headers = DefaultRequestHeaders ]),        
         body = Json.Document(response),
         nextLink = GetNextLink(body),
-        data = Table.FromRecords(body[value]),
+        data = Table.FromRecords(body[value], schema[Name], MissingField.UseNull),
         // enforce the schema
         withSchema = if (schema <> null) then SchemaTransformTable(data, schema) else data
     in
