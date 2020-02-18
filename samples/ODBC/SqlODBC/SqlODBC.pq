@@ -41,8 +41,43 @@ Config_DriverName = "SQL Server Native Client 11.0";
 // 
 Config_SqlConformance = ODBC[SQL_SC][SQL_SC_SQL92_FULL];  // null, 1, 2, 4, 8
 
+// This setting controls row count limits and offsets. If not set correctly, query
+// folding capabilities for this connector will be extremely limited. You can use
+// the LimitClauseKind constants to match common LIMIT/OFFSET SQL formats. If none
+// of the common formats match your desired SQL syntax, set LimitClauseKind to
+// LimitClauseKind.None and use the AstVisitor code below (commented out) to
+// generate a custom format.
+//
+// LimitClauseKind values and formats: 
+//
+// LimitClauseKind.Top (LIMIT only, OFFSET not supported)
+// -------------------
+// SELECT TOP 100 *
+// FROM table
+//
+// LimitClauseKind.Limit (LIMIT only, OFFSET not supported)
+// ---------------------
+// SELECT * 
+// FROM table
+// LIMIT 100
+//
+// LimitClauseKind.LimitOffset
+// ---------------------------
+// SELECT *
+// FROM table
+// LIMIT 100 OFFSET 200
+//
+// LimitClauseKind.AnsiSql2008
+// ---------------------------
+// SELECT *
+// FROM table
+// OFFSET 200 ROWS
+// FETCH FIRST 100 ROWS ONLY
+//
+Config_LimitClauseKind = LimitClauseKind.Top; // see above
+
 // Set this option to true if your ODBC supports the standard username/password 
-// handling through the UN and PWD connection string parameters. If the user 
+// handling through the UID and PWD connection string parameters. If the user 
 // selects UsernamePassword auth, the supplied values will be automatically
 // added to the CredentialConnectionString. 
 //
@@ -74,12 +109,6 @@ Config_StringLiterateEscapeCharacters  = { "\" }; // ex. { "\" }
 // Set to false or null to leave default behavior. 
 //
 Config_UseCastInsteadOfConvert = null; // true, false, null
-
-// If the driver supports the TOP clause in select statements, set this to true. 
-// If set to false, you MUST implement the AstVisitor for the LimitClause in the 
-// main body of the code below. 
-//
-Config_SupportsTop = true; // true, false
 
 // Set this to true to enable Direct Query in addition to Import mode.
 //
@@ -182,9 +211,8 @@ shared SqlODBC.Contents = (server as text) =>
                 source,
 
         // This record allows you to customize the generated SQL for certain
-        // operations. The most common usage is to define syntax for LIMIT/OFFSET operators 
-        // when TOP is not supported. 
-        // 
+        // operations. The most common usage is to define syntax for LIMIT/OFFSET operators.
+        //
 /*
         AstVisitor = [
             LimitClause = (skip, take) =>
@@ -194,6 +222,7 @@ shared SqlODBC.Contents = (server as text) =>
                 in
                     [
                         Text = Text.Format("#{0} #{1}", {offset, limit}),
+                        // Possible values for Location - BeforeQuerySpecification, AfterQuerySpecification, AfterSelect, AfterSelectBeforeModifiers
                         Location = "AfterQuerySpecification"
                     ]
         ],
@@ -306,11 +335,11 @@ BuildOdbcConfig = () as record =>
             else
                 withParams,
 
-        withTop =
+        withLimitClauseKind = 
             let
                 caps = withEscape[SqlCapabilities] & [ 
                     SqlCapabilities = [
-                        SupportsTop = Config_SupportsTop
+                        LimitClauseKind = Config_LimitClauseKind
                     ]
                 ]
             in
@@ -319,15 +348,15 @@ BuildOdbcConfig = () as record =>
         withCastOrConvert = 
             if (Config_UseCastInsteadOfConvert = true) then
                 let
-                    caps = withTop[SQLGetFunctions] & [ 
+                    caps = withLimitClauseKind[SQLGetFunctions] & [ 
                         SQLGetFunctions = [
                             SQL_CONVERT_FUNCTIONS = 0x2 /* SQL_FN_CVT_CAST */
                         ]
                     ]
                 in
-                    withTop & caps
+                    withLimitClauseKind & caps
             else
-                withTop,
+                withLimitClauseKind,
 
         withSqlConformance =
             if (Config_SqlConformance <> null) then
