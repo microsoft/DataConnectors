@@ -106,7 +106,7 @@ Config_StringLiterateEscapeCharacters  = { "\" }; // ex. { "\" }
 // Override this if the driver expects the use of CAST instead of CONVERT.
 // By default, the query will be generated using ANSI SQL CONVERT syntax.
 //
-// Set to false or null to leave default behavior. 
+// Set to null to leave default behavior.
 //
 Config_UseCastInsteadOfConvert = null; // true, false, null
 
@@ -346,11 +346,16 @@ BuildOdbcConfig = () as record =>
                 withEscape & caps,
 
         withCastOrConvert = 
-            if (Config_UseCastInsteadOfConvert = true) then
+            if (Config_UseCastInsteadOfConvert <> null) then
                 let
-                    caps = withLimitClauseKind[SQLGetFunctions] & [ 
-                        SQLGetFunctions = [
-                            SQL_CONVERT_FUNCTIONS = 0x2 /* SQL_FN_CVT_CAST */
+                    value =
+                        if (Config_UseCastInsteadOfConvert = true) then 
+                            ODBC[SQL_FN_CVT][SQL_FN_CVT_CAST]
+                        else
+                            ODBC[SQL_FN_CVT][SQL_FN_CVT_CONVERT],
+                    caps = withLimitClauseKind[SQLGetInfo] & [ 
+                        SQLGetInfo = [
+                            SQL_CONVERT_FUNCTIONS = value
                         ]
                     ]
                 in
@@ -390,4 +395,3 @@ Diagnostics.LogValue = if (EnableTraceOutput) then Diagnostics[LogValue] else (p
 // OdbcConstants contains numeric constants from the ODBC header files, and a 
 // helper function to create bitfield values.
 ODBC = Extension.LoadFunction("OdbcConstants.pqm");
-Odbc.Flags = ODBC[Flags];
