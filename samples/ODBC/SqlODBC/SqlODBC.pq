@@ -149,20 +149,20 @@ shared SqlODBC.Contents = (server as text) =>
         //
         // Configuration options for the call to Odbc.DataSource
         //
-        defaultConfig = BuildOdbcConfig(),
+        defaultConfig = Diagnostics.LogValue("BuildOdbcConfig", BuildOdbcConfig()),
 
-        SqlCapabilities = defaultConfig[SqlCapabilities] & [
+        SqlCapabilities = Diagnostics.LogValue("SqlCapabilities_Options", defaultConfig[SqlCapabilities] & [
             // place custom overrides here
             FractionalSecondsScale = 3
-        ],
+        ]),
 
         // Please refer to the ODBC specification for SQLGetInfo properties and values.
         // https://github.com/Microsoft/ODBC-Specification/blob/master/Windows/inc/sqlext.h
-        SQLGetInfo = defaultConfig[SQLGetInfo] & [
+        SQLGetInfo = Diagnostics.LogValue("SQLGetInfo_Options", defaultConfig[SQLGetInfo] & [
             // place custom overrides here
             SQL_SQL92_PREDICATES = ODBC[SQL_SP][All],
             SQL_AGGREGATE_FUNCTIONS = ODBC[SQL_AF][All]
-        ],
+        ]),
 
         // SQLGetTypeInfo can be specified in two ways:
         // 1. A #table() value that returns the same type information as an ODBC
@@ -227,6 +227,7 @@ shared SqlODBC.Contents = (server as text) =>
                     ]
         ],
 */
+
         OdbcDatasource = Odbc.DataSource(ConnectionString, [
             // A logical (true/false) that sets whether to view the tables grouped by their schema names
             HierarchicalNavigation = true, 
@@ -293,7 +294,15 @@ SqlODBC.Icons = [
 
 // build settings based on configuration variables
 BuildOdbcConfig = () as record =>
-    let        
+    let
+        Merge = (previous as record, optional caps as record, optional funcs as record, optional getInfo as record) as record => 
+            let
+                newCaps = if (caps <> null) then previous[SqlCapabilities] & caps else previous[SqlCapabilities],
+                newFuncs = if (funcs <> null) then previous[SQLGetFunctions] & funcs else previous[SQLGetFunctions],
+                newGetInfo = if (getInfo <> null) then previous[SQLGetInfo] & getInfo else previous[SQLGetInfo]
+            in
+                [ SqlCapabilities = newCaps, SQLGetFunctions = newFuncs, SQLGetInfo = newGetInfo ],
+
         defaultConfig = [
             SqlCapabilities = [],
             SQLGetFunctions = [],
@@ -303,47 +312,39 @@ BuildOdbcConfig = () as record =>
         withParams =
             if (Config_UseParameterBindings = false) then
                 let 
-                    caps = defaultConfig[SqlCapabilities] & [ 
-                        SqlCapabilities = [
-                            SupportsNumericLiterals = true,
-                            SupportsStringLiterals = true,                
-                            SupportsOdbcDateLiterals = true,
-                            SupportsOdbcTimeLiterals = true,
-                            SupportsOdbcTimestampLiterals = true
-                        ]
+                    caps = [
+                        SupportsNumericLiterals = true,
+                        SupportsStringLiterals = true,
+                        SupportsOdbcDateLiterals = true,
+                        SupportsOdbcTimeLiterals = true,
+                        SupportsOdbcTimestampLiterals = true
                     ],
-                    funcs = defaultConfig[SQLGetFunctions] & [
-                        SQLGetFunctions = [
-                            SQL_API_SQLBINDPARAMETER = false
-                        ]
+                    funcs = [
+                        SQL_API_SQLBINDPARAMETER = false
                     ]
                 in
-                    defaultConfig & caps & funcs
+                    Merge(defaultConfig, caps, funcs)
             else
                 defaultConfig,
                 
         withEscape = 
             if (Config_StringLiterateEscapeCharacters <> null) then 
                 let
-                    caps = withParams[SqlCapabilities] & [ 
-                        SqlCapabilities = [
-                            StringLiteralEscapeCharacters = Config_StringLiterateEscapeCharacters
-                        ]
+                    caps = [
+                        StringLiteralEscapeCharacters = Config_StringLiterateEscapeCharacters
                     ]
                 in
-                    withParams & caps
+                    Merge(withParams, caps)
             else
                 withParams,
 
         withLimitClauseKind = 
             let
-                caps = withEscape[SqlCapabilities] & [ 
-                    SqlCapabilities = [
-                        LimitClauseKind = Config_LimitClauseKind
-                    ]
+                caps = [ 
+                    LimitClauseKind = Config_LimitClauseKind
                 ]
             in
-                withEscape & caps,
+                Merge(withEscape, caps),
 
         withCastOrConvert = 
             if (Config_UseCastInsteadOfConvert <> null) then
@@ -353,26 +354,22 @@ BuildOdbcConfig = () as record =>
                             ODBC[SQL_FN_CVT][SQL_FN_CVT_CAST]
                         else
                             ODBC[SQL_FN_CVT][SQL_FN_CVT_CONVERT],
-                    caps = withLimitClauseKind[SQLGetInfo] & [ 
-                        SQLGetInfo = [
-                            SQL_CONVERT_FUNCTIONS = value
-                        ]
+                    getInfo = [ 
+                        SQL_CONVERT_FUNCTIONS = value
                     ]
                 in
-                    withLimitClauseKind & caps
+                    Merge(withLimitClauseKind, null, null, getInfo)
             else
                 withLimitClauseKind,
 
         withSqlConformance =
             if (Config_SqlConformance <> null) then
                 let
-                    caps = withCastOrConvert[SQLGetInfo] & [
-                        SQLGetInfo = [
-                            SQL_SQL_CONFORMANCE = Config_SqlConformance
-                        ]
+                    getInfo = [
+                        SQL_SQL_CONFORMANCE = Config_SqlConformance
                     ]
                 in
-                    withCastOrConvert & caps
+                    Merge(withCastOrConvert, null, null, getInfo)
             else
                 withCastOrConvert
     in
