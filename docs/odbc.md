@@ -150,11 +150,6 @@ The following table describes the public fields in the options record.
 <p>If your driver supports Windows Authentication, but requires additional or alternate settings in your connection string, you should set this value to false and use the CredentialConnectionString option record field described below.</p>
 <p>Default: true</p></td>
 </tr>
-<tr class="even">
-<td>LimitClauseKind</td>
-<td><p>A number value that controls how SQL is generated for Table.FirstN and Table.Skip. Because SQL-92 didn't specify this functionality, there's a lot of variation between different SQL dialects. When not set, these functions are not folded to the ODBC source.</p>
-<p>Default: LimitClauseKind.None</p></td>
-</tr>
 </tbody>
 </table>
 
@@ -275,15 +270,8 @@ No documentation available.
 
 #### LimitClause
 
-This functionality has been replaced by the LimitClauseKind option on [Odbc.DataSource](https://msdn.microsoft.com/library/mt708843).
-LimitClauseKind currently has four variations, which generate SQL text as follows.
-
-LimitClauseKind.Top: `SELECT TOP 100 * FROM table`
-LimitClauseKind.Limit: `SELECT * FROM table LIMIT 100`
-LimitClauseKind.LimitOffset: `SELECT * from table LIMIT 100 OFFSET 200`
-LimitClauseKind.AnsiSql2008: `SELECT * from table OFFSET 200 ROWS FETCH FIRST 100 ROWS ONLY`
-
-The following is the original documentation for the LimitClause field.
+This functionality has been replaced by the LimitClauseKind option of SqlCapabilities; see that section for more information. The
+following is the original documentation for the LimitClause field.
 
 This field is a function that receives two `Int64.Type` arguments (skip,
 take), and returns a record with two text fields (Text, Location).
@@ -410,7 +398,7 @@ LimitClause = (skip, take) =>
 </tr>
 <tr class="odd">
 <td>SupportsTop</td>
-<td><p>A logical value which indicates the driver supports the TOP clause to limit the number of returned rows. This option should be avoided in favor of setting the LimitClauseKind.</p>
+<td><p>A logical value which indicates the driver supports the TOP clause to limit the number of returned rows. This option is deprecated in favor of setting the LimitClauseKind.</p>
 <p>Default: false</p></td>
 </tr>
 <tr class="even">
@@ -450,6 +438,15 @@ LimitClause = (skip, take) =>
 <td>SupportsOdbcTimestampLiterals</td>
 <td><p>A logical value which indicates whether the generated SQL should include timestamp literals values. When set to false, timestamp values will always be specified using Parameter Binding.</p>
 <p>Default: false</p></td>
+</tr>
+<tr class="odd">
+<td>LimitClauseKind</td>
+<td><p>A number value that controls how SQL is generated for Table.FirstN and Table.Skip. Because SQL-92 didn't specify this functionality, there's a lot of variation between different SQL dialects. When not set, these functions are not folded to the ODBC source. LimitClauseKind currently has four variations, which generate SQL text as follows.</p>
+<p>LimitClauseKind.Top: `SELECT TOP 100 * FROM table`</p>
+<p>LimitClauseKind.Limit: `SELECT * FROM table LIMIT 100`</p>
+<p>LimitClauseKind.LimitOffset: `SELECT * from table LIMIT 100 OFFSET 200`</p>
+<p>LimitClauseKind.AnsiSql2008: `SELECT * from table OFFSET 200 ROWS FETCH FIRST 100 ROWS ONLY`</p>
+<p>Default: LimitClauseKind.None</p></td>
 </tr>
 </tbody>
 </table>
