@@ -25,19 +25,11 @@ shared SnowflakeODBC.Databases = (server as text, warehouse as text, optional op
         WithNetworkTimeoutOption = AddConnectionStringOption(WithLoginTimeoutOption, "network_timeout", ConnectionTimeoutOption),
         ConnectionString = AddConnectionStringOption(WithNetworkTimeoutOption, "query_timeout", QueryTimeoutOption),
         Options = [
+            // Snowflake supports "LIMIT <take> [OFFSET <skip>]". While supported in the documented grammar,
+            // using OFFSET without LIMIT produces a syntax error so we can't use LimitClauseKind.LimitOffset.
+            LimitClauseKind = LimitClauseKind.Limit,
+
             AstVisitor = [
-                LimitClause = (skip, take) =>
-                    if skip = 0 and take = null then
-                        ...
-                    else
-                        let
-                            // While supported in the documented grammar, using OFFSET without LIMIT produces a synax error.
-                            take = if take = null then 4611686018427387903 else take
-                        in
-                            [
-                                Text = Text.Format("LIMIT #{0} OFFSET #{1}", { take, skip }),
-                                Location = "AfterQuerySpecification"
-                            ],
                 Constant =
                     let
                         Quote = each Text.Format("'#{0}'", { _ }),

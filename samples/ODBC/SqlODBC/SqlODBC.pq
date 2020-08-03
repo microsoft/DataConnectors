@@ -44,9 +44,10 @@ Config_SqlConformance = ODBC[SQL_SC][SQL_SC_SQL92_FULL];  // null, 1, 2, 4, 8
 // This setting controls row count limits and offsets. If not set correctly, query
 // folding capabilities for this connector will be extremely limited. You can use
 // the LimitClauseKind constants to match common LIMIT/OFFSET SQL formats. If none
-// of the common formats match your desired SQL syntax, set LimitClauseKind to
-// LimitClauseKind.None and use the AstVisitor code below (commented out) to
-// generate a custom format.
+// of the supported formats match your desired SQL syntax, consider filing a feature
+// request to support your variation.
+//
+// Supporting OFFSET is considerably less important than supporting LIMIT.
 //
 // LimitClauseKind values and formats: 
 //
@@ -66,6 +67,10 @@ Config_SqlConformance = ODBC[SQL_SC][SQL_SC_SQL92_FULL];  // null, 1, 2, 4, 8
 // SELECT *
 // FROM table
 // LIMIT 100 OFFSET 200
+//
+// This option requires that the SQL dialect support all three variations:
+// "LIMIT x", "LIMIT x OFFSET y" and "OFFSET y". If your SQL dialect only supports
+// OFFSET when LIMIT is also specified, use LimitClauseKind.Limit instead.
 //
 // LimitClauseKind.AnsiSql2008
 // ---------------------------
@@ -210,24 +215,6 @@ shared SqlODBC.Contents = (server as text) =>
             else
                 source,
 
-        // This record allows you to customize the generated SQL for certain
-        // operations. The most common usage is to define syntax for LIMIT/OFFSET operators.
-        //
-/*
-        AstVisitor = [
-            LimitClause = (skip, take) =>
-                let
-                    offset = if (skip <> null and skip > 0) then Text.Format("OFFSET #{0} ROWS", {skip}) else "",
-                    limit = if (take <> null) then Text.Format("LIMIT #{0}", {take}) else ""
-                in
-                    [
-                        Text = Text.Format("#{0} #{1}", {offset, limit}),
-                        // Possible values for Location - BeforeQuerySpecification, AfterQuerySpecification, AfterSelect, AfterSelectBeforeModifiers
-                        Location = "AfterQuerySpecification"
-                    ]
-        ],
-*/
-
         OdbcDatasource = Odbc.DataSource(ConnectionString, [
             // A logical (true/false) that sets whether to view the tables grouped by their schema names
             HierarchicalNavigation = true, 
@@ -242,7 +229,6 @@ shared SqlODBC.Contents = (server as text) =>
 
             // These values should be set by previous steps
             CredentialConnectionString = CredentialConnectionString,
-            //AstVisitor = AstVisitor,
             SqlCapabilities = SqlCapabilities,
             SQLColumns = SQLColumns,
             SQLGetInfo = SQLGetInfo,
