@@ -164,28 +164,9 @@ shared HiveSample.Contents = (host as text, port as number) =>
             else
                 source,
 
-        // This record allows you to customize the generated SQL for certain
-        // operations. The most common usage is to define syntax for LIMIT/OFFSET operators 
-        // when TOP is not supported. 
-        // 
-        AstVisitor = [
-            // format is "LIMIT [<skip>,]<take>" - ex. LIMIT 2,10 or LIMIT 10
-            LimitClause = (skip, take) =>
-                if (take = null) then
-                    ...
-                else
-                    let
-                        skip =
-                            if (skip = null or skip = 0) then
-                                ""
-                            else
-                                Number.ToText(skip) & ","
-                    in
-                        [
-                            Text = Text.Format("LIMIT #{0}#{1}", { skip, take }),
-                            Location = "AfterQuerySpecification"
-                        ]
-        ],
+        // Hive format is "LIMIT [<skip>,]<take>" - ex. LIMIT 2,10 or LIMIT 10
+        // There's no direct support for the "skip" in this format but "take" is the important one to support.
+        LimitClauseKind = LimitClauseKind.Limit,
 
         OdbcDatasource = Odbc.DataSource(ConnectionString, [
             // A logical (true/false) that sets whether to view the tables grouped by their schema names
