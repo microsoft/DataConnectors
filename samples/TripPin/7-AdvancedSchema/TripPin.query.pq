@@ -68,6 +68,8 @@ Facts.Summarize = (_facts as list) as table =>
 
 ValueToText = (value, optional depth) =>
     let
+        List.TransformAndCombine = (list, transform, separator) => Text.Combine(List.Transform(list, transform), separator),
+
         Serialize.Binary =      (x) => "#binary(" & Serialize(Binary.ToList(x)) & ") ",
 
         Serialize.Function =    (x) => _serialize_function_param_type(
@@ -77,15 +79,13 @@ ValueToText = (value, optional depth) =>
                                        _serialize_function_return_type(Value.Type(x)) &
                                        " => (...) ",
 
-        Serialize.List =        (x) => "{" & 
-                                       Text.Combine(List.Transform(x, Serialize), ", ") &
-                                       "} ",
+        Serialize.List =        (x) => "{" & List.TransformAndCombine(x, Serialize, ", ") & "} ",
 
         Serialize.Record =      (x) => "[ " &
-                                       Text.Combine(List.Transform(
+                                       List.TransformAndCombine(
                                             Record.FieldNames(x), 
-                                            (item) => Serialize.Identifier(item) & " = " & Serialize(Record.Field(x, item))
-                                       ), ", ") &
+                                            (item) => Serialize.Identifier(item) & " = " & Serialize(Record.Field(x, item)),
+                                            ", ") &
                                        " ] ",
 
         Serialize.Table =       (x) => "#table( type " &
@@ -143,27 +143,21 @@ ValueToText = (value, optional depth) =>
                                            in
                                              "table " &
                                              (if Table.IsEmpty(schema) then "" else 
-                                                 "[" & List.Accumulate(
-                                                    List.Transform(
-                                                        Table.ToRecords(Table.Sort(schema,"Position")),
-                                                        each Serialize.Identifier(_[Name]) & " = " & _[Kind]),
-                                                    "",
-                                                    (seed,item) => (if seed="" then item else seed & ", " & item )
-                                                ) & "] " ),
+                                                 "[" & List.TransformAndCombine(
+                                                     Table.ToRecords(Table.Sort(schema,"Position")),
+                                                     each Serialize.Identifier(_[Name]) & " = " & _[Kind],
+                                                     ", ") &
+                                                 "] "),
 
         _serialize_record_type =    (x) => 
                                             let flds = Type.RecordFields(x)
                                             in
                                                 if Record.FieldCount(flds)=0 then "record" else
-                                                    "[" & List.Accumulate(
+                                                    "[" & List.TransformAndCombine(
                                                         Record.FieldNames(flds),
-                                                        "",
-                                                        (seed,item) => 
-                                                            seed &
-                                                            (if seed<>"" then ", " else "") &
-                                                            (Serialize.Identifier(item) & "=" & _serialize_typename(Record.Field(flds,item)[Type]) )
-                                                    ) & 
-                                                    (if Type.IsOpenRecord(x) then ",..." else "") &
+                                                        (item) => Serialize.Identifier(item) & "=" & _serialize_typename(Record.Field(flds,item)[Type]),
+                                                        ", ") & 
+                                                    (if Type.IsOpenRecord(x) then ", ..." else "") &
                                                     "]",
 
         _serialize_function_type =  (x) => _serialize_function_param_type(
@@ -180,14 +174,13 @@ ValueToText = (value, optional depth) =>
                                             { "isOptional", (x)=> x>n } ) )
                                 in
                                     "(" & 
-                                    List.Accumulate(
+                                    List.TransformAndCombine(
                                         funsig,
-                                        "",
-                                        (seed,item)=>
-                                            (if seed="" then "" else seed & ", ") &
+                                        (item)=>
                                             (if item[isOptional] then "optional " else "") &
-                                            Serialize.Identifier(item[Name]) & " as " & _serialize_typename(item[Value], true) )
-                                     & ")",
+                                            Serialize.Identifier(item[Name]) & " as " & _serialize_typename(item[Value], true),
+                                        ", ") &
+                                     ")",
 
         _serialize_function_return_type = (x) => _serialize_typename(Type.FunctionReturn(x), true), 
 
