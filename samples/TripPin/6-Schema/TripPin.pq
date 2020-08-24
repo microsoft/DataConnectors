@@ -189,10 +189,10 @@ SchemaTransformTable = (table as table, schema as table, optional enforceSchema 
                 omitted = Table.SelectRows(mapped, each [Type] <> null),
                 existingColumns = Table.ColumnNames(table),
                 removeMissing = Table.SelectRows(omitted, each List.Contains(existingColumns, [Name])),
-                primativeTransforms = Table.ToRows(removeMissing),
-                changedPrimatives = Table.TransformColumnTypes(table, primativeTransforms)
+                primitiveTransforms = Table.ToRows(removeMissing),
+                changedPrimitives = Table.TransformColumnTypes(table, primitiveTransforms)
             in
-                changedPrimatives,
+                changedPrimitives,
 
         // Returns the table type for a given schema
         SchemaToTableType = (schema as table) as type =>

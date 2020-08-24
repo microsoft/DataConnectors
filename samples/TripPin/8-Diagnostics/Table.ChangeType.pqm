@@ -40,8 +40,8 @@
             omitted = Table.SelectRows(mapped, each [Type] <> null),
             existingColumns = Table.ColumnNames(reordered),
             removeMissing = Table.SelectRows(omitted, each List.Contains(existingColumns, [Name])),
-            primativeTransforms = Table.ToRows(removeMissing),
-            changedPrimatives = Table.TransformColumnTypes(reordered, primativeTransforms),
+            primitiveTransforms = Table.ToRows(removeMissing),
+            changedPrimitives = Table.TransformColumnTypes(reordered, primitiveTransforms),
         
             // Get the list of transforms we'll use for Record types
             recordColumns = Table.SelectRows(schema, each Type.Is([Type], type record)),
@@ -60,7 +60,7 @@
 
             // Perform all of our transformations
             allColumnTransforms = recordChanges & listChanges & tableChanges,
-            changedRecordTypes = if (List.IsEmpty(allColumnTransforms)) then changedPrimatives else Table.TransformColumns(changedPrimatives, allColumnTransforms, null, MissingField.Ignore),
+            changedRecordTypes = if (List.IsEmpty(allColumnTransforms)) then changedPrimitives else Table.TransformColumns(changedPrimitives, allColumnTransforms, null, MissingField.Ignore),
 
             // set final type
             withType = Value.ReplaceType(changedRecordTypes, tableType)
