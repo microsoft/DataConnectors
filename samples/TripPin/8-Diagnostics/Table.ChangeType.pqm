@@ -121,8 +121,9 @@
         in
             transformMap,
 
-    GetTransformByType = (_type as type) as function =>
-                if (Type.Is(_type, type number)) then Number.From
+    GetTransformByType = (type_in as type) as function =>
+        let _type = Type.NonNullable(type_in) in
+        if (Type.Is(_type, type number)) then Number.From
         else if (Type.Is(_type, type text)) then Text.From
         else if (Type.Is(_type, type date)) then Date.From
         else if (Type.Is(_type, type datetime)) then DateTime.From
