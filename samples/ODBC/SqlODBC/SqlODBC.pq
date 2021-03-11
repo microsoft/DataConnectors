@@ -1,7 +1,8 @@
 ﻿// This connector provides a sample Direct Query enabled connector 
 // based on an ODBC driver. It is meant as a template for other 
 // ODBC based connectors that require similar functionality.
-// 
+//
+[Version = "1.0.0"]
 section SqlODBC;
 
 // When set to true, additional trace information will be written out to the User log. 
@@ -11,8 +12,6 @@ section SqlODBC;
 EnableTraceOutput = true;
 
 // TODO
-// add and handle common options record properties
-// add handling for LIMIT/OFFSET vs. TOP 
 // add handling for SSL
 
 /****************************
@@ -99,7 +98,7 @@ Config_DefaultUsernamePasswordHandling = true;  // true, false
 // 
 // Set to null to determine the value from the driver. 
 //
-Config_UseParameterBindings = false;  // true, false, null
+Config_UseParameterBindings = null;  // true, false, null
  
 // Override this setting to force the character escape value. 
 // This is typically done when you have set UseParameterBindings to false.
@@ -120,17 +119,42 @@ Config_UseCastInsteadOfConvert = null; // true, false, null
 Config_EnableDirectQuery = true;    // true, false
 
 [DataSource.Kind="SqlODBC", Publish="SqlODBC.Publish"]
-shared SqlODBC.Contents = (server as text) =>
+shared SqlODBC.Contents = (server as text, optional options as record) =>
     let
+        // Many data sources accept an optional 'options' record that allows users to change
+        // default behaviors about the connection, such as connection timeout. Use this map
+        // to define the appropriate options for your ODBC Driver. If you do not want to support
+        // an options record, remove the ValidOptionsMap variable and options parameter from
+        // the data source function.
+        ValidOptionsMap = #table(
+            {"Name","Type","Description","Default","Validate"},
+            {
+                {"ApplicationName", type nullable text, "Enter a value to use as the Application Name in the SQL traces", null, each _ = null or _ <> null},
+                {"ConnectionTimeout", type nullable number, "non-negative integers", null, each _ = null or (_ >= 0 and Number.RoundDown(_) = _)}
+                // Some data sources may support setting separate timeout values for Connect and Command timeouts
+                // {"CommandTimeout", type nullable number, "non-negative integers", null, each _ = null or (_ >= 0 and Number.RoundDown(_) = _)}
+            }
+        ),
+
+        ValidatedOptions = ValidateOptions(options, ValidOptionsMap),
+
         //
         // Connection string settings
         //
         ConnectionString = [
+            // At minimum you need to specify the ODBC Driver to use.
             Driver = Config_DriverName,
 
-            // set all connection string properties
+            // Specify custom properties for your ODBC Driver here. 
+            // The fields below are appropriate for the SQL Server ODBC Driver. The
+            // names might be different for your data source.
             Server = server,
-            ApplicationIntent = "readonly"
+            ApplicationIntent = "ReadOnly",
+
+            // These fields come from the options record, so they might be null.
+            // A later step will strip all null values from the connection string.
+            #"Application Name" = ValidatedOptions[ApplicationName]?,
+            #"Connect Timeout" = ValidatedOptions[ConnectionTimeout]?
         ],
 
         //
@@ -157,14 +181,18 @@ shared SqlODBC.Contents = (server as text) =>
         defaultConfig = Diagnostics.LogValue("BuildOdbcConfig", BuildOdbcConfig()),
 
         SqlCapabilities = Diagnostics.LogValue("SqlCapabilities_Options", defaultConfig[SqlCapabilities] & [
-            // place custom overrides here
+            // Place custom overrides here
+            // The values below are required for the SQL Native Client ODBC driver, but might
+            // not be required for your data source.
             FractionalSecondsScale = 3
         ]),
 
         // Please refer to the ODBC specification for SQLGetInfo properties and values.
         // https://github.com/Microsoft/ODBC-Specification/blob/master/Windows/inc/sqlext.h
         SQLGetInfo = Diagnostics.LogValue("SQLGetInfo_Options", defaultConfig[SQLGetInfo] & [
-            // place custom overrides here
+            // Place custom overrides here
+            // The values below are required for the SQL Native Client ODBC driver, but might
+            // not be required for your data source.
             SQL_SQL92_PREDICATES = ODBC[SQL_SP][All],
             SQL_AGGREGATE_FUNCTIONS = ODBC[SQL_AF][All]
         ]),
@@ -189,7 +217,7 @@ shared SqlODBC.Contents = (server as text) =>
                 rows = Table.TransformRows(types, each Diagnostics.LogValue("SQLGetTypeInfo " & _[TYPE_NAME], _)),
                 toTable = Table.FromRecords(rows)
             in
-                Value.ReplaceType(toTable, Value.Type(types)),                
+                Value.ReplaceType(toTable, Value.Type(types)),
 
         // SQLColumns is a function handler that receives the results of an ODBC call
         // to SQLColumns(). The source parameter contains a table with the data type 
@@ -214,12 +242,13 @@ shared SqlODBC.Contents = (server as text) =>
                     Value.ReplaceType(toTable, Value.Type(source))
             else
                 source,
+        
+        // Remove null fields from the ConnectionString
+        ConnectionStringNoNulls = Record.SelectFields(ConnectionString, Table.SelectRows(Record.ToTable(ConnectionString), each [Value] <> null)[Name]),
 
-        OdbcDatasource = Odbc.DataSource(ConnectionString, [
+        OdbcDatasource = Odbc.DataSource(ConnectionStringNoNulls, [
             // A logical (true/false) that sets whether to view the tables grouped by their schema names
-            HierarchicalNavigation = true, 
-            // Prevents execution of native SQL statements. Extensions should set this to true.
-            HideNativeQuery = true,
+            HierarchicalNavigation = true,
             // Allows upconversion of numeric types
             SoftNumbers = true,
             // Allow upconversion / resizing of numeric and string types
@@ -235,7 +264,7 @@ shared SqlODBC.Contents = (server as text) =>
             SQLGetTypeInfo = SQLGetTypeInfo
         ])
     in
-        OdbcDatasource;  
+        OdbcDatasource;
 
 // Data Source Kind description
 SqlODBC = [
@@ -360,6 +389,40 @@ BuildOdbcConfig = () as record =>
                 withCastOrConvert
     in
         withSqlConformance;
+
+ValidateOptions = (options as nullable record, validOptionsMap as table) as record =>
+    let
+        ValidKeys = Table.Column(validOptionsMap, "Name"),
+        InvalidKeys = List.Difference(Record.FieldNames(options), ValidKeys),
+        InvalidKeysText =
+            if List.IsEmpty(InvalidKeys) then
+                null
+            else
+                Text.Format(
+                    "'#{0}' are not valid options. Valid options are: '#{1}'",
+                    {Text.Combine(InvalidKeys, ", "), Text.Combine(ValidKeys, ", ")}
+                ),
+        ValidateValue = (name, optionType, description, default, validate, value) =>
+                if (value is null and (Type.IsNullable(optionType) or default <> null)) or (Type.Is(Value.Type(value), optionType) and validate(value)) then
+                    null
+                else
+                    Text.Format(
+                        "This function does not support the option '#{0}' with value '#{1}'. Valid value is #{2}.",
+                        {name, value, description}
+                    ),
+        InvalidValues = List.RemoveNulls(Table.TransformRows(validOptionsMap, each ValidateValue([Name],[Type],[Description],[Default],[Validate], Record.FieldOrDefault(options, [Name], [Default])))),
+        DefaultOptions = Record.FromTable(Table.RenameColumns(Table.SelectColumns(validOptionsMap,{"Name","Default"}),{"Default","Value"})),
+        NullNotAllowedFields = List.RemoveNulls(Table.TransformRows(validOptionsMap, each if not Type.IsNullable([Type]) and null = Record.FieldOrDefault(options, [Name], [Default]) then [Name] else null)),
+        NormalizedOptions = DefaultOptions & Record.RemoveFields(options, NullNotAllowedFields, MissingField.Ignore)
+    in
+        if null = options then 
+            DefaultOptions
+        else if not List.IsEmpty(InvalidKeys) then
+            error Error.Record("Expression.Error", InvalidKeysText)
+        else if not List.IsEmpty(InvalidValues) then
+            error Error.Record("Expression.Error", Text.Combine(InvalidValues, ", "))
+        else
+            NormalizedOptions;
 
 // 
 // Load common library functions
