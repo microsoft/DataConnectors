@@ -6,6 +6,7 @@
 
 // TODO: set AAD client ID value in the client_id file
 client_id = Text.FromBinary(Extension.Contents("client_id")); 
+client_secret = Text.FromBinary(Extension.Contents("client_secret"));
 redirect_uri = "https://oauth.powerbi.com/views/oauthredirect.html";
 token_uri = "https://login.microsoftonline.com/organizations/oauth2/v2.0/token";
 authorize_uri = "https://login.microsoftonline.com/organizations/oauth2/v2.0/authorize";
@@ -164,6 +165,7 @@ TokenMethod = (grantType, tokenField, code) =>
     let
         queryString = [
             client_id = client_id,
+            client_secret = client_secret,
             scope = "offline_access " & GetScopeString(scopes, scope_prefix),
             grant_type = grantType,
             redirect_uri = redirect_uri
