@@ -159,7 +159,7 @@ ImpalaODBC = [
     Authentication = [
         Implicit = [],
         UsernamePassword = [],
-        Windows = []
+        Windows = [ SupportsAlternateCredentials = true ]
     ],
     // Indicate optional SSL requirement
     SupportsEncryption = true
