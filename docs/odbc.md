@@ -244,8 +244,8 @@ are described in subsequent sections.
 </tr>
 <tr class="even">
 <td>TolerateConcatOverflow</td>
-<td><p>Allows conversion of numeric and text types to larger types if an operation would cause the value to fall out of range of the original type.</p>
-<p>For example, when adding Int32.Max + Int32.Max, the engine will cast the result to Int64 when this setting is set to true. When adding a VARCHAR(4000) and a VARCHAR(4000) field on a system that supports a maximize VARCHAR size of 4000, the engine will cast the result into a CLOB type.</p>
+<td><p>Allows concatenation of text values to occur even when it cannot be guaranteed that the result will fall be truncated to fit within the range of an available type.</p>
+<p>For example, when concatenating a VARCHAR(4000) field with a VARCHAR(4000) field on a system which supports a maximize VARCHAR size of 4000 and no CLOB type, the concatenation be folded even though the result might get truncated.</p>
 <p>Default: false</p></td>
 </tr>
 <tr class="odd">
