@@ -4,9 +4,9 @@ Data Connectors for Power BI enables users to connect to and access data from yo
 
 ![PBIGetData](blobs/helloworld1.png "Hello World in Get Data")
 
-Data Connectors are created using the [M language](https://msdn.microsoft.com/library/mt211003.aspx). This is the same language used by the Power Query user experience found in Power BI Desktop and Excel 2016. Extensions allow you to define new functions for the M language, and can be used to enable connectivity to new data sources. While this document will focus on defining new connectors, much of the same process applies to defining general purpose M functions. Extensions can vary in complexity, from simple wrappers that essentially just provide "branding" over existing data source functions, to rich connectors that support Direct Query.
+Data Connectors are created using the [M language](https://docs.microsoft.com/powerquery-m/power-query-m-language-specification). This is the same language used by the Power Query user experience found in Power BI Desktop and Excel 2016. Extensions allow you to define new functions for the M language, and can be used to enable connectivity to new data sources. While this document will focus on defining new connectors, much of the same process applies to defining general purpose M functions. Extensions can vary in complexity, from simple wrappers that essentially just provide "branding" over existing data source functions, to rich connectors that support Direct Query.
 
-Please see the [Power Query Connector Developer Reference](https://docs.microsoft.com/en-us/power-query/handlingauthentication) for more details.
+Please see the [Power Query Connector Developer Reference](https://docs.microsoft.com/power-query/handlingauthentication) for more details.
 
 ## Quickstart
 
@@ -27,24 +27,24 @@ Note, to load extensions during development, you will need to lower the security
 ## Gateway Support
 
 The Power BI On-Premises Gateway now supports loading custom connectors.
-Please see the [technical documentation](https://docs.microsoft.com/en-us/power-query/handlinggatewaysupport) for more information, and the [TripPin Sample](samples/TripPin/9-TestConnection) for an example of how to add gateway support to your connector.
+Please see the [technical documentation](https://docs.microsoft.com/power-query/handlinggatewaysupport) for more information, and the [TripPin Sample](https://docs.microsoft.com/power-query/samples/trippin/readme) for an example of how to add gateway support to your connector.
 
 ## Distribution of Data Connectors
 
 Power BI Desktop users can download extension files and place them in a known directory (steps described above). Power BI Desktop will automatically load the extensions on restart.
 
-Please see the [Connector Certification](https://docs.microsoft.com/en-us/power-query/connectorcertification) documentation
+Please see the [Connector Certification](https://docs.microsoft.com/power-query/connectorcertification) documentation
 for details on the certification process and requirements.
 
 ## Additional Links and Resources
 
-* [Data Connector Technical Reference](docs/m-extensions.md)
-* [M Library Functions](https://msdn.microsoft.com/library/mt253322.aspx)
-* [M Language Specification](https://msdn.microsoft.com/library/mt807488.aspx)
+* [Data Connector Technical Reference](https://docs.microsoft.com/power-query/handlingdataaccess)
+* [M Library Functions](https://docs.microsoft.com/powerquery-m/power-query-m-function-reference)
+* [M Language Specification](https://docs.microsoft.com/powerquery-m/power-query-m-language-specification)
 * [Power BI Developer Center](https://powerbi.microsoft.com/developers/)
-* [Data Connector Tutorial](https://github.com/Microsoft/DataConnectors/tree/master/samples/TripPin)
+* [Data Connector Samples](https://docs.microsoft.com/epower-query/samplesdirectory)
 
-The recording of the [Creating a Custom Data Connector session](https://www.youtube.com/watch?v=ecfRTEoYadI) from the [Microsoft Data Insights Summit 2017](https://powerbi.microsoft.com/en-us/blog/microsoft-data-insights-summit-2017-day-1-recap/) can be found by clicking the image below:
+The recording of the [Creating a Custom Data Connector session](https://www.youtube.com/watch?v=ecfRTEoYadI) from the [Microsoft Data Insights Summit 2017](https://powerbi.microsoft.com/blog/microsoft-data-insights-summit-2017-day-1-recap/) can be found by clicking the image below:
 
 [![Deep Dive into the M Language](blobs/deepDiveVideo.png)](http://www.youtube.com/watch?v=ecfRTEoYadI)
 
@@ -93,17 +93,5 @@ Data Connectors allow you to create new data sources, or customize and extend an
 * Exposing a limited/filtered view over your data source to improve usability
 * Supporting different authentication modes when creating a [Power BI Content Pack](https://powerbi.microsoft.com/documentation/powerbi-developer-content-pack-overview/)
 * Enabling Direct Query for a data source via an ODBC driver
-
-### Upcoming Changes
-
-Custom Connectors for Power BI has reached general availability, but further improvements are planned within the next twelve months, including:
-
-- [ ] File extension changes (.mez to .pqx)
-- [ ] Improved tracing and diagnostics for developing Direct Query capable connectors
-- [ ] Versioning of extensions, and support for dependencies
-- [ ] Improved support for Library extensions (for reusable utility functions)
-- [ ] Integration and support for API Connectors for Microsoft Flow and PowerApps
-- [ ] Integration with the Office Store
-- [ ] Development experience improvements
 
 Please report issues and feature requests through our [Github issues page](https://github.com/Microsoft/DataConnectors/issues).
