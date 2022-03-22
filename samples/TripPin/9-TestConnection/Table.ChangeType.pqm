@@ -1,4 +1,4 @@
-﻿let
+let
     // table should be an actual Table.Type, or a List.Type of Records
     Table.ChangeType = (table, tableType as type) as nullable table =>
         // we only operate on table types
@@ -34,36 +34,10 @@
 
             reordered = Table.SelectColumns(_table, schema[Name], MissingField.UseNull),
 
-            // process primitive values - this will call Table.TransformColumnTypes
-            map = (t) => if Type.Is(t, type table) or Type.Is(t, type list) or Type.Is(t, type record) or t = type any then null else t,        
-            mapped = Table.TransformColumns(schema, {"Type", map}),
-            omitted = Table.SelectRows(mapped, each [Type] <> null),
-            existingColumns = Table.ColumnNames(reordered),
-            removeMissing = Table.SelectRows(omitted, each List.Contains(existingColumns, [Name])),
-            primitiveTransforms = Table.ToRows(removeMissing),
-            changedPrimitives = Table.TransformColumnTypes(reordered, primitiveTransforms),
-        
-            // Get the list of transforms we'll use for Record types
-            recordColumns = Table.SelectRows(schema, each Type.Is([Type], type record)),
-            recordTypeTransformations = Table.AddColumn(recordColumns, "RecordTransformations", each (r) => Record.ChangeType(r, [Type]), type function),
-            recordChanges = Table.ToRows(Table.SelectColumns(recordTypeTransformations, {"Name", "RecordTransformations"})),
-
-            // Get the list of transforms we'll use for List types
-            listColumns = Table.SelectRows(schema, each Type.Is([Type], type list)),
-            listTransforms = Table.AddColumn(listColumns, "ListTransformations", each (t) => List.ChangeType(t, [Type]), Function.Type),
-            listChanges = Table.ToRows(Table.SelectColumns(listTransforms, {"Name", "ListTransformations"})),
-
-            // Get the list of transforms we'll use for Table types
-            tableColumns = Table.SelectRows(schema, each Type.Is([Type], type table)),
-            tableTransforms = Table.AddColumn(tableColumns, "TableTransformations", each (t) => @Table.ChangeType(t, [Type]), Function.Type),
-            tableChanges = Table.ToRows(Table.SelectColumns(tableTransforms, {"Name", "TableTransformations"})),
-
-            // Perform all of our transformations
-            allColumnTransforms = recordChanges & listChanges & tableChanges,
-            changedRecordTypes = if (List.IsEmpty(allColumnTransforms)) then changedPrimitives else Table.TransformColumns(changedPrimitives, allColumnTransforms, null, MissingField.Ignore),
-
-            // set final type
-            withType = Value.ReplaceType(changedRecordTypes, tableType)
+            
+            // Perform column transformations & set final type
+            changedTypes = Table.TransformColumns(reordered, GetTransformsForType(tableType)),
+            withType = Value.ReplaceType(changedTypes, tableType)
         in
             if (List.IsEmpty(Record.FieldNames(columnsForType))) then table else withType meta previousMeta,
 
