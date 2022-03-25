@@ -2,22 +2,22 @@
     getNextPage as function,
     optional tableType as type
 ) as table =>
-    let
+let
         listOfPages = List.Generate(
-            () => getNextPage(null),            // get the first page of data
-            (lastPage) => lastPage <> null,     // stop when the function returns null
-            (lastPage) => getNextPage(lastPage) // pass the previous page to the next function call
-        ),
-        filteredListOfPages = List.Select(listOfPages, each not Table.IsEmpty(_)),
-        tableOfPages = Table.FromList(filteredListOfPages, Splitter.SplitByNothing(), {"Column1"}),
-        firstRow = tableOfPages{0}?,
-        appliedType = if tableType = null then Value.Type(firstRow[Column1]) else tableType,
-        columns = Record.FieldNames(Type.RecordFields(Type.TableRow(appliedType)))
-    in
-        if tableType = null and firstRow = null then
-            Table.FromRows({})
-        else
-            Value.ReplaceType(
-                Table.ExpandTableColumn(tableOfPages, "Column1", columns),
-                appliedType
-            )
+        () => getNextPage(null),
+        (lastPage) => lastPage <> null,
+        (lastPage) => getNextPage(lastPage)
+    ),
+    filteredListOfPages = List.Select(listOfPages, each not Table.IsEmpty(_)),
+    tableOfPages = Table.FromList(filteredListOfPages, Splitter.SplitByNothing(), {"Column1"}),
+    firstRow = tableOfPages{0}?,
+    appliedType = 
+        if tableType <> null then tableType
+        else if firstRow <> null then Value.Type(firstRow[Column1]) 
+        else type table[],
+    columns = Record.FieldNames(Type.RecordFields(Type.TableRow(appliedType)))
+in
+    Value.ReplaceType(
+        Table.ExpandTableColumn(tableOfPages, "Column1", columns),
+        appliedType
+    )
