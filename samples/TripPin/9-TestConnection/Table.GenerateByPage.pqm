@@ -12,7 +12,7 @@ let
     tableOfPages = Table.FromList(filteredListOfPages, Splitter.SplitByNothing(), {"Column1"}),
     firstRow = tableOfPages{0}?,
     appliedType = 
-        if tableType <> null and not (try firstRow)[HasError] then tableType
+        if tableType <> null then tableType
         else if firstRow <> null then Value.Type(firstRow[Column1]) 
         else type table[],
     columns = Record.FieldNames(Type.RecordFields(Type.TableRow(appliedType)))
