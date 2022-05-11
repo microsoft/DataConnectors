@@ -42,7 +42,7 @@ for details on the certification process and requirements.
 * [M Library Functions](https://docs.microsoft.com/powerquery-m/power-query-m-function-reference)
 * [M Language Specification](https://docs.microsoft.com/powerquery-m/power-query-m-language-specification)
 * [Power BI Developer Center](https://powerbi.microsoft.com/developers/)
-* [Data Connector Samples](https://docs.microsoft.com/epower-query/samplesdirectory)
+* [Data Connector Samples](https://docs.microsoft.com/power-query/samplesdirectory)
 
 The recording of the [Creating a Custom Data Connector session](https://www.youtube.com/watch?v=ecfRTEoYadI) from the [Microsoft Data Insights Summit 2017](https://powerbi.microsoft.com/blog/microsoft-data-insights-summit-2017-day-1-recap/) can be found by clicking the image below:
 
