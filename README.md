@@ -95,3 +95,10 @@ Data Connectors allow you to create new data sources, or customize and extend an
 * Enabling Direct Query for a data source via an ODBC driver
 
 Please report issues and feature requests through our [Github issues page](https://github.com/Microsoft/DataConnectors/issues).
+
+## Community forum
+
+[The Power Query forum in the Power BI Community](https://community.powerbi.com/t5/Power-Query/bd-p/power-bi-services) is available for posting questions related to the Power Query SDK in Visual Studio.
+
+When creating a new message, we recommend adding the `pqsdk` label to the message 
+![Creating a new thread in the Power Query community forum in Power BI community with the label of pqsdk](https://user-images.githubusercontent.com/95775753/176785157-d58d2607-7445-4114-9dc8-dceb1a1f8c5e.png)
