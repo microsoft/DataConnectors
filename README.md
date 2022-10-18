@@ -100,9 +100,3 @@ Data Connectors allow you to create new data sources, or customize and extend an
 * Exposing a limited/filtered view over your data source to improve usability
 * Supporting different authentication modes when creating a [Power BI Content Pack](https://powerbi.microsoft.com/documentation/powerbi-developer-content-pack-overview/)
 * Enabling Direct Query for a data source via an ODBC driver
-
-Please report issues and feature requests through our [Github issues page](https://github.com/Microsoft/DataConnectors/issues).
-
-## Community forum
-
-[The Power Query forum in the Power BI Community](https://community.powerbi.com/t5/Power-Query/bd-p/power-bi-services) is available for posting questions related to the Power Query SDK in Visual Studio.
