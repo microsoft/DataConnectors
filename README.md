@@ -1,3 +1,10 @@
+> **Update 10/18/2022**: A new version of the Power Query SDK has been released and is currently in Public Preview. We welcome you to try out this new SDK from the Visual Studio Code Marketplace and provide feedback, report bugs and share suggestions around this new SDK. All future investments in regards to the Power Query SDK will go towards the new SDK. 
+> You can also join the new discussions section in the new Power Query SDK GitHub repository o you can interact with other members of the community and ask questions around the development of custom connectors. Below you'll find a list with all the links to the resources of the new Power Query SDK
+>
+> * [New Power Query SDK extension for Visual Studio Code](https://aka.ms/PowerQuerySDK)
+> * [GitHub repository for the new Power Query SDK](https://github.com/Microsoft/vscode-powerquery-sd)
+> * [Quickstart guide for the new Power Query SDK in Visual Studio Code](https://aka.ms/PowerQuerySDKDocs)
+
 # Getting Started with Data Connectors
 
 Data Connectors for Power BI enables users to connect to and access data from your application, service, or data source, providing them with rich business intelligence and robust analytics over multiple data sources. By integrating seamlessly into the Power Query connectivity experience in Power BI Desktop, Data Connectors make it easy for power users to query, shape and mashup data from your app to build reports and dashboards that meet the needs of their organization.
@@ -93,9 +100,3 @@ Data Connectors allow you to create new data sources, or customize and extend an
 * Exposing a limited/filtered view over your data source to improve usability
 * Supporting different authentication modes when creating a [Power BI Content Pack](https://powerbi.microsoft.com/documentation/powerbi-developer-content-pack-overview/)
 * Enabling Direct Query for a data source via an ODBC driver
-
-Please report issues and feature requests through our [Github issues page](https://github.com/Microsoft/DataConnectors/issues).
-
-## Community forum
-
-[The Power Query forum in the Power BI Community](https://community.powerbi.com/t5/Power-Query/bd-p/power-bi-services) is available for posting questions related to the Power Query SDK in Visual Studio.
