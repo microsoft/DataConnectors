@@ -1,5 +1,5 @@
 > **Update 10/18/2022**: A new version of the Power Query SDK has been released and is currently in Public Preview. We welcome you to try out this new SDK from the Visual Studio Code Marketplace and provide feedback, report bugs and share suggestions around this new SDK. All future investments in regards to the Power Query SDK will go towards the new SDK. 
-> You can also join the new discussions section in the new Power Query SDK GitHub repository o you can interact with other members of the community and ask questions around the development of custom connectors. Below you'll find a list with all the links to the resources of the new Power Query SDK
+> You can also join the new discussions section in the new Power Query SDK GitHub repository where you can interact with other members of the community and ask questions around the development of custom connectors. Below, you'll find a list with all the links to the resources of the new Power Query SDK.
 >
 > * [New Power Query SDK extension for Visual Studio Code](https://aka.ms/PowerQuerySDK)
 > * [GitHub repository for the new Power Query SDK](https://github.com/Microsoft/vscode-powerquery-sd)
