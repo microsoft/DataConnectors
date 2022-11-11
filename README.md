@@ -2,7 +2,7 @@
 > You can also join the new discussions section in the new Power Query SDK GitHub repository where you can interact with other members of the community and ask questions around the development of custom connectors. Below, you'll find a list with all the links to the resources of the new Power Query SDK.
 >
 > * [New Power Query SDK extension for Visual Studio Code](https://aka.ms/PowerQuerySDK)
-> * [GitHub repository for the new Power Query SDK](https://github.com/Microsoft/vscode-powerquery-sd)
+> * [GitHub repository for the new Power Query SDK](https://github.com/Microsoft/vscode-powerquery-sdk)
 > * [Quickstart guide for the new Power Query SDK in Visual Studio Code](https://aka.ms/PowerQuerySDKDocs)
 
 # Getting Started with Data Connectors
