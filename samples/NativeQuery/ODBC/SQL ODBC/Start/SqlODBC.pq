@@ -188,7 +188,8 @@ shared SqlODBC.Contents = (server as text, optional database as text,optional op
                 SupportsDerivedTable = true,
                 Sql92Conformance = 8 /* SQL_SC_SQL92_FULL */,
                 GroupByCapabilities = 4 /* SQL_GB_NO_RELATION */,
-                FractionalSecondsScale = 3
+                FractionalSecondsScale = 3,
+                Sql92Translation = "PassThrough"
         ]),
 
         // Please refer to the ODBC specification for SQLGetInfo properties and values.
