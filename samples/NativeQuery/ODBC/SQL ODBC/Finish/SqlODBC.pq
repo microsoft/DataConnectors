@@ -273,20 +273,6 @@ shared SqlODBC.Contents = (server as text, optional database as text,optional op
         
 // Data Source Kind description
 SqlODBC = [
-    // Set the TestConnection handler to enable gateway support.
-    // The TestConnection handler will invoke your data source function to 
-    // validate the credentials the user has provider. Ideally, this is not 
-    // an expensive operation to perform. By default, the dataSourcePath value 
-    // will be a json string containing the required parameters of your data  
-    // source function. These should be parsed and parsed as individual parameters
-    // to the specified data source function.
-    TestConnection = (dataSourcePath) => 
-        let
-            json = Json.Document(dataSourcePath),
-            server = json[server],
-			database = json[database]			// name of function parameter
-        in
-            { "SqlODBC.Contents", server, database },
     // Set supported types of authentication
     Authentication = [
         Windows = [],
