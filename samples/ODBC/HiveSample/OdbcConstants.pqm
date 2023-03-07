@@ -66,7 +66,7 @@
 
 SQL_CVT =
 [
-    //None = 0,
+    // None = 0,
 
     CHAR = 0x00000001,
     NUMERIC = 0x00000002,
@@ -116,15 +116,17 @@ SQL_CVT =
         SMALLINT = -8
     ],
 
-    //SQL Server specific defines
+    // SQL Server specific defines
     //
-    SQL_HC =                        // from Odbcss.h
+         // from Odbcss.h
+         SQL_HC =                   
     [
         OFF = 0,                //  FOR BROWSE columns are hidden
         ON = 1                //  FOR BROWSE columns are exposed
     ],
 
-    SQL_NB =                         // from Odbcss.h
+         // from Odbcss.h
+         SQL_NB =                    
     [
         OFF = 0,                //  NO_BROWSETABLE is off
         ON = 1                //  NO_BROWSETABLE is on
@@ -134,7 +136,8 @@ SQL_CVT =
     //  SQLSet/GetDescField driver specific defines.
     //  Microsoft has 1200 thru 1249 reserved for Microsoft SQL Server driver usage.
     //
-    SQL_CA_SS =                      // from Odbcss.h
+         // from Odbcss.h
+         SQL_CA_SS =                 
     [
         BASE = 1200,           // SQL_CA_SS_BASE
 
@@ -146,18 +149,19 @@ SQL_CVT =
 
     ],
 
-    SQL_SOPT_SS =                    // from Odbcss.h
+         // from Odbcss.h
+         SQL_SOPT_SS =               
     [
         BASE = 1225,                // SQL_SOPT_SS_BASE
         HIDDEN_COLUMNS = 1225 + 2,  // Expose FOR BROWSE hidden columns
         NOBROWSETABLE = 1225 + 3    // Set NOBROWSETABLE option
     ],
 
-    SQL_COMMIT = 0,      //Commit
-    SQL_ROLLBACK = 1,      //Abort
+    SQL_COMMIT = 0,      // Commit
+    SQL_ROLLBACK = 1,      // Abort
 
-    //static public readonly IntPtr SQL_AUTOCOMMIT_OFF = IntPtr.Zero;
-    //static public readonly IntPtr SQL_AUTOCOMMIT_ON = new IntPtr(1);
+    // static public readonly IntPtr SQL_AUTOCOMMIT_OFF = IntPtr.Zero;
+    // static public readonly IntPtr SQL_AUTOCOMMIT_ON = new IntPtr(1);
 
     SQL_TRANSACTION =
     [
@@ -276,7 +280,7 @@ SQL_CVT =
         NESTED = 0x00000008,    // SQL_OJ_NESTED
         NOT_ORDERED = 0x00000010,    // SQL_OJ_NOT_ORDERED
         INNER = 0x00000020,    // SQL_OJ_INNER
-        ALL_COMPARISON_OPS = 0x00000040  //SQL_OJ_ALLCOMPARISION+OPS
+        ALL_COMPARISON_OPS = 0x00000040  // SQL_OJ_ALLCOMPARISION+OPS
     ],
 
     SQL_UPDATABLE =
@@ -454,8 +458,8 @@ SQL_CVT =
         SS_TIMESTAMPOFFSET  = -155
     ],
 
-    //SQL_ALL_TYPES = 0,
-    //static public readonly IntPtr SQL_HANDLE_NULL = IntPtr.Zero;
+    // SQL_ALL_TYPES = 0,
+    // static public readonly IntPtr SQL_HANDLE_NULL = IntPtr.Zero;
 
     SQL_LENGTH = 
     [
@@ -521,7 +525,7 @@ SQL_CVT =
 
     SQL_GD = 
     [
-        //None =  0,
+        // None =  0,
         ANY_COLUMN = 1,
         ANY_ORDER = 2,
         BLOCK = 4,
@@ -529,7 +533,7 @@ SQL_CVT =
         OUTPUT_PARAMS = 16
     ],
 
-    //SQLGetInfo
+    // SQLGetInfo
 /*
     SQL_INFO =
     [
@@ -773,7 +777,7 @@ SQL_CVT =
 
     SQL_SP = 
     [
-        //None = 0,
+        // None = 0,
 
         SQL_SP_EXISTS = 0x00000001,
         SQL_SP_ISNOTNULL = 0x00000002,
@@ -902,7 +906,7 @@ SQL_CVT =
 
     SQL_FN_CVT = 
     [
-        //None = 0,
+        // None = 0,
 
         SQL_FN_CVT_CONVERT        = 0x00000001,
         SQL_FN_CVT_CAST        = 0x00000002
@@ -910,7 +914,7 @@ SQL_CVT =
 
     SQL_FN_NUM = 
     [
-        //None = 0,
+        // None = 0,
 
         SQL_FN_NUM_ABS        = 0x00000001,
         SQL_FN_NUM_ACOS        = 0x00000002,
@@ -955,7 +959,7 @@ SQL_CVT =
 
     SQL_FN_STR =
     [
-        //None = 0,
+        // None = 0,
 
         SQL_FN_STR_CONCAT            = 0x00000001,
         SQL_FN_STR_INSERT            = 0x00000002,
@@ -985,7 +989,7 @@ SQL_CVT =
 
     SQL_FN_SYSTEM = 
     [
-        //None = 0,
+        // None = 0,
 
         SQL_FN_SYS_USERNAME = 0x00000001,
         SQL_FN_SYS_DBNAME = 0x00000002,
@@ -994,7 +998,7 @@ SQL_CVT =
 
     SQL_FN_TD = 
     [
-        //None = 0,
+        // None = 0,
 
         SQL_FN_TD_NOW            = 0x00000001,
         SQL_FN_TD_CURDATE            = 0x00000002,
@@ -1028,7 +1032,7 @@ SQL_CVT =
 
     SQL_TSI =
     [
-        //None = 0,
+        // None = 0,
 
         SQL_TSI_FRAC_SECOND = 0x00000001,
         SQL_TSI_SECOND = 0x00000002,
@@ -1043,7 +1047,7 @@ SQL_CVT =
 
     SQL_AF = 
     [
-        //None = 0,
+        // None = 0,
 
         SQL_AF_AVG        = 0x00000001,
         SQL_AF_COUNT    = 0x00000002,
@@ -1058,7 +1062,7 @@ SQL_CVT =
 
     SQL_SC = 
     [
-        //None = 0,
+        // None = 0,
 
         SQL_SC_SQL92_ENTRY            = 0x00000001,
         SQL_SC_FIPS127_2_TRANSITIONAL    = 0x00000002,
@@ -1091,7 +1095,7 @@ SQL_CVT =
         SQL_IK_NONE        = 0x00000000,
         SQL_IK_ASC        = 0x00000001,
         SQL_IK_DESC        = 0x00000002,
-        SQL_IK_ALL = 0x00000003 //SQL_IK_ASC | SQL_IK_DESC
+        SQL_IK_ALL = 0x00000003 // SQL_IK_ASC | SQL_IK_DESC
     ],
 
     SQL_ISV = 
@@ -1123,7 +1127,7 @@ SQL_CVT =
 
     SQL_SRJO = 
     [
-        //None = 0,
+        // None = 0,
 
         SQL_SRJO_CORRESPONDING_CLAUSE = 0x00000001,
         SQL_SRJO_CROSS_JOIN = 0x00000002,
@@ -1145,10 +1149,11 @@ SQL_CVT =
         SQL_SRVC_ROW_SUBQUERY = 0x00000008
     ],
 
-    //public static readonly int SQL_OV_ODBC3 = 3;
-    //public const Int32 SQL_NTS = -3;       //flags for null-terminated string
+    // public static readonly int SQL_OV_ODBC3 = 3;
+    // public const Int32 SQL_NTS = -3;
+    // flags for null-terminated string
 
-    //Pooling
+    // Pooling
     SQL_CP = 
     [
         OFF = 0,

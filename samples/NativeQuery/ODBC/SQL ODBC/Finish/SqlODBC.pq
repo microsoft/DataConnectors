@@ -30,10 +30,7 @@ Config_DriverName = "SQL Server Native Client 11.0";
 // 
 // SQL_SC = 
 // [
-//     SQL_SC_SQL92_ENTRY            = 1,
-//     SQL_SC_FIPS127_2_TRANSITIONAL = 2,
-//     SQL_SC_SQL92_INTERMEDIATE     = 4,
-//     SQL_SC_SQL92_FULL             = 8
+//      SQL_SC_SQL92_ENTRY            = 1,//       SQL_SC_FIPS127_2_TRANSITIONAL = 2,//  /     SQL_SC_SQL92_INTERMEDIATE     = 4//  //     SQL_SC_SQL92_FULL             = 8
 // ]
 //
 // Set to null to determine the value from the driver.
@@ -204,10 +201,10 @@ shared SqlODBC.Contents = (server as text, optional database as text,optional op
 
         // SQLGetTypeInfo can be specified in two ways:
         // 1. A #table() value that returns the same type information as an ODBC
-        //    call to SQLGetTypeInfo.
+    //   //    call to SQLGetTypeInfo.
         // 2. A function that accepts a table argument, and returns a table. The 
-        //    argument will contain the original results of the ODBC call to SQLGetTypeInfo.
-        //    Your function implementation can modify/add to this table.
+   //    //    argument will contain the original results of the ODBC call to SQLGetTypeInfo.
+  //     //    Your function implementation can modify/add to this table.
         //
         // For details of the format of the types table parameter and expected return value,
         // please see: https://docs.microsoft.com/en-us/sql/odbc/reference/syntax/sqlgettypeinfo-function

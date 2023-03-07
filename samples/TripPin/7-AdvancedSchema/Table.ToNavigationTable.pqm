@@ -9,12 +9,11 @@
 ) as table =>
     let
         tableType = Value.Type(table),
-        newTableType = Type.AddTableKey(tableType, keyColumns, true) meta 
-        [
-            NavigationTable.NameColumn = nameColumn, 
+        newTableType = Type.AddTableKey(tableType, keyColumns, true) meta [
+            NavigationTable.NameColumn = nameColumn,
             NavigationTable.DataColumn = dataColumn,
-            NavigationTable.ItemKindColumn = itemKindColumn, 
-            Preview.DelayColumn = itemNameColumn, 
+            NavigationTable.ItemKindColumn = itemKindColumn,
+            Preview.DelayColumn = itemNameColumn,
             NavigationTable.IsLeafColumn = isLeafColumn
         ],
         navigationTable = Value.ReplaceType(table, newTableType)

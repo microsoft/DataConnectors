@@ -3,7 +3,6 @@
 //
 // Definition
 //
-
 // Data Source Kind description
 TripPin = [
     Authentication = [
@@ -16,27 +15,24 @@ TripPin = [
 TripPin.Publish = [
     Beta = true,
     Category = "Other",
-    ButtonText = { "TripPin Data Source Paths", "TripPin Data Source Paths" }
+    ButtonText = {"TripPin Data Source Paths", "TripPin Data Source Paths"}
 ];
 
 //
 // Implementation
-// 
-
+//
 DefaultRequestHeaders = [
-    #"Accept" = "application/json;odata.metadata=minimal",  // column name and values only
-    #"OData-MaxVersion" = "4.0"                             // we only support v4
+    // column name and values only
+    #"Accept" = "application/json;odata.metadata=minimal",
+    // we only support v4
+    #"OData-MaxVersion" = "4.0"
 ];
 
 BaseUrl = "http://services.odata.org/v4/TripPinService/";
 
-RootEntities = {
-    "Airlines",
-    "Airports",
-    "People"
-};
+RootEntities = {"Airlines", "Airports", "People"};
 
-[DataSource.Kind="TripPin", Publish="TripPin.Publish"]
+[DataSource.Kind = "TripPin", Publish = "TripPin.Publish"]
 shared TripPin.Contents = () => TripPinNavTable(BaseUrl) as table;
 
 TripPinNavTable = (url as text) as table =>
@@ -57,7 +53,7 @@ TripPinNavTable = (url as text) as table =>
 
 TripPin.Feed = (url as text) =>
     let
-        source = Web.Contents(url, [ Headers = DefaultRequestHeaders ]),
+        source = Web.Contents(url, [Headers = DefaultRequestHeaders]),
         json = Json.Document(source),
         // The response is a JSON record - the data we want is a list of records in the "value" field
         value = json[value],
@@ -82,17 +78,13 @@ Table.ToNavigationTable = (
 ) as table =>
     let
         tableType = Value.Type(table),
-        newTableType = Type.AddTableKey(tableType, keyColumns, true) meta 
-        [
-            NavigationTable.NameColumn = nameColumn, 
+        newTableType = Type.AddTableKey(tableType, keyColumns, true) meta [
+            NavigationTable.NameColumn = nameColumn,
             NavigationTable.DataColumn = dataColumn,
-            NavigationTable.ItemKindColumn = itemKindColumn, 
-            Preview.DelayColumn = itemNameColumn, 
+            NavigationTable.ItemKindColumn = itemKindColumn,
+            Preview.DelayColumn = itemNameColumn,
             NavigationTable.IsLeafColumn = isLeafColumn
         ],
         navigationTable = Value.ReplaceType(table, newTableType)
     in
         navigationTable;
-
-
-
