@@ -207,7 +207,7 @@ shared SqlODBC.Contents = (server as text, optional database as text,optional op
         //  call to SQLGetTypeInfo.
         // 2. A function that accepts a table argument, and returns a table. The 
         //  argument will contain the original results of the ODBC call to SQLGetTypeInfo.
-        // Your function implementation can modify/add to this table.
+        //  Your function implementation can modify/add to this table.
         //
         // For details of the format of the types table parameter and expected return value,
         // please see: https://docs.microsoft.com/en-us/sql/odbc/reference/syntax/sqlgettypeinfo-function
