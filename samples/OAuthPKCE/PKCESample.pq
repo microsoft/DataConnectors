@@ -8,15 +8,24 @@ section PKCESample;
 
 OAuthBaseUrl = "https://your-service-url/oauth";
 
+Base64UrlEncodeWithoutPadding = (hash as binary) as text =>
+    let
+        base64Encoded = Binary.ToText(hash, BinaryEncoding.Base64),
+        base64UrlEncoded = Text.Replace(Text.Replace(base64Encoded, "+", "-"), "/", "_"),
+        withoutPadding = Text.TrimEnd(base64UrlEncoded, "=")
+    in 
+        withoutPadding;
+            
 StartLogin = (resourceUrl, state, display) =>
     let
         // We'll generate our code verifier using Guids
         codeVerifier = Text.NewGuid() & Text.NewGuid(),
+        codeChallenge = Base64UrlEncodeWithoutPadding(Crypto.CreateHash(CryptoAlgorithm.SHA256, Text.ToBinary(codeVerifier, TextEncoding.Ascii))),
         AuthorizeUrl = OAuthBaseUrl & "/authorize?" & Uri.BuildQueryString([
             client_id = client_id,
             response_type = "code",
-            code_challenge_method = "plain",
-            code_challenge = codeVerifier,
+            code_challenge_method = "S256",
+            code_challenge = codeChallenge,
             state = state,
             redirect_uri = redirect_uri])
     in
