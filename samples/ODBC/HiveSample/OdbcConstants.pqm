@@ -129,7 +129,7 @@ SQL_CVT =
          SQL_NB =                    
     [
         OFF = 0,                // NO_BROWSETABLE is off
-        ON = 1                // NO_BROWSETABLE is off
+        ON = 1                // NO_BROWSETABLE is on
     ],
 
     // SQLColAttributes driver specific defines.

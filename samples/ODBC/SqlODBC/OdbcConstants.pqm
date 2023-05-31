@@ -114,7 +114,7 @@
         OFF = 0,
         // NO_BROWSETABLE is off
         ON = 1
-        // NO_BROWSETABLE is off
+        // NO_BROWSETABLE is on
     ],
     // SQLColAttributes driver specific defines.
     // SQLSet/GetDescField driver specific defines.
