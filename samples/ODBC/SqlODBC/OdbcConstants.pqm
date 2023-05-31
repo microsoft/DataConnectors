@@ -111,10 +111,10 @@
     ],
     // from Odbcss.h
     SQL_NB = [
-        OFF = 0,
         // NO_BROWSETABLE is off
-        ON = 1
+        OFF = 0,
         // NO_BROWSETABLE is on
+        ON = 1
     ],
     // SQLColAttributes driver specific defines.
     // SQLSet/GetDescField driver specific defines.
@@ -122,24 +122,24 @@
     //
     // from Odbcss.h
     SQL_CA_SS = [
-        BASE = 1200,
         // SQL_CA_SS_BASE
-        COLUMN_HIDDEN = 1200 + 11,
+        BASE = 1200,
         // Column is hidden (FOR BROWSE)
-        COLUMN_KEY = 1200 + 12,
+        COLUMN_HIDDEN = 1200 + 11,
         // Column is key column (FOR BROWSE)
+        COLUMN_KEY = 1200 + 12,
         VARIANT_TYPE = 1200 + 15,
         VARIANT_SQL_TYPE = 1200 + 16,
         VARIANT_SERVER_TYPE = 1200 + 17
     ],
     // from Odbcss.h
     SQL_SOPT_SS = [
-        BASE = 1225,
         // SQL_SOPT_SS_BASE
-        HIDDEN_COLUMNS = 1225 + 2,
+        BASE = 1225,
         // Expose FOR BROWSE hidden columns
-        NOBROWSETABLE = 1225 + 3
+        HIDDEN_COLUMNS = 1225 + 2,
         // Set NOBROWSETABLE option
+        NOBROWSETABLE = 1225 + 3
     ],
     SQL_COMMIT = 0,
     // Commit
@@ -156,18 +156,18 @@
         // VSDD 414121: SQL_TXN_SS_SNAPSHOT == 0x20 (sqlncli.h)
     ],
     SQL_PARAM = [
-        TYPE_UNKNOWN = 0,
         // SQL_PARAM_TYPE_UNKNOWN
-        INPUT = 1,
+        TYPE_UNKNOWN = 0,
         // SQL_PARAM_INPUT
-        INPUT_OUTPUT = 2,
+        INPUT = 1,
         // SQL_PARAM_INPUT_OUTPUT
-        RESULT_COL = 3,
+        INPUT_OUTPUT = 2,
         // SQL_RESULT_COL
-        OUTPUT = 4,
+        RESULT_COL = 3,
         // SQL_PARAM_OUTPUT
-        RETURN_VALUE = 5
+        OUTPUT = 4,
         // SQL_RETURN_VALUE
+        RETURN_VALUE = 5
     ],
     SQL_DESC = [
         // from sql.h (ODBCVER >= 3.0)
@@ -220,36 +220,36 @@
         CASE_SENSITIVE = 12,
         SEARCHABLE = 13,
         TYPE_NAME = 14,
+        // (ODBC 2.0)
         TABLE_NAME = 15,
         // (ODBC 2.0)
         OWNER_NAME = 16,
         // (ODBC 2.0)
         QUALIFIER_NAME = 17,
-        // (ODBC 2.0)
         LABEL = 18
     ],
     // values from sqlext.h
     SQL_SQL92_RELATIONAL_JOIN_OPERATORS = [
-        CORRESPONDING_CLAUSE = 0x00000001,
         // SQL_SRJO_CORRESPONDING_CLAUSE
-        CROSS_JOIN = 0x00000002,
+        CORRESPONDING_CLAUSE = 0x00000001,
         // SQL_SRJO_CROSS_JOIN
-        EXCEPT_JOIN = 0x00000004,
+        CROSS_JOIN = 0x00000002,
         // SQL_SRJO_EXCEPT_JOIN
-        FULL_OUTER_JOIN = 0x00000008,
+        EXCEPT_JOIN = 0x00000004,
         // SQL_SRJO_FULL_OUTER_JOIN
-        INNER_JOIN = 0x00000010,
+        FULL_OUTER_JOIN = 0x00000008,
         // SQL_SRJO_INNER_JOIN
-        INTERSECT_JOIN = 0x00000020,
+        INNER_JOIN = 0x00000010,
         // SQL_SRJO_INTERSECT_JOIN
-        LEFT_OUTER_JOIN = 0x00000040,
+        INTERSECT_JOIN = 0x00000020,
         // SQL_SRJO_LEFT_OUTER_JOIN
-        NATURAL_JOIN = 0x00000080,
+        LEFT_OUTER_JOIN = 0x00000040,
         // SQL_SRJO_NATURAL_JOIN
-        RIGHT_OUTER_JOIN = 0x00000100,
+        NATURAL_JOIN = 0x00000080,
         // SQL_SRJO_RIGHT_OUTER_JOIN
-        UNION_JOIN = 0x00000200
+        RIGHT_OUTER_JOIN = 0x00000100,
         // SQL_SRJO_UNION_JOIN
+        UNION_JOIN = 0x00000200
     ],
     // values from sqlext.h
     SQL_QU = [
@@ -261,38 +261,38 @@
     ],
     // values from sql.h
     SQL_OJ_CAPABILITIES = [
-        LEFT = 0x00000001,
         // SQL_OJ_LEFT
-        RIGHT = 0x00000002,
+        LEFT = 0x00000001,
         // SQL_OJ_RIGHT
-        FULL = 0x00000004,
+        RIGHT = 0x00000002,
         // SQL_OJ_FULL
-        NESTED = 0x00000008,
+        FULL = 0x00000004,
         // SQL_OJ_NESTED
-        NOT_ORDERED = 0x00000010,
+        NESTED = 0x00000008,
         // SQL_OJ_NOT_ORDERED
-        INNER = 0x00000020,
+        NOT_ORDERED = 0x00000010,
         // SQL_OJ_INNER
-        ALL_COMPARISON_OPS = 0x00000040
+        INNER = 0x00000020,
         // SQL_OJ_ALLCOMPARISION+OPS
+        ALL_COMPARISON_OPS = 0x00000040
     ],
     SQL_UPDATABLE = [
-        READONLY = 0,
         // SQL_ATTR_READ_ONLY
-        WRITE = 1,
+        READONLY = 0,
         // SQL_ATTR_WRITE
-        READWRITE_UNKNOWN = 2
+        WRITE = 1,
         // SQL_ATTR_READWRITE_UNKNOWN
+        READWRITE_UNKNOWN = 2
     ],
     SQL_IDENTIFIER_CASE = [
-        UPPER = 1,
         // SQL_IC_UPPER
-        LOWER = 2,
+        UPPER = 1,
         // SQL_IC_LOWER
-        SENSITIVE = 3,
+        LOWER = 2,
         // SQL_IC_SENSITIVE
-        MIXED = 4
+        SENSITIVE = 3,
         // SQL_IC_MIXED
+        MIXED = 4
     ],
     // Uniqueness parameter in the SQLStatistics function
     SQL_INDEX = [
@@ -301,50 +301,50 @@
     ],
     // Reserved parameter in the SQLStatistics function
     SQL_STATISTICS_RESERVED = [
-        QUICK = 0,
         // SQL_QUICK
-        ENSURE = 1
+        QUICK = 0,
         // SQL_ENSURE
+        ENSURE = 1
     ],
     // Identifier type parameter in the SQLSpecialColumns function
     SQL_SPECIALCOLS = [
-        BEST_ROWID = 1,
         // SQL_BEST_ROWID
-        ROWVER = 2
+        BEST_ROWID = 1,
         // SQL_ROWVER
+        ROWVER = 2
     ],
     // Scope parameter in the SQLSpecialColumns function
     SQL_SCOPE = [
-        CURROW = 0,
         // SQL_SCOPE_CURROW
-        TRANSACTION = 1,
+        CURROW = 0,
         // SQL_SCOPE_TRANSACTION
-        SESSION = 2
+        TRANSACTION = 1,
         // SQL_SCOPE_SESSION
+        SESSION = 2
     ],
     SQL_NULLABILITY = [
-        NO_NULLS = 0,
         // SQL_NO_NULLS
-        NULLABLE = 1,
+        NO_NULLS = 0,
         // SQL_NULLABLE
-        UNKNOWN = 2
+        NULLABLE = 1,
         // SQL_NULLABLE_UNKNOWN
+        UNKNOWN = 2
     ],
     SQL_SEARCHABLE = [
-        UNSEARCHABLE = 0,
         // SQL_UNSEARCHABLE
-        LIKE_ONLY = 1,
+        UNSEARCHABLE = 0,
         // SQL_LIKE_ONLY
-        ALL_EXCEPT_LIKE = 2,
+        LIKE_ONLY = 1,
         // SQL_ALL_EXCEPT_LIKE
-        SEARCHABLE = 3
+        ALL_EXCEPT_LIKE = 2,
         // SQL_SEARCHABLE
+        SEARCHABLE = 3
     ],
     SQL_UNNAMED = [
-        NAMED = 0,
         // SQL_NAMED
-        UNNAMED = 1
+        NAMED = 0,
         // SQL_UNNAMED
+        UNNAMED = 1
     ],
     // todo:move
     // internal constants
@@ -356,31 +356,31 @@
     ],
     // values for SQLStatistics TYPE column
     SQL_STATISTICSTYPE = [
-        TABLE_STAT = 0,
         // TABLE Statistics
-        INDEX_CLUSTERED = 1,
+        TABLE_STAT = 0,
         // CLUSTERED index statistics
-        INDEX_HASHED = 2,
+        INDEX_CLUSTERED = 1,
         // HASHED index statistics
-        INDEX_OTHER = 3
+        INDEX_HASHED = 2,
         // OTHER index statistics
+        INDEX_OTHER = 3
     ],
     // values for SQLProcedures PROCEDURE_TYPE column
     SQL_PROCEDURETYPE = [
-        UNKNOWN = 0,
         // procedure is of unknow type
-        PROCEDURE = 1,
+        UNKNOWN = 0,
         // procedure is a procedure
-        FUNCTION = 2
+        PROCEDURE = 1,
         // procedure is a function
+        FUNCTION = 2
     ],
     // private constants
     // to define data types (see below)
     //
-    SIGNED_OFFSET = -20,
     // SQL_SIGNED_OFFSET
-    UNSIGNED_OFFSET = -22,
+    SIGNED_OFFSET = -20,
     // SQL_UNSIGNED_OFFSET
+    UNSIGNED_OFFSET = -22,
     // C Data Types
     SQL_C = [
         CHAR = 1,
@@ -996,8 +996,8 @@
         SQL_IK_NONE = 0x00000000,
         SQL_IK_ASC = 0x00000001,
         SQL_IK_DESC = 0x00000002,
-        SQL_IK_ALL = 0x00000003
         // SQL_IK_ASC | SQL_IK_DESC
+        SQL_IK_ALL = 0x00000003
     ],
     SQL_ISV = [
         SQL_ISV_ASSERTIONS = 0x00000001,
@@ -1069,56 +1069,78 @@
     // Column set for SQLPrimaryKeys
     SQL_PRIMARYKEYS = [
         /*
-                    CATALOGNAME         = 1,                    // TABLE_CAT
-                    SCHEMANAME          = 2,                    // TABLE_SCHEM
-                    TABLENAME           = 3,                    // TABLE_NAME
+        // TABLE_CAT
+        CATALOGNAME = 1,
+        // TABLE_SCHEM
+        SCHEMANAME = 2,
+        // TABLE_NAME
+        TABLENAME = 3,
         */
-        COLUMNNAME = 4
         // COLUMN_NAME
+        COLUMNNAME = 4
         /*
-                    KEY_SEQ             = 5,                    // KEY_SEQ
-                    PKNAME              = 6,                    // PK_NAME
+        // KEY_SEQ
+        KEY_SEQ = 5,
+        // PK_NAME
+        PKNAME = 6,
         */
     ],
     // Column set for SQLStatistics
     SQL_STATISTICS = [
         /*
-                    CATALOGNAME         = 1,                    // TABLE_CAT
-                    SCHEMANAME          = 2,                    // TABLE_SCHEM
-                    TABLENAME           = 3,                    // TABLE_NAME
-                    NONUNIQUE           = 4,                    // NON_UNIQUE
-                    INDEXQUALIFIER      = 5,                    // INDEX_QUALIFIER
+        // TABLE_CAT
+        CATALOGNAME = 1,
+        // TABLE_SCHEM
+        SCHEMANAME = 2,
+        // TABLE_NAME
+        TABLENAME = 3,
+        // NON_UNIQUE
+        NONUNIQUE = 4,
+        // INDEX_QUALIFIER
+        INDEXQUALIFIER = 5,
         */
-        INDEXNAME = 6,
         // INDEX_NAME
+        INDEXNAME = 6,
         /*
-                    TYPE                = 7,                    // TYPE
+        // TYPE
+        TYPE = 7,
         */
-        ORDINAL_POSITION = 8,
         // ORDINAL_POSITION
-        COLUMN_NAME = 9
+        ORDINAL_POSITION = 8,
         // COLUMN_NAME
+        COLUMN_NAME = 9
         /*
-                    ASC_OR_DESC         = 10,                   // ASC_OR_DESC
-                    CARDINALITY         = 11,                   // CARDINALITY
-                    PAGES               = 12,                   // PAGES
-                    FILTER_CONDITION    = 13,                   // FILTER_CONDITION
+            // ASC_OR_DESC
+            ASC_OR_DESC = 10,
+            // CARDINALITY
+            CARDINALITY = 11,
+            // PAGES
+            PAGES = 12,
+            // FILTER_CONDITION
+            FILTER_CONDITION = 13,
         */
     ],
     // Column set for SQLSpecialColumns
     SQL_SPECIALCOLUMNSET = [
         /*
-                    SCOPE               = 1,                    // SCOPE
+        // SCOPE
+        SCOPE = 1,
         */
-        COLUMN_NAME = 2
         // COLUMN_NAME
+        COLUMN_NAME = 2
         /*
-                    DATA_TYPE           = 3,                    // DATA_TYPE
-                    TYPE_NAME           = 4,                    // TYPE_NAME
-                    COLUMN_SIZE         = 5,                    // COLUMN_SIZE
-                    BUFFER_LENGTH       = 6,                    // BUFFER_LENGTH
-                    DECIMAL_DIGITS      = 7,                    // DECIMAL_DIGITS
-                    PSEUDO_COLUMN       = 8,                    // PSEUDO_COLUMN
+        // DATA_TYPE
+        DATA_TYPE = 3,
+        // TYPE_NAME
+        TYPE_NAME = 4,
+        // COLUMN_SIZE
+        COLUMN_SIZE = 5,
+        // BUFFER_LENGTH
+        BUFFER_LENGTH = 6,
+        // DECIMAL_DIGITS
+        DECIMAL_DIGITS = 7,
+        // PSEUDO_COLUMN
+        PSEUDO_COLUMN = 8,
         */
     ],
     SQL_DIAG = [

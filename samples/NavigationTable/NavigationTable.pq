@@ -1,34 +1,38 @@
 ﻿// This file contains your Data Connector logic
 section NavigationTable;
 
-[DataSource.Kind="NavigationTable", Publish="NavigationTable.Publish"]
+[DataSource.Kind = "NavigationTable", Publish = "NavigationTable.Publish"]
 shared NavigationTable.Simple = () as table =>
     let
         objects = #table(
-            {"Name",       "Key",        "Data",                           "ItemKind", "ItemName", "IsLeaf"},{
-            {"Item1",      "item1",      #table({"Column1"}, {{"Item1"}}), "Table",    "Table",    true},
-            {"Item2",      "item2",      #table({"Column1"}, {{"Item2"}}), "Table",    "Table",    true},
-            {"Item3",      "item3",      FunctionCallThatReturnsATable(),  "Table",    "Table",    true},            
-            {"MyFunction", "myfunction", AnotherFunction.Contents(),       "Function", "Function", true}
-        }),
+            {"Name", "Key", "Data", "ItemKind", "ItemName", "IsLeaf"},
+            {
+                {"Item1", "item1", #table({"Column1"}, {{"Item1"}}), "Table", "Table", true},
+                {"Item2", "item2", #table({"Column1"}, {{"Item2"}}), "Table", "Table", true},
+                {"Item3", "item3", FunctionCallThatReturnsATable(), "Table", "Table", true},
+                {"MyFunction", "myfunction", AnotherFunction.Contents(), "Function", "Function", true}
+            }
+        ),
         NavTable = Table.ToNavigationTable(objects, {"Key"}, "Name", "Data", "ItemKind", "ItemName", "IsLeaf")
     in
         NavTable;
 
-[DataSource.Kind="NavigationTable", Publish="NavigationTable.Publish2"]
+[DataSource.Kind = "NavigationTable", Publish = "NavigationTable.Publish2"]
 shared NavigationTable.Nested = () as table =>
     let
         objects = #table(
-            {"Name",       "Key",  "Data",                "ItemKind", "ItemName", "IsLeaf"},{
-            {"Nested A",   "n1",   CreateNavTable("AAA"), "Database",    "Database",    false},
-            {"Nested B",   "n2",   CreateNavTable("BBB"), "Folder",    "Folder",    false},
-            {"Nested C",   "n3",   CreateNavTable("CCC"), "Sheet",    "Sheet",    false}
-        }),
+            {"Name", "Key", "Data", "ItemKind", "ItemName", "IsLeaf"},
+            {
+                {"Nested A", "n1", CreateNavTable("AAA"), "Database", "Database", false},
+                {"Nested B", "n2", CreateNavTable("BBB"), "Folder", "Folder", false},
+                {"Nested C", "n3", CreateNavTable("CCC"), "Sheet", "Sheet", false}
+            }
+        ),
         NavTable = Table.ToNavigationTable(objects, {"Key"}, "Name", "Data", "ItemKind", "ItemName", "IsLeaf")
     in
         NavTable;
 
-[DataSource.Kind="NavigationTable", Publish="NavigationTable.Publish3"]
+[DataSource.Kind = "NavigationTable", Publish = "NavigationTable.Publish3"]
 shared NavigationTable.Icons = () as table =>
     let
         // Dynamically builds a navigation table that uses all possible item kind icons
@@ -50,7 +54,6 @@ shared NavigationTable.Icons = () as table =>
             "Record",
             "Function"
         },
-
         asTable = Table.FromList(itemKinds, Splitter.SplitByNothing()),
         rename = Table.RenameColumns(asTable, {{"Column1", "Name"}}),
         // Add Data as a calculated column
@@ -77,40 +80,42 @@ NavigationTable = [
 NavigationTable.Publish = [
     Beta = true,
     Category = "Other",
-    ButtonText = { "NavTable Simple", "NavTable Simple" }
+    ButtonText = {"NavTable Simple", "NavTable Simple"}
 ];
 
 // Data Source UI publishing description
 NavigationTable.Publish2 = [
     Beta = true,
     Category = "Other",
-    ButtonText = { "NavTable Nested", "NavTable Nested" }
+    ButtonText = {"NavTable Nested", "NavTable Nested"}
 ];
 
 // Data Source UI publishing description
 NavigationTable.Publish3 = [
     Beta = true,
     Category = "Other",
-    ButtonText = { "NavTable Icons", "NavTable Icons" }
+    ButtonText = {"NavTable Icons", "NavTable Icons"}
 ];
 
 // Implementation functions
 FunctionCallThatReturnsATable = () as table => #table({"DynamicColumn"}, {{"Dynamic Value"}});
+
 AnotherFunction.Contents = () => "Returns a static string when invoked.";
 
-CreateNavTable = (message as text) as table => 
+CreateNavTable = (message as text) as table =>
     let
         objects = #table(
-            {"Name",  "Key",   "Data",                           "ItemKind", "ItemName", "IsLeaf"},{
-            {"Item1", "item1", #table({"Column1"}, {{message}}), "Table",    "Table",    true},
-            {"Item2", "item2", #table({"Column1"}, {{message}}), "Table",    "Table",    true}
-        }),
+            {"Name", "Key", "Data", "ItemKind", "ItemName", "IsLeaf"},
+            {
+                {"Item1", "item1", #table({"Column1"}, {{message}}), "Table", "Table", true},
+                {"Item2", "item2", #table({"Column1"}, {{message}}), "Table", "Table", true}
+            }
+        ),
         NavTable = Table.ToNavigationTable(objects, {"Key"}, "Name", "Data", "ItemKind", "ItemName", "IsLeaf")
     in
         NavTable;
 
 // Common library code
-
 Table.ToNavigationTable = (
     table as table,
     keyColumns as list,
@@ -122,12 +127,11 @@ Table.ToNavigationTable = (
 ) as table =>
     let
         tableType = Value.Type(table),
-        newTableType = Type.AddTableKey(tableType, keyColumns, true) meta 
-        [
-            NavigationTable.NameColumn = nameColumn, 
+        newTableType = Type.AddTableKey(tableType, keyColumns, true) meta [
+            NavigationTable.NameColumn = nameColumn,
             NavigationTable.DataColumn = dataColumn,
-            NavigationTable.ItemKindColumn = itemKindColumn, 
-            Preview.DelayColumn = itemNameColumn, 
+            NavigationTable.ItemKindColumn = itemKindColumn,
+            Preview.DelayColumn = itemNameColumn,
             NavigationTable.IsLeafColumn = isLeafColumn
         ],
         navigationTable = Value.ReplaceType(table, newTableType)

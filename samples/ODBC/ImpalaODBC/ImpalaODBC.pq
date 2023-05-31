@@ -2,7 +2,7 @@
 
 DefaultPort = 21050;
 
-[DataSource.Kind="ImpalaODBC", Publish="ImpalaODBC.UI"]
+[DataSource.Kind = "ImpalaODBC", Publish = "ImpalaODBC.UI"]
 shared ImpalaODBC.Databases = (server as text, optional options as record) as table =>
     let
         Address = GetAddress(server),
@@ -22,26 +22,31 @@ shared ImpalaODBC.Databases = (server as text, optional options as record) as ta
             ClientConnectionPooling = true,
             OnError = OnError
         ],
-        OdbcDatasource = Odbc.DataSource(ConnectionString, [
-            HierarchicalNavigation = true,
-            TolerateConcatOverflow = true,
-            SqlCapabilities = [
-                SupportsTop = true,
-                Sql92Conformance = 8,
-                SupportsNumericLiterals = true,
-                SupportsStringLiterals = true,
-                SupportsOdbcDateLiterals = true,
-                SupportsOdbcTimeLiterals = true,
-                SupportsOdbcTimestampLiterals = true
-            ],
-            SQLGetFunctions = [
-                // Disable using parameters in the queries that get generated.
-                // We enable numeric and string literals which should enable literals for all constants.
-                SQL_API_SQLBINDPARAMETER = false
+        OdbcDatasource = Odbc.DataSource(
+            ConnectionString,
+            [
+                HierarchicalNavigation = true,
+                TolerateConcatOverflow = true,
+                SqlCapabilities = [
+                    SupportsTop = true,
+                    Sql92Conformance = 8,
+                    SupportsNumericLiterals = true,
+                    SupportsStringLiterals = true,
+                    SupportsOdbcDateLiterals = true,
+                    SupportsOdbcTimeLiterals = true,
+                    SupportsOdbcTimestampLiterals = true
+                ],
+                SQLGetFunctions = [
+                    // Disable using parameters in the queries that get generated.
+                    // We enable numeric and string literals which should enable literals for all constants.
+                    SQL_API_SQLBINDPARAMETER = false
+                ]
             ]
-        ] & CommonOptions),
-            
-        ComplexColumnsRemoved = RemoveComplexColumnsFromNavigation(OdbcDatasource{[Name="IMPALA",Kind="Database"]}[Data])
+                & CommonOptions
+        ),
+        ComplexColumnsRemoved = RemoveComplexColumnsFromNavigation(
+            OdbcDatasource{[Name = "IMPALA", Kind = "Database"]}[Data]
+        )
     in
         ComplexColumnsRemoved;
 
@@ -58,16 +63,13 @@ shared ImpalaODBC.Databases = (server as text, optional options as record) as ta
 GetCredentialConnectionString = () as record =>
     let
         Credential = Extension.CurrentCredential(),
-
         AuthKind = Credential[AuthenticationKind],
-
         AuthMech.Anonymous = 0,
         AuthMech.Kerberos = 1,
         AuthMech.UsernamePassword = 3,
-
         ConnectionString =
             if AuthKind = "Implicit" or AuthKind = "Anonymous" then
-                [ AuthMech = AuthMech.Anonymous ]
+                [AuthMech = AuthMech.Anonymous]
             else if AuthKind = "Windows" then
                 [
                     AuthMech = AuthMech.Kerberos,
@@ -82,7 +84,6 @@ GetCredentialConnectionString = () as record =>
             else
                 // Unknown/unexpected auth kind, return "not implemented" as an error
                 ...,
-
         // This logic is for data sources that optional SSL/encrypted connections.
         // When SupportsEncryption is set to true on the data source kind record,
         // Power Query will try to connect using SSL. If that fails, the connector
@@ -91,11 +92,7 @@ GetCredentialConnectionString = () as record =>
         // chooses to establish an unencrypted connection, Credential[EncryptConnection]
         // will be set to false on the subsequent connection attempt.
         EncryptConnection = Credential[EncryptConnection]?,
-        SSL =
-            if EncryptConnection = null or EncryptConnection = true then
-                1
-            else
-                0
+        SSL = if EncryptConnection = null or EncryptConnection = true then 1 else 0
     in
         ConnectionString & [SSL = SSL, UseSystemTrustStore = SSL];
 
@@ -103,21 +100,30 @@ RemoveComplexColumns = (data as table) as table =>
     let
         SchemaTable = Table.Schema(data),
         ComplexColumnNames = Table.SelectRows(SchemaTable, each Text.Contains([NativeTypeName], "<"))[Name],
-        ComplexColumnsRemoved = 
-            if List.Count(ComplexColumnNames) = Table.RowCount(SchemaTable) then 
+        ComplexColumnsRemoved =
+            if List.Count(ComplexColumnNames) = Table.RowCount(SchemaTable) then
                 error [Reason = "DataSource.Error", Message = "No Scalar Columns available"]
-            else Table.RemoveColumns(data, ComplexColumnNames)
+            else
+                Table.RemoveColumns(data, ComplexColumnNames)
     in
         ComplexColumnsRemoved;
-            
+
 RemoveComplexColumnsFromNavigation = (source as table) as table =>
     let
         TableLevelNavigationTableType = Value.Type(source{0}[Data]),
-        TransformedTable = Table.TransformColumns(source,{{
-            "Data", 
-            (data) => Value.ReplaceType(
-                Table.TransformColumns(data, {{"Data", (rawTable) => RemoveComplexColumns(rawTable)}}),
-                TableLevelNavigationTableType)}})
+        TransformedTable = Table.TransformColumns(
+            source,
+            {
+                {
+                    "Data",
+                    (data) =>
+                        Value.ReplaceType(
+                            Table.TransformColumns(data, {{"Data", (rawTable) => RemoveComplexColumns(rawTable)}}),
+                            TableLevelNavigationTableType
+                        )
+                }
+            }
+        )
     in
         Value.ReplaceType(TransformedTable, Value.Type(source));
 
@@ -126,40 +132,47 @@ OnError = (errorRecord as record) =>
         OdbcError = errorRecord[Detail][OdbcErrors]{0},
         OdbcErrorMessage = OdbcError[Message],
         OdbcErrorCode = OdbcError[NativeError],
-        HasCredentialError = errorRecord[Detail] <> null
+        HasCredentialError =
+            errorRecord[Detail] <> null
             and errorRecord[Detail][OdbcErrors]? <> null
             and Text.Contains(OdbcErrorMessage, "[ThriftExtension]")
-            and OdbcErrorCode <> 0 and OdbcErrorCode <> 7,
+            and OdbcErrorCode <> 0
+            and OdbcErrorCode <> 7,
         IsSSLError = OdbcErrorCode = 6
     in
         if HasCredentialError then
-            if IsSSLError then 
+            if IsSSLError then
                 error Extension.CredentialError(Credential.EncryptionNotSupported)
-            else 
+            else
                 error Extension.CredentialError(Credential.AccessDenied, OdbcErrorMessage)
-        else 
+        else
             error errorRecord;
 
 GetAddress = (server as text) as record =>
     let
         Address = Uri.Parts("http://" & server),
-        BadServer = Address[Host] = "" or Address[Scheme] <> "http" or Address[Path] <> "/" or Address[Query] <> [] or Address[Fragment] <> ""
-            or Address[UserName] <> "" or Address[Password] <> "",
-        Port = if Address[Port] = 80 and not Text.EndsWith(server, ":80") then 
-                DefaultPort 
-            else Address[Port],
+        BadServer =
+            Address[Host] = ""
+            or Address[Scheme] <> "http"
+            or Address[Path] <> "/"
+            or Address[Query] <> []
+            or Address[Fragment] <> ""
+            or Address[UserName] <> ""
+            or Address[Password] <> "",
+        Port = if Address[Port] = 80 and not Text.EndsWith(server, ":80") then DefaultPort else Address[Port],
         Host = Address[Host],
-        Result = [Host=Host, Port=Port]
+        Result = [Host = Host, Port = Port]
     in
-        if BadServer then 
+        if BadServer then
             error "Invalid server name"
-        else Result;
+        else
+            Result;
 
 ImpalaODBC = [
     Authentication = [
         Implicit = [],
         UsernamePassword = [],
-        Windows = [ SupportsAlternateCredentials = true ]
+        Windows = [SupportsAlternateCredentials = true]
     ],
     // Indicate optional SSL requirement
     SupportsEncryption = true
@@ -168,6 +181,6 @@ ImpalaODBC = [
 ImpalaODBC.UI = [
     Beta = true,
     Category = "Database",
-    ButtonText = { "ImpalaODBC Sample", "ImpalaODBC Sample" },
+    ButtonText = {"ImpalaODBC Sample", "ImpalaODBC Sample"},
     SupportsDirectQuery = true
 ];
