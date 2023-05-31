@@ -1,5 +1,2 @@
 ﻿// Use this file to write queries to test your data connector
-let
-    result = OpenApiSample.ApisGuru()
-in
-    result
+let result = OpenApiSample.ApisGuru() in result
