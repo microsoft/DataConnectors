@@ -1,1 +1,1 @@
-﻿ TripPin.Contents("http://services.odata.org/v4/TripPinService/")
+﻿TripPin.Contents("http://services.odata.org/v4/TripPinService/")

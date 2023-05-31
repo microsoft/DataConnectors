@@ -30,10 +30,10 @@ Config_DriverName = "SQL Server Native Client 11.0";
 // 
 // SQL_SC = 
 // [
-//     SQL_SC_SQL92_ENTRY            = 1,
-//     SQL_SC_FIPS127_2_TRANSITIONAL = 2,
-//     SQL_SC_SQL92_INTERMEDIATE     = 4,
-//     SQL_SC_SQL92_FULL             = 8
+//      SQL_SC_SQL92_ENTRY            = 1,
+//      SQL_SC_FIPS127_2_TRANSITIONAL = 2,
+//      SQL_SC_SQL92_INTERMEDIATE     = 4,
+//      SQL_SC_SQL92_FULL             = 8
 // ]
 //
 // Set to null to determine the value from the driver.
