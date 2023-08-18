@@ -1,23 +1,45 @@
 // This is not a complete connector sample, but demonstrates a PKCE based OAuth flow
-[Version = "1.0.0"]
+[Version = "2.0.0"]
 section PKCESample;
 
 // Native client flow (PKCE)
 // see https://tools.ietf.org/html/rfc7636
 // see https://oauth.net/2/pkce/
-OAuthBaseUrl = "https://your-service-url/oauth";
+OAuthBaseUrl = "https://your-service-url/oauth/";
+AuthorizeUrl = Uri.Combine(OAuthBaseUrl, "authorize");
+TokenUrl = Uri.Combine(OAuthBaseUrl, "token");
+
+client_id = "your-client-id";
+
+// The sample provides two code_challenge_method examples: "plain" and "S256".
+code_challenge_method = "S256";
+
+// Other OAuth settings
+windowWidth = 720;
+windowHeight = 1024;
+
+// This is the expected Redirect URI for OAuth flows to work in the Power BI service.
+redirect_uri = "https://oauth.powerbi.com/views/oauthredirect.html";
 
 StartLogin = (resourceUrl, state, display) =>
     let
         // We'll generate our code verifier using Guids
-        codeVerifier = Text.NewGuid() & Text.NewGuid(),
-        AuthorizeUrl = OAuthBaseUrl
-            & "/authorize?"
+        plainTextCodeVerifier = Text.NewGuid() & Text.NewGuid(),
+        codeVerifier =
+            if (code_challenge_method = "plain") then
+                plainTextCodeVerifier
+            else if (code_challenge_method = "S256") then
+                Base64Url.Encode(Crypto.CreateHash(CryptoAlgorithm.SHA256, Text.ToBinary(plainTextCodeVerifier)))
+            else
+                error "Unexpected code_challenge_method",
+
+        AuthorizeUrl = AuthorizeUrl
+            & "?"
             & Uri.BuildQueryString(
                 [
                     client_id = client_id,
                     response_type = "code",
-                    code_challenge_method = "plain",
+                    code_challenge_method = code_challenge_method,
                     code_challenge = codeVerifier,
                     state = state,
                     redirect_uri = redirect_uri
@@ -59,7 +81,7 @@ TokenMethod = (code, grant_type, optional verifier) =>
         // ManualHandlingStatusCodes = {400, 403}
         ManualHandlingStatusCodes = {},
         Response = Web.Contents(
-            OAuthBaseUrl & "/access_token",
+            TokenUrl,
             [
                 Content = Text.ToBinary(Uri.BuildQueryString(query)),
                 Headers = [
@@ -78,3 +100,5 @@ TokenMethod = (code, grant_type, optional verifier) =>
             Parts;
 
 Refresh = (resourceUrl, refresh_token) => TokenMethod(refresh_token, "refresh_token");
+
+Base64Url.Encode = (s) => Text.Replace(Text.Replace(Text.BeforeDelimiter(Binary.ToText(s,0),"="),"+","-"),"/","_");
