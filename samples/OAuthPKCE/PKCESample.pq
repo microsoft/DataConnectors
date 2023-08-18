@@ -101,4 +101,4 @@ TokenMethod = (code, grant_type, optional verifier) =>
 
 Refresh = (resourceUrl, refresh_token) => TokenMethod(refresh_token, "refresh_token");
 
-Base64Url.Encode = (s) => Text.Replace(Text.Replace(Text.BeforeDelimiter(Binary.ToText(s,0),"="),"+","-"),"/","_");
+Base64Url.Encode = (s) => Text.Replace(Text.Replace(Text.BeforeDelimiter(Binary.ToText(s,BinaryEncoding.Base64),"="),"+","-"),"/","_");
