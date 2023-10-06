@@ -52,7 +52,7 @@ StartLogin = (resourceUrl, state, display) =>
             WindowHeight = windowHeight,
             WindowWidth = windowWidth,
             // Need to roundtrip this value to FinishLogin
-            Context = codeVerifier
+            Context = plainTextCodeVerifier
         ];
 
 // The code verifier will be passed in through the context parameter.
