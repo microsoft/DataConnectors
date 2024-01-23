@@ -21,7 +21,7 @@ Please see the [Power Query Connector Developer Reference](https://docs.microsof
 2. Create a new Data Connector project
 3. Define your connector logic
 4. Build the project to produce an extension file
-5. Copy the extension file into the `[Documents]\Power BI Desktop\Custom Connectors` directory
+5. Copy the extension file into the `[Documents]\Microsoft Power BI Desktop\Custom Connectors` directory
 6. Open Power BI Desktop
 
 Note, to load extensions during development, you will need to lower the security level for extensions in Power BI Desktop to enable loading unsigned/uncertified connectors.
