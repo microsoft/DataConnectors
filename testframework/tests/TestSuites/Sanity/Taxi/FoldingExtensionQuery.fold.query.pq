@@ -1,0 +1,1 @@
+﻿Table.RowCount(FoldingExtension.Contents())

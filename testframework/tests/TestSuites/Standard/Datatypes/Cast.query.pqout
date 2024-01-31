@@ -1,0 +1,1 @@
+#table( type table [TimestampToDateCast = any, TimestampToStringCast = any, FloatToIntegerCast = any, FloatToStringCast = any, IntegerToFloatCast = any, IntegerToStringCast = any, BooleanToStringCast = any] , {{#date(2023, 2, 1), "2/1/2023 12:49:00 AM", 1, "8.6", 75, "1", "false"} } ) 

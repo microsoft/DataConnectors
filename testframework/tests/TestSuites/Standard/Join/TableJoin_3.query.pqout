@@ -1,0 +1,1 @@
+#table( type table [t1.trip_distance = number, t1.fare_amount = number, t1.payment_type = number] , {{0.00, 15.20, 1} , {0.00, 16.70, 1} , {0.00, 18.50, 1} , {0.00, 19.50, 1} , {0.00, 19.70, 1} } ) 

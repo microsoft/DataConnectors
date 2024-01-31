@@ -1,0 +1,9 @@
+{
+    "PQTestExePath":"<Replace with the path to PQTest.exe. Ex: 'C:\\Users\\ContosoUser\\.vscode\\extensions\\powerquery.vscode-powerquery-sdk-0.2.3-win32-x64\\.nuget\\Microsoft.PowerQuery.SdkTools.2.114.4\\tools\\PQTest.exe'>",
+    "ExtensionPath":"<Replace with the path to .mez or .pqx file for the extension. Ex: 'C:\\dev\\ConnectorName\\ConnectorName.mez'>",
+    "TestSettingsDirectoryPath":"<Replace with path to directory containing the JSON Test Setting files. Ex: 'C:\\dev\\DataConnectors\\testframework\\tests\\ConnectorConfigs\\ConnectorName\\Settings'>",
+    "TestSettingsList":"<Replace with  the list of JSON Setting files Ex: SanitySettings.json StandardSettings.json>",
+    "ValidateQueryFolding":"<Replace with True/False to indicate if query folding needs to be verified>",
+    "DetailedResults":"<Replace with True/False to indicate if detailed results needs to be displayed>",
+    "JSONResults":"<Replace with True/False to indicate if detailed results needs to be displayed>"
+}

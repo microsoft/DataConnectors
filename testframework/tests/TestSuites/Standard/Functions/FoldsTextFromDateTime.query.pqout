@@ -1,0 +1,1 @@
+#table( type table [lpep_pickup_datetime = datetime, lpep_dropoff_datetime = datetime, casted_lpep_pickup_datetime = any, casted_lpep_dropoff_datetime = any] , {{#datetime(2023, 2, 1, 0, 15, 0), #datetime(2023, 2, 1, 0, 26, 0), "2/1/2023 12:15:00 AM", "2/1/2023 12:26:00 AM"} } ) 

@@ -1,0 +1,1 @@
+#table( type table [AdditionInteger = any, SubtractionInteger = any, MultiplicationInteger = any, DivisionInteger = any, AdditionFloat = any, SubtractionFloat = any, MultiplicationFloat = any, DivisionFloat = any] , {{283, 103, 17370, 2.14444444, 125.9, -54.1, 3231, 0.39888889} } ) 
