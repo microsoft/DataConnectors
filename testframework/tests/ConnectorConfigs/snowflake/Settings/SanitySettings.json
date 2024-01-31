@@ -1,5 +1,0 @@
-{
-    "FailOnMissingOutputFile": false,
-    "QueryFilePath": "TestSuites/Sanity",
-    "ParameterQueryFilePath": "ConnectorConfigs/Snowflake/ParameterQueries/Snowflake.parameterquery.pq"
-}

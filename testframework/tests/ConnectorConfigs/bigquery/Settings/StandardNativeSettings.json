@@ -1,5 +1,0 @@
-{
-    "FailOnMissingOutputFile": false,
-    "QueryFilePath": "TestSuites/Standard",
-    "ParameterQueryFilePath": "ConnectorConfigs/bigquery/ParameterQueries/BigqueryNative.parameterquery.pq"
-}

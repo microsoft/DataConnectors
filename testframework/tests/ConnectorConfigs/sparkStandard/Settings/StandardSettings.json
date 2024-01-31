@@ -1,5 +1,0 @@
-{
-    "FailOnMissingOutputFile": false,
-    "QueryFilePath": "TestSuites/Standard",
-    "ParameterQueryFilePath": "ConnectorConfigs/sparkStandard/ParameterQueries/SparkStandard.parameterquery.pq"
-}
