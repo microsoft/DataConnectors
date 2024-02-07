@@ -182,12 +182,11 @@ $PSStyle.Foreground.Magenta
 Write-Output ("Note: Please verify the settings above and ensure the following:
 1. Credentials are setup for the extension following the instructions here: https://learn.microsoft.com/en-us/power-query/power-query-sdk-vs-code#set-credential
 2. Parameter query file(s) are updated with the M query to connect to your data source and retrieve the NycTaxiGreen & TaxiZoneLookup tables under: 
-$ExtensionParameterQueriesPath
-3. Diagnostics folder path that will be used for query folding verfication: 
-$DiagnosticFolderPath"
-)
-
-
+$ExtensionParameterQueriesPath")
+if ($ValidateQueryFolding){ 
+Write-Output ("3. Diagnostics folder path that will be used for query folding verfication: 
+$DiagnosticFolderPath")
+}
 $PSStyle.Reset
 
 $confirmation = Read-Host "Do you want to proceed? [y/n]" 
