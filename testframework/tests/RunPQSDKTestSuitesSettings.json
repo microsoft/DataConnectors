@@ -1,6 +1,4 @@
 {
-    "PQTestExePath":"C:\\Code\\MSFT\\PowerQuerySdkTools\\out\\AnyCPU\\Debug\\PQTest\\PQTest.exe",
-    "ExtensionPath":"C:\\Code\\00Testing\\PQSDKTestFramework\\Extensions\\TestConnector.pqx",
-    "PQTestExePathx":"<Replace with the path to PQTest.exe. Ex: 'C:\\Users\\ContosoUser\\.vscode\\extensions\\powerquery.vscode-powerquery-sdk-0.2.3-win32-x64\\.nuget\\Microsoft.PowerQuery.SdkTools.2.114.4\\tools\\PQTest.exe'>",
-    "ExtensionPathx":"<Replace with the path to .mez or .pqx file for the extension. Ex: 'C:\\dev\\ConnectorName\\ConnectorName.mez'>"
+    "PQTestExePath":"<Replace with the path to PQTest.exe. Ex: 'C:\\Users\\ContosoUser\\.vscode\\extensions\\powerquery.vscode-powerquery-sdk-0.2.3-win32-x64\\.nuget\\Microsoft.PowerQuery.SdkTools.2.114.4\\tools\\PQTest.exe'>",
+    "ExtensionPath":"<Replace with the path to .mez or .pqx file for the extension. Ex: 'C:\\dev\\ConnectorName\\ConnectorName.mez'>"
 }
