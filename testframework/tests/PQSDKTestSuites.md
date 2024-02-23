@@ -1,6 +1,6 @@
 # PQ SDK Test Framework - Test Suites
 
-The PQ SDK Test Framework consists of prebuilt test suite to easily validate any extension connectors. The test framework is built to run tests in PQ/PQOut format using the `pqtest.exe compare` command. Please review the documentation in [PQTest docs](hhttps://learn.microsoft.com/power-query/powerquery-sdktools/pqtest-overview) to learn more about running tests with PQTest.exe in PQ/PQOut format.
+The PQ SDK Test Framework consists of prebuilt test suite to easily validate any extension connectors. The test framework is built to run tests in PQ/PQOut format using the `pqtest.exe compare` command. Please review the documentation in [PQTest docs](https://learn.microsoft.com/power-query/powerquery-sdktools/pqtest-overview) to learn more about running tests with PQTest.exe in PQ/PQOut format.
 
 The test framework consists of the following:
 
