@@ -9,7 +9,7 @@
        Pre-Requisite: Ensure the credentials are setup for your connector following the instructions here: https://learn.microsoft.com/en-us/power-query/power-query-sdk-vs-code#set-credential
 
        .LINK
-       General pqtest.md: https://dev.azure.com/powerbi/Power%20Query/_git/PowerQuerySdkTools?path=/Tools/PQTest/pqtest.md
+       General pqtest.md: https://learn.microsoft.com/power-query/powerquery-sdktools/pqtest-overview
        Compare command specific pqtest.md : https://dev.azure.com/powerbi/Power%20Query/_git/DataConnectors?path=/PowerQuerySDKTestFramework/docs/PowerQuerySdkTools/Tools/PQTest/pqtest.md
        
        .PARAMETER PQTestExePath
