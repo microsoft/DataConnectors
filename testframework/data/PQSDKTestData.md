@@ -5,6 +5,8 @@ record data** and the **Taxi Zone Lookup table**. The details of the data could 
 [TLC Trip Record Data](https://www.nyc.gov/site/tlc/about/tlc-trip-record-data.page) page on the NYC Taxi & Limousine
 Commission website.
 
+The modified dataset is open for anyone to use under the [CDLA-Permissive-2.0 license](https://cdla.dev/permissive-2-0/). 
+
 ## PQ SDK Test Framework - Test Data Details:
 
 The PQ SDK Test Framework dataset contains the below files:
