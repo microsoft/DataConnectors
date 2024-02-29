@@ -100,3 +100,10 @@ Data Connectors allow you to create new data sources, or customize and extend an
 * Exposing a limited/filtered view over your data source to improve usability
 * Supporting different authentication modes when creating a [Power BI Content Pack](https://powerbi.microsoft.com/documentation/powerbi-developer-content-pack-overview/)
 * Enabling Direct Query for a data source via an ODBC driver
+
+## Additional Information
+
+The dataset provided with the [Power Query SDK Test Framework](testframework/) is based on datasets from the [NYC Taxi and Limousine Commission](https://www.nyc.gov/site/tlc/about/about-tlc.page) and provided under the [CDLA-Permissive-2.0 license](https://cdla.dev/permissive-2-0/). Please see the following links for more information:
+
+- [Original dataset location](https://www.nyc.gov/site/tlc/about/tlc-trip-record-data.page)
+- [Original terms of use](https://www.nyc.gov/home/terms-of-use.page)
