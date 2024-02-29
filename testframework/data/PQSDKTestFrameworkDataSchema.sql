@@ -1,4 +1,4 @@
-CREATE TABLE NyxTaxiGreen (
+CREATE TABLE NycTaxiGreen (
     RecordID int,
     VendorID int,
     lpepPickupDatetime timestamp,
