@@ -1,0 +1,1 @@
+#table( type table [PULocationID = number, total_trip_distance = any] , {{92, 15.46} , {173, 0} , {95, 0.07} , {82, 3.14} } ) 

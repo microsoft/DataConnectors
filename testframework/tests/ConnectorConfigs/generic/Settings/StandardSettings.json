@@ -1,0 +1,5 @@
+{
+    "FailOnMissingOutputFile": false,
+    "QueryFilePath": "TestSuites/Standard",
+    "ParameterQueryFilePath": "ConnectorConfigs/Generic/ParameterQueries/Generic.parameterquery.pq"
+}

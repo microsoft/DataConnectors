@@ -1,0 +1,1 @@
+(parameter) => Value.Metadata(Value.Type(parameter[taxi_table]))

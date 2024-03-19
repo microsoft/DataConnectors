@@ -1,0 +1,5 @@
+{
+    "FailOnMissingOutputFile": false,
+    "QueryFilePath": "TestSuites/Sanity",
+    "ParameterQueryFilePath": "ConnectorConfigs/Generic/ParameterQueries/Generic.parameterquery.pq"
+}

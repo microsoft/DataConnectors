@@ -1,0 +1,1 @@
+#table( type table [RecordID = number, lpep_pickup_datetime = datetime, Y = any, M = any, D = any, QOY = any, WOY = any, DOY = any] , {{4, #datetime(2023, 2, 1, 0, 15, 0), 2023, 2, 1, 1, 5, 32} , {8, #datetime(2023, 2, 1, 0, 43, 0), 2023, 2, 1, 1, 5, 32} , {15, #datetime(2023, 2, 1, 0, 9, 0), 2023, 2, 1, 1, 5, 32} , {16, #datetime(2023, 2, 1, 0, 42, 0), 2023, 2, 1, 1, 5, 32} } ) 
