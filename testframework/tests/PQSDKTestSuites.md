@@ -1,6 +1,6 @@
 # PQ SDK Test Framework - Test Suites
 
-The PQ SDK Test Framework consists of prebuilt test suite to easily validate any extension connectors. The test framework is built to run tests in PQ/PQOut format using the `pqtest.exe compare` command. Please review the documentation in [PQTest docs](https://learn.microsoft.com/power-query/powerquery-sdktools/pqtest-overview) to learn more about running tests with PQTest.exe in PQ/PQOut format.
+The PQ SDK Test Framework consists of prebuilt test suite to easily validate any extension connectors. The test framework is built to run tests in PQ/PQOut format using the `pqtest.exe compare` command. Please review the documentation in [PQTest docs](https://learn.microsoft.com/power-query/sdk-tools/pqtest-overview) to learn more about running tests with PQTest.exe in PQ/PQOut format.
 
 The test framework consists of the following:
 
@@ -85,7 +85,7 @@ The test data is provided in the form of csv along with the schema defintion. Th
 
   Take the output from the above command and replace the Username and Password values with correct credentials and save  it as json file (Ex: contoso_cred.json).
 
-- Then, use this `set-credential` command store credentials that will be used by the `compare` commands to run the tests. Using the existing powershell window, set the credentials for your extension using the json credential file generated in the previous step. Refer the [PQTest docs](https://learn.microsoft.com/power-query/powerquery-sdktools/pqtest-overview) to learn more about the usage of `credential-template` and `set-credential` to set up the credentials for your connector.
+- Then, use this `set-credential` command store credentials that will be used by the `compare` commands to run the tests. Using the existing powershell window, set the credentials for your extension using the json credential file generated in the previous step. Refer the [PQTest docs](https://learn.microsoft.com/power-query/sdk-tools/pqtest-overview) to learn more about the usage of `credential-template` and `set-credential` to set up the credentials for your connector.
 
   ```
   Get-Content "<Replace with path to the json credential file>" | & $PQTestExe set-credential -e "$Extension" -q "<Replace with the path to any parameter query file>
@@ -162,7 +162,7 @@ Example:
 
 ```
 
-Please review the [PQTest docs](https://learn.microsoft.com/power-query/powerquery-sdktools/pqtest-overview) for more information on running tests with PQTest.exe.
+Please review the [PQTest docs](https://learn.microsoft.com/power-query/sdk-tools/pqtest-overview) for more information on running tests with PQTest.exe.
 
 ## Running query folding tests
 
@@ -197,4 +197,4 @@ Below are sample instructions on how custom tests can be added:
 - Create a settings file `CustomSettings.json` under `testframework\tests\ConnectorConfigs\<Connector Name>\Settings` folder. Add the paths for test folder `"QueryFilePath": "TestSuites/Custom"` and the parameter query file `"ParameterQueryFilePath": "ParameterQueries/<Connector Name>/<Connector Name>.parameterquery.pq"` in it.
 - Run the test first time to generate the PQOut output file. 
 - Subsequent runs will validate the output generated with the PQOut output file. 
-- Please review the documentation in [PQTest docs](https://learn.microsoft.com/power-query/powerquery-sdktools/pqtest-overview) for more information on creating new tests using the compare command.
+- Please review the documentation in [PQTest docs](https://learn.microsoft.com/power-query/sdk-tools/pqtest-overview) for more information on creating new tests using the compare command.
