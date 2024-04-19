@@ -9,8 +9,8 @@
        Pre-Requisite: Ensure the credentials are setup for your connector following the instructions here: https://learn.microsoft.com/en-us/power-query/power-query-sdk-vs-code#set-credential
 
        .LINK
-       General pqtest.md: https://learn.microsoft.com/power-query/powerquery-sdktools/pqtest-overview
-       Compare command specific pqtest.md : https://learn.microsoft.com/power-query/powerquery-sdktools/pqtest-commands-and-options
+       General pqtest.md: https://learn.microsoft.com/power-query/sdk-tools/pqtest-overview
+       Compare command specific pqtest.md : https://learn.microsoft.com/power-query/sdk-tools/pqtest-commands-options
        
        .PARAMETER PQTestExePath
        Provide the path to PQTest.exe. Ex: 'C:\\Users\\ContosoUser\\.vscode\\extensions\\powerquery.vscode-powerquery-sdk-0.2.3-win32-x64\\.nuget\\Microsoft.PowerQuery.SdkTools.2.114.4\\tools\\PQTest.exe'
