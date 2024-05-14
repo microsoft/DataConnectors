@@ -18,8 +18,8 @@ Config_SqlConformance = SQL_SC[SQL_SC_SQL92_FULL];
 Config_DefaultUsernamePasswordHandling = true;
 // true, false, null
 Config_UseParameterBindings = false;
-// ex. { "\" }
-Config_StringLiterateEscapeCharacters = {"\"};
+// ex. { "'" } or { {"\", "\\"}, {"'", "\'"} }
+Config_StringLiteralEscapeCharacters = { {"\", "\\"}, {"'", "\'"} };
 // true, false, null
 Config_UseCastInsteadOfConvert = null;
 // true, false
@@ -270,12 +270,12 @@ BuildOdbcConfig = () as record =>
             else
                 defaultConfig,
         withEscape =
-            if (Config_StringLiterateEscapeCharacters <> null) then
+            if (Config_StringLiteralEscapeCharacters <> null) then
                 let
                     caps = withParams[SqlCapabilities]
                         & [
                             SqlCapabilities = [
-                                StringLiteralEscapeCharacters = Config_StringLiterateEscapeCharacters
+                                StringLiteralEscapeCharacters = Config_StringLiteralEscapeCharacters
                             ]
                         ]
                 in
