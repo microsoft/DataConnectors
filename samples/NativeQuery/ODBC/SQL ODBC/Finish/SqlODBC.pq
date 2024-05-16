@@ -11,9 +11,6 @@ section SqlODBC;
 // no-op and simply returns the original value.
 EnableTraceOutput = true;
 
-// TODO
-// add handling for SSL
-
 /****************************
  * ODBC Driver Configuration
  ****************************/
