@@ -10,7 +10,7 @@ shared NavigationTable.Simple = () as table =>
                 {"Item1", "item1", #table({"Column1"}, {{"Item1"}}), "Table", "Table", true},
                 {"Item2", "item2", #table({"Column1"}, {{"Item2"}}), "Table", "Table", true},
                 {"Item3", "item3", FunctionCallThatReturnsATable(), "Table", "Table", true},
-                {"MyFunction", "myfunction", AnotherFunction.Contents(), "Function", "Function", true}
+                {"MyFunction", "myfunction", AnotherFunction.Contents, "Function", "Function", true}
             }
         ),
         NavTable = Table.ToNavigationTable(objects, {"Key"}, "Name", "Data", "ItemKind", "ItemName", "IsLeaf")
@@ -37,11 +37,13 @@ shared NavigationTable.Icons = () as table =>
     let
         // Dynamically builds a navigation table that uses all possible item kind icons
         itemKinds = {
+            // Cube related item kinds can only be used for actual Cube sources.
+            // The Power Query SDK currently only supports Table sources.
+            // "Cube",
+            // "CubeDatabase",
+            // "CubeView",
+            // "CubeViewFolder",
             "Feed",
-            "Cube",
-            "CubeDatabase",
-            "CubeView",
-            "CubeViewFolder",
             "Database",
             "DatabaseServer",
             "Dimension",
