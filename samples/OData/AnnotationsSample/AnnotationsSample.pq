@@ -1,24 +1,24 @@
-﻿section TripPinAnnotations;
+﻿[Version = "1.0.0"]
+section AnnotationsSample;
 
 // Data Source Kind description
-TripPin = [
+AnnotationsSample = [
     // TestConnection is required to enable the connector through the Gateway
-    TestConnection = (dataSourcePath) => {"TripPin.Annotations"},
+    TestConnection = (dataSourcePath) => {"AnnotationsSample.Contents"},
     Authentication = [
         Anonymous = []
-    ],
-    Label = "AnnotationsSample"
+    ]
 ];
 
 // Data Source UI publishing description
-TripPin.Publish = [
+AnnotationsSample.Publish = [
     Beta = true,
     Category = "Other",
     ButtonText = {"AnnotationsSample", "AnnotationsSample"}
 ];
 
-[DataSource.Kind = "TripPin", Publish = "TripPin.Publish"]
-shared TripPin.Annotations = () =>
+[DataSource.Kind = "AnnotationsSample", Publish = "AnnotationsSample.Publish"]
+shared AnnotationsSample.Contents = () =>
     let
         serviceDocument = TripPin.ServiceDocument()
     in
