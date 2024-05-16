@@ -48,8 +48,6 @@ HelloWorldWithDocs = [
     Authentication = [
         Anonymous = []
     ]
-    // ,
-    // Label = "Hello World With Docs"
 ];
 
 // Data Source UI publishing description
