@@ -1,4 +1,5 @@
-﻿section SnowflakeODBC;
+﻿[Version = "1.0.0"]
+section SnowflakeODBC;
 
 // When set to true, additional trace information will be written out to the User log.
 // This should be set to false before release. Tracing is done through a call to
