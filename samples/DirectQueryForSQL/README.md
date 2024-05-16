@@ -1,4 +1,5 @@
 # Direct Query using SQL Server ODBC
+
 This sample creates an ODBC based custom connector that enables Direct Query for SQL Server.
 
 The code does the following:
