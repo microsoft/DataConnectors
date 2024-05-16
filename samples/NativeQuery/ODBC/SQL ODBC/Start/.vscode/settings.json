@@ -1,5 +1,5 @@
 {
-    "powerquery.sdk.defaultExtension": "${workspaceFolder}\\bin\\AnyCPU\\Debug\\${workspaceFolderBasename}.mez",
-    "powerquery.sdk.defaultQueryFile": "${workspaceFolder}\\${workspaceFolderBasename}.query.pq",
+    "powerquery.sdk.defaultExtension": "${workspaceFolder}\\bin\\AnyCPU\\Debug\\SqlODBC.mez",
+    "powerquery.sdk.defaultQueryFile": "${workspaceFolder}\\SqlODBC.query.pq",
     "powerquery.general.mode": "SDK",
 }
