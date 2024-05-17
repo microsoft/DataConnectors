@@ -11,8 +11,7 @@ HelloWorld = [
     TestConnection = (dataSourcePath) => {"HelloWorld.Contents"},
     Authentication = [
         Anonymous = []
-    ],
-    Label = Extension.LoadString("DataSourceLabel")
+    ]
 ];
 
 HelloWorld.Publish = [

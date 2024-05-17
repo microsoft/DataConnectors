@@ -1,0 +1,5 @@
+{
+    "powerquery.sdk.defaultExtension": "${workspaceFolder}\\bin\\AnyCPU\\Debug\\TripPin.mez",
+    "powerquery.sdk.defaultQueryFile": "${workspaceFolder}\\TripPin.query.pq",
+    "powerquery.general.mode": "SDK",
+}

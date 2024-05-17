@@ -1,4 +1,5 @@
-﻿section ImpalaODBC;
+﻿[Version = "1.0.0"]
+section ImpalaODBC;
 
 DefaultPort = 21050;
 
@@ -170,7 +171,7 @@ GetAddress = (server as text) as record =>
 
 ImpalaODBC = [
     Authentication = [
-        Implicit = [],
+        Anonymous = [],
         UsernamePassword = [],
         Windows = [SupportsAlternateCredentials = true]
     ],

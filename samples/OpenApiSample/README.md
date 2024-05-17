@@ -4,9 +4,9 @@ Open API (aka Swagger) is a standard for describing REST APIs through a JSON def
 Swagger allows clients to interact with a given REST API without pre-existing knowledge of the source. 
 Swagger is a very similar in concept to OData, but can be thought of a way to describe Function calls, as opposed to OData's focus on standardized data retrieval.
 
-The `OpenApi.Document` function in the M engine can be used to create a simple Data Connector from a Swagger document. 
+The `OpenApi.Document` function in the M engine can be used to create a simple Data Connector from a Swagger document.
 
-> **Note:** `OpenApi.Document` is only available via extensibility. You will not be able to directly invoke this function from Power BI Desktop or other Power Query experiences. 
+> **Note:** `OpenApi.Document` is only available via extensibility. You will not be able to directly invoke this function from Power BI Desktop or other Power Query experiences.
 
 ## Limitations
 
@@ -57,5 +57,4 @@ Note, given the [limitations] described above, the majority of the APIs found he
 
 ### Additional Samples
 
-Please see the [Data.World Swagger](../DataWorldSwagger) sample for a connector with custom OAuth flow, and API Key based authentication. 
-
+Please see the [Data.World Swagger](../DataWorldSwagger) sample for a connector with custom OAuth flow, and API Key based authentication.

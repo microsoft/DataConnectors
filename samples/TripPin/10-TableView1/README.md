@@ -4,8 +4,8 @@ This multi-part tutorial covers the creation of a new data source extension for 
 
 In this lesson, you will:
 
-* Learn the basics of query folding 
-* Learn about the `Table.View` function 
+* Learn the basics of query folding
+* Learn about the `Table.View` function
 * Replicate OData query folding handlers for
   * `$top`
   * `$skip`
