@@ -102,7 +102,7 @@ Data Connectors allow you to create new data sources, or customize and extend an
 * Enabling Direct Query for a data source via an ODBC driver
 
 ## Additional Information
-
+# gfdnbvuodnuiopfbvdfk;vbjk;bdfjo;vbdfjk;gdf[oigf9498143510320.231654987987t8y98rt98r7t98rt7y9r7y98rt
 The dataset provided with the [Power Query SDK Test Framework](testframework/) is based on datasets from the [NYC Taxi and Limousine Commission](https://www.nyc.gov/site/tlc/about/about-tlc.page) and provided under the [CDLA-Permissive-2.0 license](https://cdla.dev/permissive-2-0/). Please see the following links for more information:
 
 - [Original dataset location](https://www.nyc.gov/site/tlc/about/tlc-trip-record-data.page)
