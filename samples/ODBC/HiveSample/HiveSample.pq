@@ -4,13 +4,14 @@
 // This should be set to false before release. Tracing is done through a call to
 // Diagnostics.LogValue(). When EnableTraceOutput is set to false, the call becomes a
 // no-op and simply returns the original value.
-EnableTraceOutput = false;
+EnableTraceOutput = true;
 
 /****************************
  * ODBC Driver Configuration
  ****************************/
 // Config_DriverName = "Hortonworks Hive ODBC Driver";
-Config_DriverName = "Microsoft Hive ODBC Driver";
+// Config_DriverName = "Microsoft Hive ODBC Driver";
+Config_DriverName = "Cloudera ODBC Driver for Apache Hive";
 
 // null, 1, 2, 4, 8
 Config_SqlConformance = SQL_SC[SQL_SC_SQL92_FULL];
@@ -45,8 +46,13 @@ shared HiveSample.Contents = (host as text, port as number) =>
             port = port,
             // UsernamePassword
             authmech = 3,
-            // SASL
-            thrifttransport = 1
+            // SASL=1, HTTP=2
+            thrifttransport = 2,
+            SSL = 1,
+            ca_cert = "C:\Program Files\Cloudera ODBC Driver for Apache Hive\lib\cacerts.pem",
+            protocol = "hs2",
+            HttpPath="/zzeng-impala01/cdp-proxy-api/impala"
+
         ],
         //
         // Handle credentials
