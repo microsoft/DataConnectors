@@ -63,8 +63,8 @@ HelloWorldType = type function (
                 }
             ])
         ] meta [
-            // Connectors don't need to provide a FieldCaption for the options record.
-            // The default label will be a localized equivalent of "Advanced options".
+            // Connectors can provide their own label options parameter label, but in the future this will default
+            // to a localized equivalent of "Advanced options".
             // Documentation.FieldCaption = "Advanced options",
         ]
     )
