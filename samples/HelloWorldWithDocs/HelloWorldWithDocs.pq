@@ -3,11 +3,19 @@
 [DataSource.Kind = "HelloWorldWithDocs", Publish = "HelloWorldWithDocs.Publish"]
 shared HelloWorldWithDocs.Contents = Value.ReplaceType(HelloWorldImpl, HelloWorldType);
 
+// The function type should have the same parameters (names, primitive data types, required vs. option)
+// and names as the implementation it will be used for.
 HelloWorldType = type function (
     message as (
         type text meta [
+            // FieldCaption becomes the parameter label.
             Documentation.FieldCaption = "Message",
+            // FieldDescription becomes the parameter tooltip.
             Documentation.FieldDescription = "Text to display",
+            // SampleValues is an M list value (i.e. surrounded with curly brackets). 
+            // The sample values are displayed as watermark text in the input field.
+            // The displayed value might be truncated if the text is too long for the input field.
+            // A single sample value should still be a list - for example: {"My value"}, not "My value".
             Documentation.SampleValues = {"Hello world", "Hola mundo"}
         ]
     ),
@@ -15,12 +23,17 @@ HelloWorldType = type function (
         type number meta [
             Documentation.FieldCaption = "Count",
             Documentation.FieldDescription = "Number of times to repeat the message",
+            // Documentation.AllowedValues is an M list value.
+            // The allowed values are typically displayed as a dropdown list in the input field.
+            // NOTE: Allowed values will be included in the generated user query and should NOT
+            // include localized strings.
             Documentation.AllowedValues = {1, 2, 3}
         ]
     )
 ) as table meta [
     Documentation.Name = "Hello - Name",
     Documentation.LongDescription = "Hello - Long Description",
+    // Documentation.Examples is an M list value.
     Documentation.Examples = {
         [
             Description = "Returns a table with 'Hello world' repeated 2 times",
