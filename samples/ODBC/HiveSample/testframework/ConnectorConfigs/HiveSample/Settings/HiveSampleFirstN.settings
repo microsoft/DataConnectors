@@ -1,0 +1,6 @@
+{
+  "ExtensionPaths": ["bin/AnyCPU/Debug/HiveSample.mez"],
+  "ParameterQueryFilePath": "testframework/ConnectorConfigs/HiveSample/ParameterQueries/HiveSampleCustomer.parameterquery.pq",
+  "QueryFilePath": "testframework/Tests/Sanity/HiveSampleFirstN.query.pq",
+  "FailOnMissingOutputFile": false
+}

@@ -1,0 +1,7 @@
+#table( type table [customer_id = any, first_name = any, last_name = any, sale_id = any, amount = any] , {
+    {1, "Alice", "Johnson", 101, 150.5},
+    {1, "Alice", "Johnson", 103, 75.25},
+    {2, "Bob", "Smith", 102, 200},
+    {2, "Bob", "Smith", 105, 120.75},
+    {3, "Carol", "Williams", 104, 300}
+})

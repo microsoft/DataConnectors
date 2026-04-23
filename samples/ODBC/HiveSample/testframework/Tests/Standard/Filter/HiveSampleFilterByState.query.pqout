@@ -1,0 +1,3 @@
+#table( type table [customer_id = any, first_name = any, last_name = any, city = any, state = any] , {
+    {2, "Bob", "Smith", "Los Angeles", "CA"}
+})
