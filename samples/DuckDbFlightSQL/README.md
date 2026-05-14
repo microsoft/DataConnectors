@@ -47,10 +47,9 @@ DuckDb/
     ├── Settings/                # PQTest settings (Sanity, Standard, DatasourceSpecific)
     ├── TestSuites/              # Test cases organized by category
     │   ├── Setup/               # Docker setup, data loading, readme
-    │   ├── Sanity/              # Basic connectivity and schema tests
-    │   ├── Standard/            # Full functional and query folding tests
     │   ├── DatasourceSpecific/  # DuckDB-specific tests
     │   └── PerfTests/           # Performance test queries
+    │   # Sanity & Standard tests use shared testframework/tests/TestSuites/
     ├── RunDuckDbTestsWithVSCodeGuide.md   # VS Code test guide
     └── RunDuckDbPerfTestsGuide.md         # Performance test guide
 ```
