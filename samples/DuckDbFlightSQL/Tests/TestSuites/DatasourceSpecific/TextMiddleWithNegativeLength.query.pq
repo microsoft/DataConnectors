@@ -1,4 +1,6 @@
-(parameter) => 
+// Excluded from Standard because DuckDB handles negative length differently than test suite expects
+// Expected value is an empty string and DuckDB wraps around negative length
+(parameter) =>
 let
    T2 = Table.Sort(parameter[zone_table], "LocationID"),
    T3 = Table.FirstN(T2, 1),
