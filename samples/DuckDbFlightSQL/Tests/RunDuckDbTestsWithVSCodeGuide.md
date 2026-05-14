@@ -10,30 +10,30 @@ This guide explains how to run DuckDB connector tests using the **PQTest VS Code
 ## Setup
 
 1.  **Open the Connector Folder:**
-    *   Open the `DuckDb` folder as your **root workspace** in VS Code.
+    - Open the `DuckDb` folder as your **root workspace** in VS Code.
 
 2.  **Configuration:**
-    *   The folder should be configured with a `.vscode/settings.json` file that points to:
-        *   **Extension Path:** `bin/AnyCPU/Debug/DuckDb.mez`
-        *   **Settings File:** `./Tests/Settings`
+    - The folder should be configured with a `.vscode/settings.json` file that points to:
+      - **Extension Path:** `bin/AnyCPU/Debug/DuckDb.mez`
+      - **Settings File:** `./Tests/Settings`
 
 3.  **Build:**
-    *   Build the connector so the `.mez` file exists at the expected path:
-        ```powershell
-        dotnet build DuckDb.proj
-        ```
+    - Build the connector so the `.mez` file exists at the expected path:
+      ```powershell
+      dotnet build DuckDb.proj
+      ```
 
 4.  **Credentials:**
-    *   Set up credentials using the **Power Query: Set Credential** command in VS Code. See [Set Credential documentation](https://learn.microsoft.com/en-us/power-query/power-query-sdk-vs-code#set-credential) for details.
-    *   Use `UsernamePassword` authentication with the credentials from the [Connection Details](TestSuites/Setup/readme.md#connection-details).
+    - Set up credentials using the **Power Query: Set Credential** command in VS Code. See [Set Credential documentation](https://learn.microsoft.com/en-us/power-query/power-query-sdk-vs-code#set-credential) for details.
+    - Use `UsernamePassword` authentication with the credentials from the [Connection Details](TestSuites/Setup/readme.md#connection-details).
 
 ## Running Tests
 
 1.  Open the **Test Explorer** view in VS Code.
 2.  You will see the settings files located in `Tests/Settings`:
-    *   `DuckDbSanitySettings` — basic connectivity and schema tests
-    *   `DuckDbStandardSettings` — full functional and query folding test suite
-    *   `DuckDbDatasourceSpecificSettings` — DuckDB-specific tests
+    - `DuckDbSanitySettings` — basic connectivity and schema tests
+    - `DuckDbStandardSettings` — full functional and query folding test suite
+    - `DuckDbDatasourceSpecificSettings` — DuckDB-specific tests
 3.  Click the "Run" icon to execute tests.
 
 ## Running Tests from the Command Line

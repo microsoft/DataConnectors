@@ -6,22 +6,23 @@ A sample Power Query M connector for **DuckDb** using the **FlightSQL** protocol
 
 Uses **`Adbc.Connection`** exclusively — no ODBC, `Adbc.Query`, or `Adbc.Database` needed.
 
-| Feature | Implementation |
-|---|---|
-| **Connection** | `Adbc.Connection` via FlightSQL gRPC |
-| **Navigation** | Database → Schema → Table via `information_schema` |
-| **Query Folding** | `SqlView.Generator` with DuckDb-specific `SqlGenerator` |
-| **Type Mapping** | Full DuckDb coverage (BOOLEAN through STRUCT/MAP) |
-| **Relationships** | PK/FK detection via `information_schema` constraints |
-| **Authentication** | Username/Password, Bearer Token, Anonymous |
-| **DirectQuery** | Supported |
-| **Native Query** | Supported with folding |
+| Feature            | Implementation                                          |
+| ------------------ | ------------------------------------------------------- |
+| **Connection**     | `Adbc.Connection` via FlightSQL gRPC                    |
+| **Navigation**     | Database → Schema → Table via `information_schema`      |
+| **Query Folding**  | `SqlView.Generator` with DuckDb-specific `SqlGenerator` |
+| **Type Mapping**   | Full DuckDb coverage (BOOLEAN through STRUCT/MAP)       |
+| **Relationships**  | PK/FK detection via `information_schema` constraints    |
+| **Authentication** | Username/Password, Bearer Token, Anonymous              |
+| **DirectQuery**    | Supported                                               |
+| **Native Query**   | Supported with folding                                  |
 
 ## FlightSQL ADBC Driver
 
 The FlightSQL ADBC driver (`libadbc_driver_flightsql.dll`) ships with both **Power Query SDK Tools** and **Power BI Desktop**. No separate driver installation is needed.
 
 `FlightSqlAdbcConfig.pqm` configures the driver by specifying:
+
 - **Driver location**: folder (`FlightSQL`), file name, and entry point (`FlightSqlDriverInit`)
 - **Metadata**: catalog/schema support, identifier quoting, supported table types (`BASE TABLE`, `VIEW`)
 - **Type mapping**: references `TypeInfo.pqm` for DuckDB-to-M type resolution
@@ -30,7 +31,7 @@ The connector uses `Adbc.Connection` with `grpc://` (TLS disabled) or `grpc+tls:
 
 ## Files
 
-```
+```text
 DuckDb/
 ├── DuckDb.pq                    # Main connector entry point
 ├── DuckDb.query.pq              # Evaluation query for SDK testing
@@ -57,20 +58,23 @@ DuckDb/
 ## Key Design Decisions
 
 ### Adbc.Connection Only
+
 Simplest approach for FlightSQL — directly creates a connection, builds navigation via SQL metadata queries, and wires up `SqlView.Generator` for folding.
 
 ### SQL Generator
+
 The query folding engine uses a three-layer override architecture:
 
-| Layer | File | Role |
-|---|---|---|
-| **SQL92 Base** | `SqlGeneratorCommon.pqm` | Shared infrastructure: type validation, AST helpers, 40+ function stubs, base SQL92 capabilities |
-| **DuckDB Overrides** | `SqlGenerator.pqm` | DuckDB dialect: 24 type facets, LIMIT/OFFSET syntax, function remapping, typed literal generation |
-| **Connector Wiring** | `DuckDb.pq` | Creates `SqlView.Generator` instance, wires to `Adbc.Connection` via `GetData` |
+| Layer                | File                     | Role                                                                                              |
+| -------------------- | ------------------------ | ------------------------------------------------------------------------------------------------- |
+| **SQL92 Base**       | `SqlGeneratorCommon.pqm` | Shared infrastructure: type validation, AST helpers, 40+ function stubs, base SQL92 capabilities  |
+| **DuckDB Overrides** | `SqlGenerator.pqm`       | DuckDB dialect: 24 type facets, LIMIT/OFFSET syntax, function remapping, typed literal generation |
+| **Connector Wiring** | `DuckDb.pq`              | Creates `SqlView.Generator` instance, wires to `Adbc.Connection` via `GetData`                    |
 
 `SqlGenerator.pqm` loads the base via `Extension.LoadExpression()`, defines an override record, and calls `MergeOverrides("Sql92", Override, false)` to produce the final generator.
 
 **Key DuckDB overrides:**
+
 - **LIMIT/OFFSET**: Translates M's `Table.FirstN`/`Table.Skip` to `LIMIT n OFFSET m`
 - **Function remapping**: `TIMESTAMPADD`/`TIMESTAMPDIFF` to DuckDB's `date_add`/`date_diff`, `Text.PositionOf` to `INSTR`, `Text.StartsWith` to `starts_with`
 - **Typed literals**: `DATE '2023-01-01'`, `TIMESTAMP '...'`, `TIME '...'`, `CAST(value AS TYPE)` for numeric/string types
@@ -80,6 +84,7 @@ The query folding engine uses a three-layer override architecture:
 Partners building new ADBC connectors can use this as a template: copy `SqlGeneratorCommon.pqm` as-is, then create a dialect-specific `SqlGenerator.pqm` with overrides for their database's SQL syntax and type system.
 
 ### Primary & Foreign Keys
+
 Queries `information_schema.table_constraints` + `key_column_usage` for PKs, applies them via `Type.ReplaceTableKeys`. Exposes `GetForeignKeys()` for FK discovery. Power BI uses these to auto-create relationships.
 
 ## Supported Types

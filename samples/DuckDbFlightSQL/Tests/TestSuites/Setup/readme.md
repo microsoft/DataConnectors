@@ -35,28 +35,29 @@ cd Tests/TestSuites/Setup
 ```
 
 This script:
+
 1. Copies 4 CSV files into the Docker container
 2. Creates 7 tables and 1 view with varied DuckDB types (TINYINT, UTINYINT, SMALLINT, USMALLINT, INTEGER, UBIGINT, DECIMAL, BOOLEAN, TIMESTAMP, DATE, VARCHAR, HUGEINT, UUID, JSON, ARRAY, STRUCT, BLOB)
 3. Loads the data and verifies row counts
 
 ### Tables Created
 
-| Table | Rows | Description |
-|-------|------|-------------|
-| `NycTaxiData` | 10,000 | Trip data with mixed types (TINYINT, TIMESTAMP, BOOLEAN, DECIMAL, etc.) |
-| `NycTaxiDateData` | 10,000 | Trip data with UBIGINT and DATE columns |
-| `TaxiZoneLookup` | 265 | Zone reference data (USMALLINT, VARCHAR) |
-| `misc_table` | 1 | Mixed precision types (DECIMAL(38,18), DECIMAL(12,6), SMALLINT) |
-| `TEXT_SAMPLES` | 1 | Text operation samples (VARCHAR(255)) |
-| `ExtendedTypes` | 1 | Extended scalar types (HUGEINT, UUID, JSON, BLOB) |
-| `NestedTypes` | 1 | Nested/complex types (ARRAY, STRUCT) |
-| `NycTaxiSummary` | 10,000 | View over NycTaxiData (RecordID, VendorID, fare_amount, tip_amount, total_amount, lpep_pickup_datetime) |
+| Table             | Rows   | Description                                                                                             |
+| ----------------- | ------ | ------------------------------------------------------------------------------------------------------- |
+| `NycTaxiData`     | 10,000 | Trip data with mixed types (TINYINT, TIMESTAMP, BOOLEAN, DECIMAL, etc.)                                 |
+| `NycTaxiDateData` | 10,000 | Trip data with UBIGINT and DATE columns                                                                 |
+| `TaxiZoneLookup`  | 265    | Zone reference data (USMALLINT, VARCHAR)                                                                |
+| `misc_table`      | 1      | Mixed precision types (DECIMAL(38,18), DECIMAL(12,6), SMALLINT)                                         |
+| `TEXT_SAMPLES`    | 1      | Text operation samples (VARCHAR(255))                                                                   |
+| `ExtendedTypes`   | 1      | Extended scalar types (HUGEINT, UUID, JSON, BLOB)                                                       |
+| `NestedTypes`     | 1      | Nested/complex types (ARRAY, STRUCT)                                                                    |
+| `NycTaxiSummary`  | 10,000 | View over NycTaxiData (RecordID, VendorID, fare_amount, tip_amount, total_amount, lpep_pickup_datetime) |
 
 ## Step 3: Verify Setup
 
 After the script completes, you should see:
 
-```
+```text
 === All tables loaded and verified successfully! ===
 ```
 
@@ -71,11 +72,11 @@ cd Tests/Settings
 
 ## Connection Details
 
-| Setting | Value |
-|---------|-------|
-| Host | `localhost:31337` |
-| TLS | Disabled |
+| Setting  | Value               |
+| -------- | ------------------- |
+| Host     | `localhost:31337`   |
+| TLS      | Disabled            |
 | Username | `sqlflite_username` |
 | Password | `sqlflite_password` |
-| Database | `TPC-H-small` |
-| Schema | `main` |
+| Database | `TPC-H-small`       |
+| Schema   | `main`              |

@@ -6,7 +6,7 @@ This guide explains how to run the DuckDB FlightSQL connector performance tests 
 
 1. **PQPerf.exe** — included in the `Microsoft.PowerQuery.SdkTools` NuGet package under the `tools/` folder.
 2. **Built connector** — ensure `DuckDb.mez` exists at `bin/AnyCPU/Debug/DuckDb.mez`. Build it by running from the repo root:
-   ```
+   ```powershell
    dotnet build DuckDb.proj
    ```
 3. **Credentials** — set up DuckDB connector credentials via the **Power Query: Set Credential** VS Code command. The connector uses `UsernamePassword` authentication.
@@ -23,16 +23,16 @@ cd Tests/TestSuites/Setup
 
 This creates 7 tables and 1 view in the `TPC-H-small` database:
 
-| Table | Rows | Description |
-|-------|------|-------------|
-| `NycTaxiData` | 10,000 | Trip data with mixed types (TIMESTAMP, DECIMAL, BOOLEAN, etc.) |
-| `NycTaxiDateData` | 10,000 | Trip data with DATE columns |
-| `TaxiZoneLookup` | 265 | Zone reference data |
-| `misc_table` | 1 | Mixed precision types for edge-case testing |
-| `TEXT_SAMPLES` | 1 | Text operation samples |
-| `ExtendedTypes` | 1 | Extended scalar types (HUGEINT, UUID, JSON, BLOB) |
-| `NestedTypes` | 1 | Nested/complex types (ARRAY, STRUCT) |
-| `NycTaxiSummary` | 10,000 | View over NycTaxiData |
+| Table             | Rows   | Description                                                    |
+| ----------------- | ------ | -------------------------------------------------------------- |
+| `NycTaxiData`     | 10,000 | Trip data with mixed types (TIMESTAMP, DECIMAL, BOOLEAN, etc.) |
+| `NycTaxiDateData` | 10,000 | Trip data with DATE columns                                    |
+| `TaxiZoneLookup`  | 265    | Zone reference data                                            |
+| `misc_table`      | 1      | Mixed precision types for edge-case testing                    |
+| `TEXT_SAMPLES`    | 1      | Text operation samples                                         |
+| `ExtendedTypes`   | 1      | Extended scalar types (HUGEINT, UUID, JSON, BLOB)              |
+| `NestedTypes`     | 1      | Nested/complex types (ARRAY, STRUCT)                           |
+| `NycTaxiSummary`  | 10,000 | View over NycTaxiData                                          |
 
 ## Performance Settings
 
@@ -40,18 +40,18 @@ The test configuration is in `Tests/PerfSettings/perfSettings.json`:
 
 ### Key Configuration Fields
 
-| Field | Description |
-|-------|-------------|
-| `ExtensionPaths` | Path to the DuckDB `.mez` connector file |
-| `WarmupCount` | Number of warmup iterations before measurement (default: 2) |
-| `RunCount` | Number of measured iterations (default: 3) |
-| `EvaluatorMode` | Evaluation mode — `SinglePartition` for these tests |
-| `ExpectedRowCount` | Expected number of rows returned by the query |
+| Field              | Description                                                 |
+| ------------------ | ----------------------------------------------------------- |
+| `ExtensionPaths`   | Path to the DuckDB `.mez` connector file                    |
+| `WarmupCount`      | Number of warmup iterations before measurement (default: 2) |
+| `RunCount`         | Number of measured iterations (default: 3)                  |
+| `EvaluatorMode`    | Evaluation mode — `SinglePartition` for these tests         |
+| `ExpectedRowCount` | Expected number of rows returned by the query               |
 
 ## Test Scenario
 
-| Scenario | Protocol | Rows | Query File |
-|----------|----------|------|------------|
+| Scenario              | Protocol         | Rows   | Query File                                    |
+| --------------------- | ---------------- | ------ | --------------------------------------------- |
 | Duck Db Query NycTaxi | ADBC (FlightSQL) | 10,000 | `TestSuites/PerfTests/DuckDbNycTaxi.query.pq` |
 
 ## Running Tests
@@ -71,7 +71,7 @@ cd Tests\PerfSettings
 
 ## Sample Output
 
-```
+```text
   - Perf Runs:
     - Name: Duck Db Query NycTaxi
     - Query File Path: ../TestSuites/PerfTests/DuckDbNycTaxi.query.pq
