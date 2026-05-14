@@ -1,0 +1,1 @@
+#table( type table [HugeIntCol = number, UuidCol = text, JsonCol = text, BlobCol = binary] , {{1234567890123456, "a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11", "{""key"": ""value"", ""num"": 42}", #binary({72, 54, 53, 54, 67, 54, 67, 54, 70} ) } } )

@@ -1,0 +1,704 @@
+//  This is SqlGenerator template that will be shared with connector developers. Connector developers will be able to
+//  use different base configurations, currently only Generators.Sql92.ID configuration is available.
+//     1) It has couple of configurations (have details in comments below) which can be overridden
+//     2) Helpers to create Sql Ast
+//     3) Some Assert functions to validate overrides
+//     4) Merge Override function to merge user overrides with SqlGenerator override.
+let
+// Base SqlGenerator
+    Implementation = "1.0",
+// This is used to convert for the type conversions of the results, if provided then any comparision/operation
+// between Type1 and Type2 will result in ResultType
+//   Table Columns :
+//   Type1 :     TypeValue
+//   Type2 :     TypeValue
+//   ResultType: TypeValue
+    ImplicitTypeConversions = null,
+//Allows the M engine to select a compatible data type when conversion between two specific numeric types is not declared as supported in the SupportedConversions.
+//If true then SqlTypeCategories SoftBase2Types and SoftBase10Types also needs to be provided.
+    UseSoftNumbers = false,
+    funcName = [
+        year = "year",
+        month = "month",
+        dayofmonth = "dayofmonth",
+        quarter = "quarter",
+        week = "week",
+        dayofyear = "dayofyear",
+        dayofweek = "dayofweek",
+        ABS = "ABS",
+        ACOS = "ACOS",
+        ASIN = "ASIN",
+        ATAN = "ATAN",
+        ATAN2 = "ATAN2",
+        COS = "COS",
+        EXP = "EXP",
+        MOD = "MOD",
+        POWER = "POWER",
+        SIGN = "SIGN",
+        SIN = "SIN",
+        SQRT = "SQRT",
+        TAN = "TAN",
+        CONTAINS = "CONTAINS",
+        StartsWith = "StartsWith",
+        EndsWith = "EndsWith",
+        Length = "Length",
+        LEFT = "LEFT",
+        RIGHT = "RIGHT",
+        REPLACE = "REPLACE",
+        REPEAT = "REPEAT",
+        LOWER = "LOWER",
+        UPPER = "UPPER",
+        LTRIM = "LTRIM",
+        RTRIM = "RTRIM",
+        CHAR = "CHAR",
+        ASCII = "ASCII",
+        minute = "minute",
+        hour = "hour",
+        round = "round",
+        ceil = "ceil",
+        floor = "floor",
+        LN = "LN"
+    ],
+// Constants
+    minute = Literal("minute"),
+    second = Literal("second"),
+    hour = Literal("hour"),
+    nanosecond = Literal("nanosecond"),
+    minusone = Literal("-1"),
+    one = Literal("1"),
+    zero = Literal("0"),
+    nanosecondspersecond = Literal("1000000000"),
+    startOfYearDateTime = SqlConstant("AnsiString","2000-01-01 00:00:00.000",type text),
+    ticksperday = Literal("864000000000"),
+    ticksperhour = Literal("36000000000"),
+    ticksperminute = Literal("600000000"),
+    tickspersecond = Literal("10000000"),
+
+//Internal Helpers
+    SingleListElement = (ast,visitor) =>
+        let
+            sqlastarg2 = visitor(ast[Arguments]{1}),
+            array = List.Transform(ast[Arguments]{0}[Value],(c) => [Kind = "Constant", Value = c]),
+            sqlastarray = List.Transform(array, (c) => visitor(c)),
+            sqlast = if(ast[Arguments]{0}[Value]{0} = null) then UnaryLogicalOperation("IsNull",sqlastarg2)
+                else BinaryLogicalOperation("Equals",sqlastarg2,sqlastarray{0})
+        in
+            sqlast,
+
+    InExpression = (args,visitor) =>
+        let
+            array = List.Transform(args{0}[Value],(c) => [Kind = "Constant", Value = c]),
+            sqlastarg1 = List.Transform(array, (c) => visitor(c)),
+            inarrayexpression = InArrayExpression(sqlastarg1),
+            sqlastarg2 = visitor(args{1})
+        in
+            BinaryLogicalOperation("In",sqlastarg2,inarrayexpression),
+
+// All Helpers
+    GetInvocation = (ast, function, count) =>
+        if ast[Kind] = "Invocation" and ast[Function][Kind] = "Constant" and ast[Function][Value] = function and List.Count(ast[Arguments]) = count
+        then ast[Arguments]
+        else ...,
+    ApproxDistinctCount = (list) => [
+        Kind = "Invocation",
+        Function = Function("approx_count_distinct"),
+        Arguments = List.Transform(list, Argument), Type = Int64.Type
+    ],
+    InvocationWithVerbatim = (verbatimPrefix,args,name,Type) => [Kind = "Invocation", Function =  [Kind = "Function", Name=name, VerbatimPrefix = verbatimPrefix], Arguments = args, Type = Type],
+    IntervalExpression = (intervalUnit,expr) => [Kind = "Interval", Interval = [Kind = "Literal", Value = intervalUnit], Expression = expr],
+    WhenItem = (when,thenItem,Type) => [When = when,Then = thenItem,Type = Type],
+    CaseFunction = (whenItems,elseItem,case,Type) => [Kind = "Case",Conditions = whenItems,Case = case,Else = elseItem,Type = Type],
+    ConditionOperation = (operator,left,right) => [Kind = "ConditionOperation",Operator = operator,Left = left,Right = right,Type = Logical.Type],
+    UnaryLogicalOperation = (operator,expression) => [Kind = "UnaryLogicalOperation",Operator = operator,Expression = expression,Type = Logical.Type ],
+    BinaryLogicalOperation = (operator,left,right) =>  [Kind = "BinaryLogicalOperation",Operator = operator,Left =left,Right= right,Type = Logical.Type],
+    Argument = (expr,Type) => [Expression = expr, Type = Type],
+    Function = (name) => [Kind = "Function", Name=name],
+    Literal = (value) => [Kind = "Literal", Value = value],
+    BinaryOperation = (left, operator, right) => [Kind = "Binary",Left = left,Operator = operator, Right = right, Type = Double.Type ],
+    Invocation = (args, name) => [Kind = "Invocation", Function = Function(name), Arguments = args, Type = Int64.Type],
+    InvocationWithType = (args,name,Type) => [Kind = "Invocation", Function = Function(name), Arguments = args, Type = Type],
+    InArrayExpression = (elements) => [Kind = "InArray",Elements = elements,Type = List.Type],
+    SqlConstant = (constantType,literal,typeValue) => [Kind = "SqlConstant", ConstantType = constantType,Literal = literal,Type = typeValue],
+    CastSqlExpression = (SqlAst,Type) => [Kind = "Cast",Expression = SqlAst,Type = Type],
+
+// These are helper functions to merge base sql generator record with user provided overrides
+// If ApplyAssert is false then validations are skipped. It shouldn't be true in Production Code.
+    MergeOverrides = (generatorId as text, SqlGeneratorOverrides as record,ApplyAssert as logical) =>
+        let
+            SqlGeneratorBase = SqlGeneratorBaseSettings{[ID = generatorId]}[Settings],
+            SqlGetTypeInfo = Value.AssertTableType(SqlGeneratorOverrides[SqlGetTypeInfo],SqlGetTypeInfoType,ApplyAssert),
+            DefaultTypes = if(Record.HasFields(SqlGeneratorOverrides,{"DefaultTypes"}))
+                then Value.AssertTableType(SqlGeneratorOverrides[DefaultTypes],DefaultTypesType,ApplyAssert)
+                else null,
+            TimestampFunctionOverrides = if(Record.HasFields(SqlGeneratorOverrides,{"TimestampFunctionOverrides"})) then Value.AssertRecordType(SqlGeneratorOverrides[TimestampFunctionOverrides],TimestampFunctionOverridesType,2,ApplyAssert)
+                else null,
+            SupportedConversions = if(Record.HasFields(SqlGeneratorOverrides,{"SupportedConversions"}))
+                then Value.AssertTableType(SqlGeneratorOverrides[SupportedConversions],SupportedConversionsType,ApplyAssert)
+                else null,
+            SqlTypesCategories = if(Record.HasFields(SqlGeneratorOverrides,{"SqlTypesCategories"}))
+                then Value.AssertRecordType(SqlGeneratorOverrides[SqlTypesCategories],SqlTypesCategoriesType,2,ApplyAssert)
+                else null,
+            withnullcheckSqlCapabilities = SqlGeneratorOverrides[SqlCapabilities]? ?? [],
+            validatedSqlCapabilitiesOverrides =  Value.AssertRecordType(withnullcheckSqlCapabilities,SqlCapabilitiesType,2,ApplyAssert),
+            mergedSqlCapabilities = MergeSqlCapabilities(SqlGeneratorBase[SqlCapabilities],validatedSqlCapabilitiesOverrides),
+            SqlCapabilities = Value.AssertRecordType(mergedSqlCapabilities,SqlCapabilitiesType,1,ApplyAssert),
+            withchecknull = SqlGeneratorOverrides[FunctionOverrides]? ?? [],
+            validatedfunctionoverrides = Value.AssertRecordType(withchecknull,FunctionOverridesType,1,ApplyAssert),
+            FunctionOverrides = Value.AssertRecordType(MergeFunctionOverrides(SqlGeneratorBase[AstVisitor][FunctionOverrides],validatedfunctionoverrides),FunctionOverridesType,1,ApplyAssert),
+            BinaryOperatorOverrides = SqlGeneratorOverrides[BinaryOperatorOverrides]? ?? [],
+            UnaryOperatorOverrides = SqlGeneratorOverrides[UnaryOperatorOverrides]? ?? [],
+            ImplicitTypeConversions = SqlGeneratorOverrides[ImplicitTypeConversions]? ?? SqlGeneratorBase[ImplicitTypeConversions],
+            SoftNumbers = SqlGeneratorOverrides[UseSoftNumbers]? ?? SqlGeneratorBase[SoftNumbers],
+            AstVisitor = SqlGeneratorBase[AstVisitor] & [FunctionOverrides = FunctionOverrides, BinaryOperatorOverrides = BinaryOperatorOverrides, UnaryOperatorOverrides = UnaryOperatorOverrides],
+            CombineContext = (left, right) => if left = [] then right else if right = [] then left else null
+        in
+            [
+                Implementation = SqlGeneratorBase[Implementation],
+                ImplicitTypeConversions = ImplicitTypeConversions,
+                SoftNumbers = SoftNumbers,
+                SqlGetTypeInfo = SqlGetTypeInfo,
+                SqlCapabilities = SqlCapabilities,
+                AstVisitor = AstVisitor,
+                CombineContext = CombineContext,
+                DefaultTypes = DefaultTypes,
+                TimestampFunctionOverrides = TimestampFunctionOverrides,
+                SupportedConversions = SupportedConversions,
+                SqlTypesCategories = SqlTypesCategories
+            ],
+
+    MergeSqlCapabilities = (SqlCapabilitiesBase as record, SqlCapabilitiesOverrides as record) =>
+        let
+// Sql Capabilities merge
+            fields = Record.FieldNames(SqlCapabilitiesOverrides),
+            listOfFieldValues = List.Transform(fields,each TransformFunction(_,SqlCapabilitiesOverrides,SqlCapabilitiesBase)),
+            TransformFunction = (fieldName as text,override as record, base as record) =>
+            if(Type.Is(Value.Type(Record.Field(override,fieldName)),type record))
+            then Record.AddField([],fieldName,Record.Field(base,fieldName) & Record.Field(override,fieldName))
+            else Record.AddField([],fieldName,Record.Field(override,fieldName))
+        in
+            SqlCapabilitiesBase & Record.Combine(listOfFieldValues),
+    MergeFunctionOverrides = (base as record, overrides as record) =>
+        let
+            FunctionOverrides = if(overrides = null) then [] else overrides
+        in
+            if(overrides = []) then base else base & FunctionOverrides,
+
+// #SqlGeneratorTypes
+// Types for SqlCapabilities
+    SupportedPredicatesType = type [ IsNull = logical,IsNotNull = logical,SupportsComparision = logical],
+    SupportedSql92RelationalJoinOperatorsType = type  [ FullOuterJoin = logical,LeftOuterJoin = logical,RightOuterJoin = logical,
+        InnerJoin = logical,CrossJoin = logical
+    ],
+    TimeStampIntervalValuesType = type nullable [
+        Nanosecond = text,
+        Microsecond = text,
+        Second = text,
+        Minute = text,
+        Hour = text,
+        Day = text,
+        Week = text,
+        Month = text,
+        Quarter = text,
+        Year = text
+    ],
+    SqlCapabilitiesType = type  [
+        LimitClauseKind = number,
+        FractionalSecondsScale =  number,
+        SupportsBindParameters = logical,
+        IdentifierQuoteChar = nullable text,
+        CatalogNameSeparator = nullable text,
+        CatalogNameLocation = nullable number,
+        Sql92Conformance = nullable number,
+        MaxColumnsInOrderBy = nullable number,
+        MaxIdentifierNameLength = nullable number,
+        OrderByColumnsInSelect = nullable logical,
+        TolerateConcatOverflow = logical,
+        SupportedPredicates = SupportedPredicatesType,
+        SupportedSql92RelationalJoinOperators = SupportedSql92RelationalJoinOperatorsType,
+        TimeStampIntervalValues = TimeStampIntervalValuesType,
+        SupportsColumnAliases = logical,
+        MaxColumnsInGroupBy = number,
+        MaxColumnsInSelect = number,
+        GroupByCapabilities = number,
+        StringConcatNullBehavior = number,
+        SearchPatternEscapeCharacter = text,
+        SupportsCastFunction = logical,
+        IdentifierSpecialCharacters = nullable text
+    ],
+    SqlGetTypeInfoType = Value.Type(SqlGetTypeInfo),
+    DefaultTypesType = Value.Type(DefaultTypes),
+    TimestampFunctionOverridesType = Value.Type(TimestampFunctionOverrides),
+    SupportedConversionsType = Value.Type(SupportedConversions),
+    SqlTypesCategoriesType = type [
+        SoftBase2Types = nullable list,
+        SoftBase10Types = nullable list,
+        VarBinaryTypes = nullable list,
+        WideCharTypes = nullable list,
+        VarCharTypes = nullable list,
+        WideVarCharTypes = nullable list
+    ],
+    FunctionOverridesType = type [
+        Date.Year =         nullable text,
+        Date.Month =        nullable text,
+        Date.Day =          nullable text,
+        Date.QuarterOfYear = nullable text,
+        Date.WeekOfYear = nullable text,
+        Date.DayOfYear = nullable text,
+        Date.DayOfWeek = nullable text,
+        Number.Abs = nullable text,
+        Number.Acos = nullable text,
+        Number.Asin = nullable text,
+        Number.Atan = nullable text,
+        Number.Atan2 = nullable text,
+        Number.Cos = nullable text,
+        Number.Exp = nullable text,
+        Number.Mod = nullable text,
+        Number.Power = nullable text,
+        Number.Sign = nullable text,
+        Number.Sin = nullable text,
+        Number.Sqrt = nullable text,
+        Number.Tan = nullable text,
+        Text.Contains = record,
+        Text.StartsWith = nullable text,
+        Text.EndsWith = nullable text,
+        Text.Length = nullable text,
+        Text.Start = nullable text,
+        Text.End = nullable text,
+        Text.Replace = nullable text,
+        Text.Repeat = nullable text,
+        Text.Lower = nullable text,
+        Text.Upper = nullable text,
+        Text.TrimStart = nullable text,
+        Text.TrimEnd = nullable text,
+        Character.FromNumber = nullable text,
+        Character.ToNumber = nullable text,
+        Time.Minute = nullable text,
+        Time.Hour = nullable text,
+        Number.Round = nullable text,
+        Number.RoundUp = nullable text,
+        Number.RoundDown = nullable text,
+        Number.Log = nullable text,
+        Value.NullableEquals = nullable text,
+        Value.Equals = nullable text
+    ] meta [recordtype = "FunctionOverrides"],
+
+    ComplexFunctionOverridesType = Type.ForFunction([ReturnType = type record, Parameters = [visitor = type function,rowType = type record,groupKeys = type list, ast = type record]], 5),
+
+    Value.AssertRecordType = (value as record,valuetype as type, validationtype as number,ApplyAssert as logical) =>
+        if(ApplyAssert = false) then value
+        else if(Type.Is(valuetype,type record)<> true) then error "Type provided is not a record type"
+        else if(Value.Metadata(valuetype)[recordtype]? = "FunctionOverrides") then Value.AssertFunctionOverrides(value,valuetype)
+        else if(validationtype = 1) then  Value.HardValidation(value,valuetype)
+        else if(validationtype = 2) then  Value.SoftValidation(value,valuetype)
+        else error "validationType is not correct",
+
+    Value.AssertTableType = (value as table,tabletype as type,ApplyAssert as logical) =>
+        let
+            rows= Table.ToRows(value),
+            fieldnamesfromvalue = Table.Column(Table.Schema(value),"Name"),
+            fieldnamesfromtype  = Table.Column(Type.TableSchema(tabletype),"Name"),
+            validatecolumncount = if(List.Count(fieldnamesfromvalue) = List.Count(fieldnamesfromtype))
+                then rows else error "Column counts do not match between table value and table type provided",
+            validatedcolumnames = if(List.MatchesAll(fieldnamesfromvalue, each fieldnamesfromtype{List.PositionOf(fieldnamesfromvalue,_)} = _))
+                then validatecolumncount else error "Column names of the table value doesnt match with table type provided",
+            validatedatatypes = List.Transform(validatedcolumnames,each validatetablerows(_)),
+            validatetablerows = (row as list) =>
+                let
+                    rowrecord  = Record.FromList(row,fieldnamesfromtype),
+                    result = List.Transform(fieldnamesfromtype,each validatecell(_)),
+                    validatecell = (fieldname as text) =>
+                        let
+                            value = if(Record.HasFields(rowrecord,fieldname)) then Record.Field(rowrecord,fieldname) else error Text.Format("table column #{0} is missing",{fieldname}),
+                            result = if(Type.Is(Value.Type(value),Type.TableColumn(tabletype,fieldname))) then true else error Text.Format("table column #{0} type mismatch",{fieldname})
+                        in
+                            result
+                in
+                    List.AllTrue(result)
+        in
+            if (ApplyAssert = false) then value
+            else if(List.AllTrue(validatedatatypes)) then value
+            else error "There should already have been error message",
+
+//  These all are internal functions used for validation
+    Value.AssertFunctionType = (functionvalue as function, functiontype as type) =>
+        let
+            parametersfromvalue = Type.FunctionParameters(Value.Type(functionvalue)),
+            returnfromvalue = Type.FunctionReturn(Value.Type(functionvalue)),
+            parametersfromtype = Type.FunctionParameters(functiontype),
+            returnfromtype = Type.FunctionReturn(functiontype),
+            returnValidated = if(Type.Is(returnfromvalue,returnfromtype)or Type.Is(type any, returnfromvalue))
+                then true
+                else error "return for the function doesnt match with type",
+            parameternamesfromvalue = Record.FieldNames(parametersfromvalue),
+            parameternamesfromtype = Record.FieldNames(parametersfromtype),
+            validateparametercount = if(List.Count(parameternamesfromvalue) = List.Count(parameternamesfromtype))
+                then true
+                else error "Number of parameters in function doesn't match with number of parameters in type",
+            validatedparameternames = if(List.MatchesAll(parameternamesfromvalue, each parameternamesfromtype{List.PositionOf(parameternamesfromvalue,_)} = _))
+                then true
+                else error "parameter names for the function signature doesn't match with type",
+            validateparametertypes =  List.AllTrue(List.Transform(parameternamesfromvalue,each
+                if(Type.Is(Record.Field(parametersfromvalue,_),Record.Field(parametersfromtype,_))
+                or  Type.Is(type any,Record.Field(parametersfromvalue,_)))
+                then true
+                else error Text.Format("Function parameter #{0} type doesn't match function signature type",{_})))
+        in
+            List.AllTrue({returnValidated,validateparametercount,validateparametertypes}),
+
+    Value.AssertFunctionOverrides = (value as record, valuetype as type) =>
+        let
+            fieldnames = Record.FieldNames(value),
+            result = List.Transform(fieldnames, each validatefield(_)),
+            validatefield = (fieldname as text) =>
+                let
+                    fieldvalue = Record.Field(value,fieldname),
+                    result = try if((Type.Is(Value.Type(fieldvalue),type text) or fieldvalue = null)
+                        or (Type.Is(Value.Type(fieldvalue),type record)))
+                        then Value.ValidateTextForFunctionOverrides(fieldname)
+                        else if (Type.Is(Value.Type(fieldvalue),type function)) then Value.AssertFunctionType(fieldvalue,ComplexFunctionOverridesType)
+                        else error Text.Format("#{0} doesn't have a valid type, Functionoverrides can have only functions and text as a value",{fieldname})
+                in
+                    if(result[HasError]) then error result[Error] else true
+        in
+            if(List.AllTrue(result)) then value
+            else error "There is an error which should already have been shown",
+
+    Value.ValidateTextForFunctionOverrides = (fieldname as text) =>
+        let
+            typefields = Type.RecordFields(FunctionOverridesType)
+        in
+            if(Record.HasFields(typefields,fieldname)) then true
+            else error Text.Format("Simple Overrides can only be provided to functions for which there is already a simple function override in base SqlGenerator
+            , #{0} function is not a simple override in base sql generator",{fieldname}),
+
+    Value.SoftValidation = (value as record, valuetype as type) =>
+        if( Value.FieldByFieldValidation(value,valuetype,2)) then value else error "There is an error which should already have been shown",
+//   Value.FieldByFieldValidation(value,valuetype,2),
+
+    Value.HardValidation = (value as record, valuetype as type) =>
+        if(Record.FieldCount(value) <> Record.FieldCount(Type.RecordFields(valuetype)))
+        then error [  Reason = "FileNotFound",
+                      Message = "Field Count doesnt match with type"
+                   ]
+        else if(Type.Is(valuetype,type record) <> true) then error "Type passed for validation is not record type"
+        else if(Value.FieldByFieldValidation(value,valuetype,1)) then value
+        else error "There is an error which should already have been shown",
+
+    Value.FieldByFieldValidation = (value as record, valuetype as type, validationtype as number)  =>
+        let
+            validatedfields = List.Transform(Record.FieldNames(value),each ValidateField(_,value,valuetype,validationtype))
+        in
+            List.AllTrue(validatedfields),
+
+// validatedfields,
+    ValidateField = (fieldname as text, value as record, valuetype as type,validationtype as number) =>
+        let
+            typefields = Type.RecordFields(valuetype),
+            fieldtype = if(Record.HasFields(typefields,fieldname))
+                then Record.Field(typefields,fieldname)[Type]
+                else error Text.Format("Field #{0} is not a valid field in provided type",{fieldname}),
+            fieldvalue = Record.Field(value,fieldname),
+            checkforRecord = try if(Type.Is(Value.Type(fieldvalue),type record)) then Value.AssertRecordType(fieldvalue,fieldtype,validationtype)
+                else if (Type.Is(Value.Type(fieldvalue),type table)) then Value.AssertTableType(fieldvalue,fieldtype)
+                else if (Type.Is(Value.Type(fieldvalue),type function)) then Value.AssertFunctionType(fieldvalue,fieldtype)
+                else if (Type.Is(Value.Type(Record.Field(value,fieldname)),fieldtype)) then true
+                else error Text.Format("Invalid fieldtype for #{0}",{fieldname})
+        in
+            if(checkforRecord[HasError]) then error checkforRecord[Error] else true,
+
+    SqlGetTypeInfo = #table(type table [SqlTypeName = text, Type = type, ColumnSize = number, GetLiteral = nullable function,Searchable = number,UnsignedAttribute = nullable number,NumericPrecisionRadix = nullable number],{}),
+    SqlCapabilities = [
+       // LimitClause kind supported by DataSource
+       // Possible Values are :
+       //            LimitClauseKind.None
+       //            LimitClauseKind.Top
+       //            LimitClauseKind.LimitOffset
+       //            LimitClauseKind.Limit
+       //            LimitClauseKind.AnsiSql2008
+        LimitClauseKind = LimitClauseKind.None,
+       //   Fractional second scale supported for time values in datasource. For example value of 9 means ss.fffffffff (fractional second value till 9 decimal is supported)
+        FractionalSecondsScale = 9,
+       //  DataSource supports bind parameters. Valid values are true or false
+        SupportsBindParameters = false,
+     //   The character string that is used as the starting and ending delimiter of a quoted (delimited)
+     //   identifier in SQL statements.
+        IdentifierQuoteChar = """" ,
+     //   A character string: the character or characters that the data source defines as the separator
+     //   between a catalog name and the qualified name element that follows or precedes it.If null value provided
+     //   then it defaults to "."
+        CatalogNameSeparator = "." ,
+     //   An integer value that indicates the position of the catalog in a qualified table name
+     //   Possible values are :
+     //       0  ---> Datasource doesn't support catalog name.
+     //       1  ---> catalog name is at the start of the table name, as in \EMPDATA\EMP.DBF.
+     //       2  ---> catalog is at the end of the table name, as in ADMIN.EMP@EMPDATA.
+     //       null ---> Defaults to 1
+        CatalogNameLocation = 1 ,
+     //   An integer value that indicates the level of SQL-92 supported by the driver:
+     //   Possible values are :
+     //       1  ---> Entry level SQL-92 compliant.
+     //       2  ---> FIPS 127-2 transitional level compliant.
+     //       4  ---> Intermediate level SQL-92 compliant.
+     //       8  ---> Full level SQL-92 compliant.
+     //       null ---> Defaults to 4
+        Sql92Conformance = 4 ,
+     //   An integer Value that specifies the maximum number of columns allowed in an ORDER BY clause.
+     //   If there is no specified limit or the limit is unknown, this value is set to zero.
+     //   If null value is provided or value not provided then it defaults to 15
+        MaxColumnsInOrderBy = 65535 ,
+     //   An integer that indicates the maximum size in characters that the data source supports for user-defined names.
+     //   If null then defaults to 128
+        MaxIdentifierNameLength = 255 ,
+     //   true if the columns in the ORDER BY clause must be in the select list; otherwise, false.
+     //   if null then defaults to true
+        OrderByColumnsInSelect = false ,
+     //  This is set to true when trying to tolerate concatenation overflows. It is used along with SqlTypesCategories
+     //   VarBinaryTypes , WideCharTypes , VarCharTypes , WideVarCharTypes
+        TolerateConcatOverflow =  true,
+     //   This record determines which Sql predicate Functions are supported
+        SupportedPredicates = [
+            IsNull = true,
+            IsNotNull = false,
+            SupportsComparision = true
+        ],
+     //   This record is to configure which Sql relational join operators are supported
+        SupportedSql92RelationalJoinOperators = [
+            FullOuterJoin = true,
+            LeftOuterJoin = true,
+            RightOuterJoin = true,
+            InnerJoin = true,
+            CrossJoin = true
+        ],
+     //   true if the data source supports column aliases; otherwise, false.
+        SupportsColumnAliases = true ,
+     //   An integer value that specifies the maximum number of columns allowed in a GROUP BY clause.
+     //   If there is no specified limit or the limit is unknown, this value is set to zero.
+        MaxColumnsInGroupBy = 65535 ,
+     //   An integer value that specifies the maximum number of columns allowed in a select list.
+     //   If there is no specified limit or the limit is unknown, this value is set to zero.
+        MaxColumnsInSelect = 65535 ,
+     //   An integer value that specifies the relationship between the columns in the GROUP BY clause
+     //   and the nonaggregated columns in the select list:
+     //   Possible values are :
+     //       0  ---> A COLLATE clause can be specified at the end of each grouping column.
+     //       1  ---> GROUP BY clauses are not supported.
+     //       2  ---> The GROUP BY clause must contain all nonaggregated columns in the select list.
+     //               It cannot contain any other columns. For example, SELECT DEPT, MAX(SALARY) FROM EMPLOYEE GROUP BY DEPT.
+     //       3  ---> The GROUP BY clause must contain all nonaggregated columns in the select list. It can contain columns
+     //               that are not in the select list. For example, SELECT DEPT, MAX(SALARY) FROM EMPLOYEE GROUP BY DEPT, AGE.
+     //       4  ---> The columns in the GROUP BY clause and the select list are not related. The meaning of nongrouped,
+     //               nonaggregated columns in the select list is data source-dependent. For example, SELECT DEPT, SALARY
+     //               FROM EMPLOYEE GROUP BY DEPT, AGE.
+        GroupByCapabilities = 2 ,
+     //  TimeStampInterval Values supported by datasource
+        TimeStampIntervalValues = [
+            Nanosecond = "nanosecond",
+            Microsecond = "microsecond",
+            Second = "second",
+            Minute = "minute",
+            Hour = "hour",
+            Day = "day",
+            Week = "week",
+            Month = "month",
+            Quarter = "quarter",
+            Year = "year"
+        ],
+     //   This value indicates how the data source handles the concatenation of NULL valued character data type columns with non-NULL valued character data type columns.
+     //   Possible values are :
+     //       0  ---> Result is NULL valued.
+     //       1  ---> Result is concatenation of non-NULL valued column or columns.
+        StringConcatNullBehavior = 0 ,
+     //   A character string specifying what driver supports as an escape character that allows the use of the pattern match metacharacters underscore (_) and percent sign (%)
+     //   as valid characters in search patterns. This escape character applies only for those catalog function arguments that support search strings. If this string is empty,
+     //   the driver does not support a search-pattern escape character.
+        SearchPatternEscapeCharacter = "\" ,
+     //  Supports Cast Function
+        SupportsCastFunction = true,
+     //   A character string that contains all special characters (that is, all characters except a through z, A through Z, 0 through 9, and underscore)
+     //   that can be used in an identifier name, such as a table name, column name, or index name, on the data source.
+     //   For example, "#$^". If an identifier contains one or more of these characters, the identifier must be a delimited identifier.
+        IdentifierSpecialCharacters = ""
+     ],
+
+    FunctionOverrides = [
+    // Simple Function Overrides
+        Date.Year = funcName[year],              // year([DateColumn])
+        Date.Month = funcName[month],            // month(DateColumn])
+        Date.Day = funcName[dayofmonth],         // dayofmonth([DateColumn])
+        Date.QuarterOfYear = funcName[quarter],  // quarter([DateColumn])
+        Date.WeekOfYear = funcName[week],        // week([DateColumn])
+        Date.DayOfYear = funcName[dayofyear],    // dayofyear([DateColumn])
+        Date.DayOfWeek = funcName[dayofweek],    // dayofweek([DateColumn])
+        Number.Abs = funcName[ABS],              // ABS([NumberColumn])
+        Number.Acos = funcName[ACOS],            // ACOS([NumberColumn])
+        Number.Asin = funcName[ASIN],            // ASIN([NumberColumn])
+        Number.Atan = funcName[ATAN],            // ATAN([NumberColumn])
+        Number.Atan2 = funcName[ATAN2],          // ATAN2([NumberColumn])
+        Number.Cos = funcName[COS],              // COS([NumberColumn])
+        Number.Exp = funcName[EXP],              // EXP([NumberColumn])
+        Number.Mod = funcName[MOD],              // MOD(INT1,INT2)
+        Number.Power = funcName[POWER],          // POWER([NumberColumn])
+        Number.Sign = funcName[SIGN],            // SIGN([NumberColumn])
+        Number.Sin = funcName[SIN],              // SIN([NumberColumn])
+        Number.Sqrt = funcName[SQRT],            // SQRT([NumberColumn])
+        Number.Tan = funcName[TAN],              // TAN([NumberColumn])
+        Text.Contains = [Name = funcName[CONTAINS],Type = Logical.Type],      // CONTAINS([STRINGCOLUMN],"texttocheck")
+        Text.StartsWith = [Name = funcName[StartsWith],Type = Logical.Type],  // StartsWith([STRINGCOLUMN],"substring")
+        Text.EndsWith = [Name = funcName[EndsWith],Type = Logical.Type],      // EndsWith([STRINGCOLUMN],"substring")
+        Text.Length = funcName[Length],          // Length([STRINGCOLUMN])
+        Text.Start = funcName[LEFT],             // LEFT([STRINGCOLUMN],count)
+        Text.End = funcName[RIGHT],              // RIGHT([STRINGCOLUMN],count)
+        Text.Replace = funcName[REPLACE],        // REPLACE([STRINGCOLUMN],"oldtext","newtext")
+        Text.Repeat = funcName[REPEAT],          // REPEAT([STRINGCOLUMN],repeatcount)
+        Text.Lower = funcName[LOWER],            // LOWER([STRINGCOLUMN])
+        Text.Upper = funcName[UPPER],            // UPPER([STRINGCOLUMN])
+        Text.TrimStart = funcName[LTRIM],        // LTRIM([STRINGCOLUMN])
+        Text.TrimEnd = funcName[RTRIM],          // RTRIM([STRINGCOLUMN])
+        Character.FromNumber = funcName[CHAR],   // CHAR([NumberColumn])
+        Character.ToNumber = funcName[ASCII],    // ASCII([STRINGCOLUMN])
+        Time.Minute = funcName[minute],          // minute([timecolumn])
+        Time.Hour = funcName[hour],              // hour([timecolumn])
+        Number.Round = funcName[round],          // round([numbercolumn])
+        Number.RoundUp = funcName[ceil],         // ceil([numbercolumn])
+        Number.RoundDown = funcName[floor],      // floor([numbercolumn])
+        Number.Log = funcName[LN],               // LN([numbercolumn])
+        Value.Equals = null,
+        Value.NullableEquals = null,
+
+        List.Contains = (visitor, rowType, groupKeys, ast) =>
+            if List.Count(ast[Arguments]) = 2 then
+                let
+                    arg1 = ast[Arguments]{0},
+                    arg2 = ast[Arguments]{1},
+                    sqlAstArg2 = visitor(arg2),
+                    withNullRemoved = List.RemoveNulls(arg1[Value]),
+                    countAfterNullRemoved = List.Count(withNullRemoved),
+                    hasNull = List.Count(arg1[Value]) <> countAfterNullRemoved,
+                    valueEqualsTo = BinaryLogicalOperation("Equals",sqlAstArg2,visitor([Kind = "Constant", Value = withNullRemoved{0}])),
+                    isNull = UnaryLogicalOperation("IsNull",sqlAstArg2),
+                    result = if(arg1[Kind] = "Constant" and Type.Is(Value.Type(arg1[Value]),type list))
+                        then
+                            let
+                                result = if(countAfterNullRemoved = 1)
+                                    then
+                                        if hasNull then ConditionOperation("Or",valueEqualsTo,isNull) else valueEqualsTo
+                                    else
+                                        if (hasNull and (countAfterNullRemoved = 0))
+                                        then isNull
+                                        else
+                                            let
+                                                inExpression = InExpression({[Kind = "Constant", Value = withNullRemoved],ast[Arguments]{1}},visitor),
+                                                result = if hasNull then ConditionOperation("Or",inExpression,isNull) else inExpression
+                                            in
+                                                result
+                                in
+                                    result
+                        else ...
+                    in
+                        result
+            else ...
+    ],
+
+    DefaultTypes = #table(type table [Type = type,SqlTypeName = text],{}),
+
+    TimestampFunctionOverrides = [timestampadd = null, timestampdiff = null],
+
+    SupportedConversions = #table(type table [FromSqlTypeName = text, ToSqlTypeNames = list ],{}),
+
+    SqlTypesCategories = [
+        SoftBase2Types = null,
+        SoftBase10Types = null,
+        VarBinaryTypes = null,
+        WideCharTypes = null,
+        VarCharTypes = null,
+        WideVarCharTypes = null
+    ],
+
+    BinaryOperatorOverrides = [],
+    UnaryOperatorOverrides = [],
+
+    SqlGeneratorBase = [
+        Implementation = Implementation,
+        SoftNumbers = UseSoftNumbers,
+        ImplicitTypeConversions = ImplicitTypeConversions,
+        SqlGetTypeInfo = SqlGetTypeInfo,
+        AstVisitor = []
+    ],
+
+    SqlGenerator92Standard = [
+        Implementation = Implementation,
+        ImplicitTypeConversions = ImplicitTypeConversions,
+        SoftNumbers = UseSoftNumbers,
+        SqlGetTypeInfo = SqlGetTypeInfo,
+        SqlCapabilities = SqlCapabilities,
+        AstVisitor = [
+               FunctionOverrides = FunctionOverrides,
+               BinaryOperatorOverrides = BinaryOperatorOverrides,
+               UnaryOperatorOverrides = UnaryOperatorOverrides
+        ],
+        DefaultTypes = DefaultTypes,
+        TimestampFunctionOverrides = TimestampFunctionOverrides,
+        SupportedConversions = SupportedConversions,
+        SqlTypesCategories = SqlTypesCategories
+    ],
+
+    Generators.Sql92.ID = "Sql92",
+    SqlGeneratorBaseSettings = #table({"ID", "Settings"}, {
+        {Generators.Sql92.ID, SqlGenerator92Standard}
+      })
+in
+    [
+       MergeOverrides = MergeOverrides,
+       Value.AssertRecordType = Value.AssertRecordType,
+       Value.AssertTableType = Value.AssertTableType,
+       AllTypes = [
+           SupportedPredicatesType = SupportedPredicatesType,
+           SupportedSql92RelationalJoinOperatorsType = SupportedSql92RelationalJoinOperatorsType,
+           TimeStampIntervalValuesType = TimeStampIntervalValuesType,
+           SqlCapabilitiesType = SqlCapabilitiesType,
+           SqlGetTypeInfoType = SqlGetTypeInfoType,
+           FunctionOverridesType = FunctionOverridesType,
+           DefaultTypesType = DefaultTypesType,
+           TimestampFunctionOverridesType = TimestampFunctionOverridesType,
+           SqlTypesCategoriesType = SqlTypesCategoriesType,
+           SupportedConversions = SupportedConversionsType
+        ],
+        Constants = [
+            minute = minute,
+            second = second,
+            hour = hour,
+            nanosecond = nanosecond,
+            minusone = minusone,
+            one = one,
+            zero = zero,
+            startOfYearDateTime = startOfYearDateTime,
+            ticksperday = ticksperday,
+            tickspersecond = tickspersecond,
+            ticksperminute = ticksperminute,
+            ticksperhour = ticksperhour,
+            nanosecondspersecond = nanosecondspersecond
+        ],
+        Helpers = [
+            SingleListElement = SingleListElement,
+            InExpression = InExpression,
+            GetInvocation = GetInvocation,
+            ApproxDistinctCount = ApproxDistinctCount,
+            InvocationWithVerbatim = InvocationWithVerbatim,
+            WhenItem = WhenItem,
+            CaseFunction = CaseFunction,
+            ConditionOperation = ConditionOperation,
+            UnaryLogicalOperation = UnaryLogicalOperation,
+            BinaryLogicalOperation = BinaryLogicalOperation,
+            Argument = Argument,
+            Function = Function,
+            Literal = Literal,
+            BinaryOperation = BinaryOperation,
+            Invocation = Invocation,
+            InvocationWithType = InvocationWithType,
+            InArrayExpression = InArrayExpression,
+            SqlConstant = SqlConstant,
+            CastSqlExpression = CastSqlExpression,
+            IntervalExpression = IntervalExpression
+        ],
+        FunctionNames = funcName
+    ]

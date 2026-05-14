@@ -1,0 +1,1 @@
+{"DOLocationID", "PULocationID", "RatecodeID", "RecordID", "VendorID", "congestion_surcharge", "ehail_fee", "extra", "fare_amount", "improvement_surcharge", "lpep_dropoff_datetime", "lpep_pickup_datetime", "mta_tax", "passenger_count", "payment_type", "store_and_fwd_flag", "tip_amount", "tolls_amount", "total_amount", "trip_distance", "trip_type"} 

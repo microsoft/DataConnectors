@@ -1,0 +1,1 @@
+#table( type table [Name = text, Kind = text, IsNullable = logical] , {{"RecordID", "number", false} , {"lpep_dropoff_date", "date", true} , {"lpep_pickup_date", "date", false} } )

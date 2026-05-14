@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <data name="ButtonTitle" xml:space="preserve">
+    <value>DuckDb (FlightSQL)</value>
+  </data>
+  <data name="ButtonHelp" xml:space="preserve">
+    <value>Connect to a DuckDb instance via FlightSQL</value>
+  </data>
+  <data name="ConnectionName" xml:space="preserve">
+    <value>DuckDb (FlightSQL)</value>
+  </data>
+  <data name="ConnectionLongDescription" xml:space="preserve">
+    <value>Connect to a DuckDb instance via the FlightSQL (gRPC) protocol using ADBC.</value>
+  </data>
+</root>

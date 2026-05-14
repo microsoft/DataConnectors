@@ -1,0 +1,1 @@
+#table( type table [t1.payment_type = number, a0 = any] , {{1, 40} , {2, 21} } ) 

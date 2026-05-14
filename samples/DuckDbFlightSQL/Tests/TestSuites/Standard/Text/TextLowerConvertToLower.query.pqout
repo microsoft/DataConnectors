@@ -1,0 +1,3 @@
+#table( type table [Zone = text, Lower_ConvertToLower = any] , {
+    {"Newark Airport", "newark airport"}
+})

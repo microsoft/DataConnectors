@@ -1,0 +1,1 @@
+#table( type table [LocationID = number, Borough = text, Zone = text, service_zone = text, textFromInt = any] , {{1, "EWR", "Newark Airport", "EWR", "#(0001)"} } ) 

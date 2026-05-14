@@ -1,0 +1,6 @@
+{
+    "powerquery.general.mode": "SDK",
+    "powerquery.sdk.test.settingsFiles": "./Tests/Settings",
+    "powerquery.sdk.defaultExtension": "${workspaceFolder}\\bin\\AnyCPU\\Debug\\${workspaceFolderBasename}.mez",
+    "powerquery.sdk.defaultQueryFile": "${workspaceFolder}\\${workspaceFolderBasename}.query.pq"
+}

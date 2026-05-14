@@ -1,0 +1,3 @@
+#table( type table [Zone = text, PositionOf_EmptyString = any] , {
+    {"Newark Airport", 0}
+})

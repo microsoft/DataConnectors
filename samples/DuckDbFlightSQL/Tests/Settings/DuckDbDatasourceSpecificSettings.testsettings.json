@@ -1,0 +1,6 @@
+{
+    "FailOnMissingOutputFile": true,
+    "QueryFilePath": "../TestSuites/DatasourceSpecific",
+    "ParameterQueryFilePath": "../ParameterQueries/DuckDb.parameterquery.pq",
+    "DiagnosticsFolderPath": "../Diagnostics/Standard"
+}

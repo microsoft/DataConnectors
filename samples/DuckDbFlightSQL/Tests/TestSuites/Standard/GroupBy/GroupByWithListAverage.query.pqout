@@ -1,0 +1,1 @@
+#table( type table [Borough = text, Grouped = any] , {{"Bronx", 146.837209} } )

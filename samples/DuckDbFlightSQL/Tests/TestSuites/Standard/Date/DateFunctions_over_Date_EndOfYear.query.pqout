@@ -1,0 +1,1 @@
+#table( type table [RecordID = number, lpep_pickup_date = date, EOY = any] , {{4, #date(2023, 2, 1), #date(2023, 12, 31)} } ) 

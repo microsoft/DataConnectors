@@ -1,0 +1,1 @@
+#table( type table [t1.LocationID = number, t1.LocationID_copy = any] , {{1, 1} , {2, 2} , {3, 3} , {4, 4} , {5, 5} } ) 

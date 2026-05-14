@@ -1,0 +1,1 @@
+#table( type table [passenger_count = number, total_amount = number, CompareDecimalPrecision = any] , {{1, 250.2, -1} } ) 

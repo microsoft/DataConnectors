@@ -1,0 +1,31 @@
+// FlightSqlAdbcConfig.pqm — ADBC driver configuration for DuckDb via FlightSQL.
+let
+    TypeInfo = Extension.LoadExpression("TypeInfo.pqm"),
+    FlightSqlAdbcConfig = [
+        Name = "FlightSqlAdbcDuckDb",
+        Folder = "FlightSQL",
+        File = "libadbc_driver_flightsql.dll",
+        DriverType = "Unmanaged",
+        EntryPoint = "FlightSqlDriverInit",
+        IdentifierQuoteChar = """",
+        CatalogNameSeparator = ".",
+        TableTypes = "BASE TABLE, VIEW",
+        SupportsCatalog = true,
+        SupportsSchema = true,
+        SupportedConnectionOptions = [
+            adbc.connection.catalog = false,
+            adbc.connection.db_schema = false
+        ],
+        TypeInfo = Table.SelectColumns(
+            TypeInfo,
+            {"Name", "SqlType", "Unsigned", "ColumnSize", "NumberPrecisionRadix", "LiteralPrefix", "LiteralSuffix"}
+        )
+    ],
+    Extension.LoadExpression = (name as text) =>
+        let
+            binary = Extension.Contents(name),
+            asText = Text.FromBinary(binary)
+        in
+            Expression.Evaluate(asText, #shared)
+in
+    FlightSqlAdbcConfig

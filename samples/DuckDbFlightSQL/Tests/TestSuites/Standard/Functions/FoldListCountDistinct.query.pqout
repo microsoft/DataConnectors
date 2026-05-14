@@ -1,0 +1,1 @@
+#table( type table [PULocationID = number, CountDistinct = number] , {{3, 1} } ) 

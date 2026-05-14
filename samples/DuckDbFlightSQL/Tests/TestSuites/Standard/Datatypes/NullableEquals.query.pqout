@@ -1,0 +1,1 @@
+#table( type table [total_amount = number, payment_type = number, PaymentTypeIsEmpty = any] , {{-94.84, null, null} , {-41, 4, true} , {-21, 4, true} , {-17.75, 4, true} , {-9.8, 3, false} } ) 

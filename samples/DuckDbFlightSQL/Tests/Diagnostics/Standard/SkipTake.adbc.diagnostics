@@ -1,0 +1,29 @@
+[
+  {
+    "Command": "SHOW DATABASES"
+  },
+  {
+    "Command": "SELECT schema_name AS Name FROM information_schema.schemata WHERE catalog_name = 'TPC-H-small' AND schema_name <> 'information_schema'"
+  },
+  {
+    "Command": "SELECT table_name AS Name, table_type FROM information_schema.tables WHERE table_catalog = 'TPC-H-small' AND table_schema = 'main'"
+  },
+  {
+    "Command": "SELECT column_name, data_type, is_nullable FROM information_schema.columns WHERE table_catalog = 'TPC-H-small' AND table_schema = 'main' AND table_name = 'TaxiZoneLookup' ORDER BY ordinal_position"
+  },
+  {
+    "Command": "SELECT kcu.column_name FROM information_schema.table_constraints tc JOIN information_schema.key_column_usage kcu ON tc.constraint_name = kcu.constraint_name AND tc.table_catalog = kcu.table_catalog AND tc.table_schema = kcu.table_schema AND tc.table_name = kcu.table_name WHERE tc.constraint_type = 'PRIMARY KEY' AND tc.table_catalog = 'TPC-H-small' AND tc.table_schema = 'main' AND tc.table_name = 'TaxiZoneLookup' ORDER BY kcu.ordinal_position"
+  },
+  {
+    "Command": "select \"LocationID\", \"Borough\", \"Zone\", \"service_zone\" from \"main\".\"TaxiZoneLookup\" order by \"LocationID\" LIMIT 1"
+  },
+  {
+    "Command": "select \"LocationID\", \"Borough\", \"Zone\", \"service_zone\" from \"main\".\"TaxiZoneLookup\" order by \"LocationID\" OFFSET 264"
+  },
+  {
+    "Command": "select \"LocationID\", \"Borough\", \"Zone\", \"service_zone\" from \"main\".\"TaxiZoneLookup\" order by \"LocationID\" LIMIT 1 OFFSET 200"
+  },
+  {
+    "Command": "select \"LocationID\", \"Borough\", \"Zone\", \"service_zone\" from \"main\".\"TaxiZoneLookup\" order by \"LocationID\""
+  }
+]

@@ -1,0 +1,20 @@
+[
+  {
+    "Command": "SHOW DATABASES"
+  },
+  {
+    "Command": "SELECT schema_name AS Name FROM information_schema.schemata WHERE catalog_name = 'TPC-H-small' AND schema_name <> 'information_schema'"
+  },
+  {
+    "Command": "SELECT table_name AS Name, table_type FROM information_schema.tables WHERE table_catalog = 'TPC-H-small' AND table_schema = 'main'"
+  },
+  {
+    "Command": "SELECT column_name, data_type, is_nullable FROM information_schema.columns WHERE table_catalog = 'TPC-H-small' AND table_schema = 'main' AND table_name = 'NycTaxiDateData' ORDER BY ordinal_position"
+  },
+  {
+    "Command": "SELECT kcu.column_name FROM information_schema.table_constraints tc JOIN information_schema.key_column_usage kcu ON tc.constraint_name = kcu.constraint_name AND tc.table_catalog = kcu.table_catalog AND tc.table_schema = kcu.table_schema AND tc.table_name = kcu.table_name WHERE tc.constraint_type = 'PRIMARY KEY' AND tc.table_catalog = 'TPC-H-small' AND tc.table_schema = 'main' AND tc.table_name = 'NycTaxiDateData' ORDER BY kcu.ordinal_position"
+  },
+  {
+    "Command": "select \"RecordID\", \"lpep_pickup_date\", cast(cast(date_add(\"lpep_pickup_date\", cast(864000000000 / CAST(864000000000 as BIGINT) as BIGINT) * interval 1 Day) as TIMESTAMP) as DATE) as \"C1\", cast(cast(date_add(\"lpep_pickup_date\", cast(36000000000 / CAST(864000000000 as BIGINT) as BIGINT) * interval 1 Day) as TIMESTAMP) as DATE) as \"C2\", cast(cast(date_add(\"lpep_pickup_date\", cast(600000000 / CAST(864000000000 as BIGINT) as BIGINT) * interval 1 Day) as TIMESTAMP) as DATE) as \"C3\", cast(cast(date_add(\"lpep_pickup_date\", cast(10000000 / CAST(864000000000 as BIGINT) as BIGINT) * interval 1 Day) as TIMESTAMP) as DATE) as \"C4\", cast(cast(date_add(\"lpep_pickup_date\", cast(900612500000 / CAST(864000000000 as BIGINT) as BIGINT) * interval 1 Day) as TIMESTAMP) as DATE) as \"C5\", cast(cast(date_add(\"lpep_pickup_date\", cast((CAST(0 as BIGINT) - 900612500000) / CAST(864000000000 as BIGINT) as BIGINT) * interval 1 Day) as TIMESTAMP) as DATE) as \"C6\" from \"main\".\"NycTaxiDateData\" order by \"RecordID\" desc LIMIT 5"
+  }
+]

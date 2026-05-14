@@ -1,0 +1,26 @@
+[
+  {
+    "Command": "SHOW DATABASES"
+  },
+  {
+    "Command": "SELECT schema_name AS Name FROM information_schema.schemata WHERE catalog_name = 'TPC-H-small' AND schema_name <> 'information_schema'"
+  },
+  {
+    "Command": "SELECT table_name AS Name, table_type FROM information_schema.tables WHERE table_catalog = 'TPC-H-small' AND table_schema = 'main'"
+  },
+  {
+    "Command": "SELECT column_name, data_type, is_nullable FROM information_schema.columns WHERE table_catalog = 'TPC-H-small' AND table_schema = 'main' AND table_name = 'NycTaxiData' ORDER BY ordinal_position"
+  },
+  {
+    "Command": "SELECT kcu.column_name FROM information_schema.table_constraints tc JOIN information_schema.key_column_usage kcu ON tc.constraint_name = kcu.constraint_name AND tc.table_catalog = kcu.table_catalog AND tc.table_schema = kcu.table_schema AND tc.table_name = kcu.table_name WHERE tc.constraint_type = 'PRIMARY KEY' AND tc.table_catalog = 'TPC-H-small' AND tc.table_schema = 'main' AND tc.table_name = 'NycTaxiData' ORDER BY kcu.ordinal_position"
+  },
+  {
+    "Command": "select \"fare_amount\", ceil(\"fare_amount\") as \"C1\", ceil(\"fare_amount\", CAST(2 as INTEGER)) as \"C2\" from ( select \"RecordID\", \"VendorID\", \"lpep_pickup_datetime\", \"lpep_dropoff_datetime\", \"store_and_fwd_flag\", \"RatecodeID\", \"PULocationID\", \"DOLocationID\", \"passenger_count\", \"trip_distance\", \"fare_amount\", \"extra\", \"mta_tax\", \"tip_amount\", \"tolls_amount\", \"ehail_fee\", \"improvement_surcharge\", \"total_amount\", \"payment_type\", \"trip_type\", \"congestion_surcharge\" from \"main\".\"NycTaxiData\" where cast(\"PULocationID\" as DOUBLE) = CAST(170 as DOUBLE) and not \"PULocationID\" is null ) as \"ITBL\" order by \"ITBL\".\"RecordID\" LIMIT 1"
+  },
+  {
+    "Command": "select \"fare_amount\", ceil(\"fare_amount\") as \"C1\", ceil(\"fare_amount\", CAST(2 as INTEGER)) as \"C2\" from ( select \"RecordID\", \"VendorID\", \"lpep_pickup_datetime\", \"lpep_dropoff_datetime\", \"store_and_fwd_flag\", \"RatecodeID\", \"PULocationID\", \"DOLocationID\", \"passenger_count\", \"trip_distance\", \"fare_amount\", \"extra\", \"mta_tax\", \"tip_amount\", \"tolls_amount\", \"ehail_fee\", \"improvement_surcharge\", \"total_amount\", \"payment_type\", \"trip_type\", \"congestion_surcharge\" from \"main\".\"NycTaxiData\" where cast(\"PULocationID\" as DOUBLE) = CAST(170 as DOUBLE) and not \"PULocationID\" is null ) as \"ITBL\" order by \"ITBL\".\"RecordID\" LIMIT 1"
+  },
+  {
+    "Command": "select \"RecordID\", \"VendorID\", \"lpep_pickup_datetime\", \"lpep_dropoff_datetime\", \"store_and_fwd_flag\", \"RatecodeID\", \"PULocationID\", \"DOLocationID\", \"passenger_count\", \"trip_distance\", \"fare_amount\", \"extra\", \"mta_tax\", \"tip_amount\", \"tolls_amount\", \"ehail_fee\", \"improvement_surcharge\", \"total_amount\", \"payment_type\", \"trip_type\", \"congestion_surcharge\" from \"main\".\"NycTaxiData\""
+  }
+]

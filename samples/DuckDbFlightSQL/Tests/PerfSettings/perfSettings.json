@@ -1,0 +1,16 @@
+{
+	"ExtensionPaths": [ "../../bin/AnyCPU/Debug/DuckDb.mez" ],
+	"ShowProgressBars": true,
+	"ShowConsoleColors": true,
+	"EnableDiagnostics": true,
+	"WarmupCount": 2,
+	"RunCount": 3,
+	"Scenarios": [
+		{
+			"Name": "Duck Db Query NycTaxi",
+			"QueryFilePath": "../TestSuites/PerfTests/DuckDbNycTaxi.query.pq",
+			"EvaluatorMode": "SinglePartition",
+			"ExpectedRowCount": 10000
+		}
+	]
+}

@@ -1,0 +1,10 @@
+{
+    "FailOnMissingOutputFile": true,
+    "QueryFilePath": "../TestSuites/Standard",
+    "ParameterQueryFilePath": "../ParameterQueries/DuckDb.parameterquery.pq",
+    "DiagnosticsFolderPath": "../Diagnostics/Standard",
+    "TestFilters": [
+        "!Text/TextMiddleWithNegativeLength.query.pq",
+        "!DateTime/DateTimeArithmetic.query.pq"
+    ]
+}
