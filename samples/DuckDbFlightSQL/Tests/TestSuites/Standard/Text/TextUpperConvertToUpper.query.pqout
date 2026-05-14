@@ -1,3 +1,0 @@
-#table( type table [Zone = text, Upper_ConvertToUpper = any] , {
-    {"Newark Airport", "NEWARK AIRPORT"}
-})

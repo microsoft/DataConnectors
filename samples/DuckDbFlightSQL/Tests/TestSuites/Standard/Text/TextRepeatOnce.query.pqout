@@ -1,3 +1,0 @@
-#table( type table [Zone = text, Repeat_Once = any] , {
-    {"Newark Airport", "Newark Airport"}
-})

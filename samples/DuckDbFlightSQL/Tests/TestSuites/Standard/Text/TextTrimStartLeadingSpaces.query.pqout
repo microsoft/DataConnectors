@@ -1,3 +1,0 @@
-#table( type table [Zone = text, TrimStart_LeadingSpaces = any] , {
-    {"Newark Airport", "Newark Airport"}
-})

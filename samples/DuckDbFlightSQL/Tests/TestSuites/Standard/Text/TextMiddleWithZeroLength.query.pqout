@@ -1,3 +1,0 @@
-#table( type table [Zone = text, withZeroLength = any] , {
-    {"Newark Airport", ""}
-})

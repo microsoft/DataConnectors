@@ -1,1 +1,0 @@
-#table( type table [Borough = text, LocationID = number] , {{"Queens", 2} , {"Queens", 7} } ) 

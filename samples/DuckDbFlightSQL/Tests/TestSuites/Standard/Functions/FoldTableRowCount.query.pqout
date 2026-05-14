@@ -1,1 +1,0 @@
-#table( type table [#"Row Count" = number] , {{10000} } ) 

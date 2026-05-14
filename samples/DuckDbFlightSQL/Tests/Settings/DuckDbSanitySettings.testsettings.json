@@ -1,6 +1,6 @@
 {
   "FailOnMissingOutputFile": true,
-  "QueryFilePath": "../TestSuites/Sanity",
+  "QueryFilePath": "../../../../testframework/tests/TestSuites/Sanity",
   "ParameterQueryFilePath": "../ParameterQueries/DuckDb.parameterquery.pq",
   "DiagnosticsFolderPath": "../Diagnostics/Sanity"
 }
