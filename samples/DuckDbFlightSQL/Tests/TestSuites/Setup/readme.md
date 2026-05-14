@@ -3,7 +3,7 @@
 ## Prerequisites
 
 - [Docker Desktop for Windows](https://www.docker.com/products/docker-desktop/) installed and running
-- Test data CSV files from the [DataConnectors test framework](https://github.com/microsoft/DataConnectors/tree/master/testframework/data):
+- Test data CSV files from the [DataConnectors test framework](../../../../../testframework/data):
   - `nyc_taxi_tripdata.csv`
   - `nyc_taxi_trip_date_data.csv`
   - `taxi+_zone_lookup.csv`
