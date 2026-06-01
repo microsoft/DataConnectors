@@ -97,6 +97,8 @@ For example, to start the container with TLS disabled:
 docker run --name sqlflite --detach --rm --tty --init --publish 31337:31337 --env TLS_ENABLED="0" --env SQLFLITE_PASSWORD="sqlflite_password" --env PRINT_QUERIES="1" --pull missing voltrondata/sqlflite:latest
 ```
 
+For the full set of container options (TLS, JWT auth, custom data, etc.), see the [sqlflite README](https://github.com/voltrondata/sqlflite/blob/main/README.md).
+
 See [Test Data Setup](Tests/TestSuites/Setup/readme.md) for the full container setup, data loading script, and table inventory.
 
 - [Running Tests with VS Code](Tests/RunDuckDbTestsWithVSCodeGuide.md): recommended approach using Test Explorer
