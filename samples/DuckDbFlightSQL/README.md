@@ -4,8 +4,6 @@ A sample Power Query M connector for **DuckDb** using the **FlightSQL** protocol
 
 ## Architecture
 
-Uses **`Adbc.Connection`** exclusively — no ODBC, `Adbc.Query`, or `Adbc.Database` needed.
-
 | Feature            | Implementation                                          |
 | ------------------ | ------------------------------------------------------- |
 | **Connection**     | `Adbc.Connection` via FlightSQL gRPC                    |
@@ -19,7 +17,7 @@ Uses **`Adbc.Connection`** exclusively — no ODBC, `Adbc.Query`, or `Adbc.Datab
 
 ## FlightSQL ADBC Driver
 
-The FlightSQL ADBC driver (`libadbc_driver_flightsql.dll`) ships with both **Power Query SDK Tools** and **Power BI Desktop**. No separate driver installation is needed.
+The open source [FlightSQL ADBC driver](https://github.com/apache/arrow-adbc/tree/main/go/adbc/driver/flightsql) (`libadbc_driver_flightsql.dll`) ships with both **PowerQuerySDKTools** and **Power BI Desktop**. No separate driver installation is needed.
 
 `FlightSqlAdbcConfig.pqm` configures the driver by specifying:
 
@@ -56,19 +54,16 @@ DuckDb/
 
 ## Key Design Decisions
 
-### Adbc.Connection Only
-
-Simplest approach for FlightSQL — directly creates a connection, builds navigation via SQL metadata queries, and wires up `SqlView.Generator` for folding.
-
 ### SQL Generator
 
-The query folding engine uses a three-layer override architecture:
+`SqlView.Generator(id, generator, getData)` is the engine-provided helper that plugs a SQL dialect into M's query-folding pipeline. `id` is a record uniquely identifying the source (this sample uses `[Module, Signature]`); `generator` is the merged SQL92-based generator record produced by `SqlGenerator.pqm`; `getData` is the callback that executes a generated SQL string and returns a table. The returned table folds downstream operations such as `Table.SelectRows`, `Table.Group`, and `Table.Sort` into the dialect's SQL.
+
+The query folding engine uses a two-layer override architecture:
 
 | Layer                | File                     | Role                                                                                              |
 | -------------------- | ------------------------ | ------------------------------------------------------------------------------------------------- |
 | **SQL92 Base**       | `SqlGeneratorCommon.pqm` | Shared infrastructure: type validation, AST helpers, 40+ function stubs, base SQL92 capabilities  |
 | **DuckDB Overrides** | `SqlGenerator.pqm`       | DuckDB dialect: 24 type facets, LIMIT/OFFSET syntax, function remapping, typed literal generation |
-| **Connector Wiring** | `DuckDb.pq`              | Creates `SqlView.Generator` instance, wires to `Adbc.Connection` via `GetData`                    |
 
 `SqlGenerator.pqm` loads the base via `Extension.LoadExpression()`, defines an override record, and calls `MergeOverrides("Sql92", Override, false)` to produce the final generator.
 
@@ -88,14 +83,24 @@ Queries `information_schema.table_constraints` + `key_column_usage` for PKs, app
 
 ## Supported Types
 
+The DuckDB types mapped by this sample are listed below. This is the set covered by `TypeInfo.pqm` and `SqlGenerator.pqm` for DuckDB; it is not the limit of what ADBC or `SqlView.Generator` can support. Connectors for other backends will map a different set based on their type system.
+
 BOOLEAN, TINYINT, SMALLINT, INTEGER, BIGINT, HUGEINT, FLOAT, DOUBLE, DECIMAL, DATE, TIME, TIMESTAMP, TIMESTAMP WITH TIME ZONE, VARCHAR, CHAR, BLOB, BINARY, UUID, JSON, INTERVAL, ARRAY, STRUCT, MAP
 
 ## Testing
 
-Tests require a DuckDB FlightSQL server running locally. See [Test Data Setup](Tests/TestSuites/Setup/readme.md) for Docker container setup and data loading instructions.
+Tests run against a DuckDB FlightSQL server hosted by [SQLFlite](https://github.com/voltrondata/sqlflite), an open source Flight SQL server image from Voltron Data. The test setup uses the published Docker image (`voltrondata/sqlflite:latest`) running locally on `localhost:31337` with the container's default credentials (`sqlflite_username` / `sqlflite_password`); change these in `Tests/Credentials/duckdb_cred.json` if you override the container defaults.
 
-- [Running Tests with VS Code](Tests/RunDuckDbTestsWithVSCodeGuide.md) — recommended approach using Test Explorer
-- [Running Performance Tests](Tests/RunDuckDbPerfTestsGuide.md) — performance testing with PQPerf
+For example, to start the container with TLS disabled:
+
+```powershell
+docker run --name sqlflite --detach --rm --tty --init --publish 31337:31337 --env TLS_ENABLED="0" --env SQLFLITE_PASSWORD="sqlflite_password" --env PRINT_QUERIES="1" --pull missing voltrondata/sqlflite:latest
+```
+
+See [Test Data Setup](Tests/TestSuites/Setup/readme.md) for the full container setup, data loading script, and table inventory.
+
+- [Running Tests with VS Code](Tests/RunDuckDbTestsWithVSCodeGuide.md): recommended approach using Test Explorer
+- [Running Performance Tests](Tests/RunDuckDbPerfTestsGuide.md): performance testing with PQPerf
 
 ## Building
 
