@@ -75,8 +75,6 @@ The query folding engine uses a two-layer override architecture:
 - **Type facets**: 24 DuckDB types with `NativeTypeName`, precision, radix, and scale metadata
 - **Supported conversions**: Type casting rules (e.g., `BOOLEAN` to `VARCHAR`/`DECIMAL`/`BIGINT`)
 
-Partners building new ADBC connectors can use this as a template: copy `SqlGeneratorCommon.pqm` as-is, then create a dialect-specific `SqlGenerator.pqm` with overrides for their database's SQL syntax and type system.
-
 ### Primary & Foreign Keys
 
 Queries `information_schema.table_constraints` + `key_column_usage` for PKs, applies them via `Type.ReplaceTableKeys`. Exposes `GetForeignKeys()` for FK discovery. Power BI uses these to auto-create relationships.
@@ -86,6 +84,20 @@ Queries `information_schema.table_constraints` + `key_column_usage` for PKs, app
 The DuckDB types mapped by this sample are listed below. This is the set covered by `TypeInfo.pqm` and `SqlGenerator.pqm` for DuckDB; it is not the limit of what ADBC or `SqlView.Generator` can support. Connectors for other backends will map a different set based on their type system.
 
 BOOLEAN, TINYINT, SMALLINT, INTEGER, BIGINT, HUGEINT, FLOAT, DOUBLE, DECIMAL, DATE, TIME, TIMESTAMP, TIMESTAMP WITH TIME ZONE, VARCHAR, CHAR, BLOB, BINARY, UUID, JSON, INTERVAL, ARRAY, STRUCT, MAP
+
+## Using This as a Template
+
+To adapt this sample for a different FlightSQL-backed database, the main swap-out points are:
+
+| File                     | What to change                                                                                                                                                |
+| ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `DuckDb.pq`              | Connector name, `DataSource.Kind`, user-facing parameters and credential handling, default URI scheme, and the options record passed to `Adbc.Connection`.    |
+| `FlightSqlAdbcConfig.pqm`| Server-specific ADBC metadata: `Name`, catalog/schema support flags, identifier quoting, supported table types. Driver location and entry point stay the same.|
+| `SqlGenerator.pqm`       | Replace DuckDB dialect rules with your database's: type facets, LIMIT/OFFSET syntax, function remapping, typed literal formats, supported cast rules.         |
+| `TypeInfo.pqm`           | Replace DuckDB native-type to M-type mappings with your database's type system.                                                                               |
+| `SqlGeneratorCommon.pqm` | Typically reused as-is. This is the shared SQL92 base.                                                                                                        |
+| `resources.resx`         | Update display strings (connector name, descriptions, error messages).                                                                                        |
+| `Tests/`                 | Point credentials and parameter queries at your server; update DatasourceSpecific tests to match your dialect's supported features.                           |
 
 ## Testing
 
