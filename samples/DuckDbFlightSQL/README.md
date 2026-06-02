@@ -1,6 +1,6 @@
 # DuckDb Connector (FlightSQL / ADBC)
 
-A sample Power Query M connector for **DuckDb** using the **FlightSQL** protocol via **ADBC** (Arrow Database Connectivity). Designed as a reference implementation for partners building FlightSQL-based connectors for Power BI.
+A sample Power Query M connector for [DuckDb](https://duckdb.org/) using the [FlightSQL](https://arrow.apache.org/docs/format/FlightSql.html) protocol via [ADBC](https://arrow.apache.org/adbc/) (Arrow Database Connectivity). Designed as a reference implementation for partners building FlightSQL-based connectors for Power BI.
 
 ## Architecture
 
