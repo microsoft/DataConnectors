@@ -101,6 +101,8 @@ To adapt this sample for a different FlightSQL-backed database, the main swap-ou
 
 ## Testing
 
+Tests follow the [PQ SDK Test Framework](../../testframework/tests/PQSDKTestSuites.md), run via `pqtest.exe` (see [PQTest docs](https://learn.microsoft.com/power-query/sdk-tools/pqtest-overview)). This sample reuses the shared **Sanity** and **Standard** suites from `testframework/tests/TestSuites/` and adds DuckDB-specific tests under `Tests/TestSuites/DatasourceSpecific/`. See [Running Tests with VS Code](Tests/RunDuckDbTestsWithVSCodeGuide.md) for live results in Test Explorer.
+
 Tests run against a DuckDB FlightSQL server hosted by [SQLFlite](https://github.com/voltrondata/sqlflite), an open source Flight SQL server image from Voltron Data. The test setup uses the published Docker image (`voltrondata/sqlflite:latest`) running locally on `localhost:31337` with the container's default credentials (`sqlflite_username` / `sqlflite_password`); change these in `Tests/Credentials/duckdb_cred.json` if you override the container defaults.
 
 For example, to start the container with TLS disabled:
