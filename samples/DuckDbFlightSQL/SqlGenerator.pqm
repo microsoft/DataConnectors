@@ -35,7 +35,10 @@ let
     SqlTypesCategories = [
         SoftBase2Types = {"DOUBLE", "FLOAT", "DECIMAL", "BIGINT", "INTEGER", "SMALLINT", "TINYINT"},
         SoftBase10Types = {"DECIMAL", "DOUBLE", "FLOAT", "BIGINT", "INTEGER", "SMALLINT", "TINYINT"},
-        VarBinaryTypes = {"BLOB"}, WideCharTypes = {"VARCHAR"}, VarCharTypes = {"VARCHAR"}, WideVarCharTypes = {"VARCHAR"}
+        VarBinaryTypes = {"BLOB"},
+        WideCharTypes = {"VARCHAR"},
+        VarCharTypes = {"VARCHAR"},
+        WideVarCharTypes = {"VARCHAR"}
     ],
     DefaultTypes = #table({"Type","SqlTypeName"}, {
         {Logical.Type, "BOOLEAN"}, {Int8.Type, "TINYINT"}, {Int16.Type, "SMALLINT"}, {Int32.Type, "INTEGER"},
