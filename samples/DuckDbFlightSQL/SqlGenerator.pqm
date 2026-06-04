@@ -223,9 +223,11 @@ let
             // date_add(epoch, scaledInterval)
             addArgs = {[Expression = epochTimestamp, Type = datetimeTypeWithFacets], [Expression = scaledInterval, Type = Int64.Type]},
             dateAddResult = [Kind = "Invocation", Function = [Kind = "Function", Name = "date_add"], Arguments = addArgs, Type = datetimeTypeWithFacets],
-            result = if Type.Is(sqlAstCol[Type], type nullable date) then
-                CastSqlExpression(dateAddResult, datetypewithFacets)
-            else dateAddResult
+            result =
+                if Type.Is(sqlAstCol[Type], type nullable date) then
+                    CastSqlExpression(dateAddResult, datetypewithFacets)
+                else
+                    dateAddResult
         in
             result,
 
@@ -250,9 +252,11 @@ let
             // nextPeriod - interval 1 subtractUnit
             subInterval = [Kind = "Interval", Interval = [Kind = "Literal", Value = subtractUnit], Expression = Literal("1")],
             endResult = BinaryOperation(nextPeriod, "Subtract", subInterval),
-            result = if isDateType then
-                CastSqlExpression(endResult, datetypewithFacets)
-            else endResult
+            result =
+                if isDateType then
+                    CastSqlExpression(endResult, datetypewithFacets)
+                else
+                    endResult
         in
             result,
 
@@ -269,9 +273,11 @@ let
             scaledInterval = BinaryOperation(castCount, "Multiply", oneInterval),
             addArgs = {[Expression = sqlAstCol, Type = sqlAstCol[Type]], [Expression = scaledInterval, Type = Int64.Type]},
             dateAddResult = [Kind = "Invocation", Function = [Kind = "Function", Name = "date_add"], Arguments = addArgs, Type = datetimeTypeWithFacets],
-            result = if Type.Is(sqlAstCol[Type], type nullable date) then
-                CastSqlExpression(dateAddResult, datetypewithFacets)
-            else dateAddResult
+            result =
+                if Type.Is(sqlAstCol[Type], type nullable date) then
+                    CastSqlExpression(dateAddResult, datetypewithFacets)
+                else
+                    dateAddResult
         in
             result,
 
