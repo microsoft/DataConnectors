@@ -117,12 +117,10 @@ let
 
     TypeFacets = [
         #"VARCHAR" = Type.ReplaceFacets(Text.Type, [NativeTypeName = "VARCHAR"]),
-        #"CHAR" = Type.ReplaceFacets(Text.Type, [NativeTypeName = "CHAR"]),
         #"BOOLEAN" = Type.ReplaceFacets(Logical.Type, [NativeTypeName = "BOOLEAN"]),
         #"TINYINT" = Type.ReplaceFacets(Int8.Type, [NativeTypeName = "TINYINT"]),
         #"SMALLINT" = Type.ReplaceFacets(Int16.Type, [NativeTypeName = "SMALLINT"]),
         #"INTEGER" = Type.ReplaceFacets(Int32.Type, [NativeTypeName = "INTEGER"]),
-        #"INT" = Type.ReplaceFacets(Int32.Type, [NativeTypeName = "INT"]),
         #"BIGINT" = Type.ReplaceFacets(Int64.Type, [NativeTypeName = "BIGINT"]),
         #"HUGEINT" = Type.ReplaceFacets(Decimal.Type, [NativeTypeName = "HUGEINT"]),
         #"UTINYINT" = Type.ReplaceFacets(Int16.Type, [NativeTypeName = "UTINYINT"]),
@@ -138,7 +136,6 @@ let
         #"TIMESTAMP" = Type.ReplaceFacets(DateTime.Type, [NativeTypeName = "TIMESTAMP"]),
         #"TIMESTAMP WITH TIME ZONE" = Type.ReplaceFacets(DateTimeZone.Type, [NativeTypeName = "TIMESTAMP WITH TIME ZONE"]),
         #"BLOB" = Type.ReplaceFacets(Binary.Type, [NativeTypeName = "BLOB"]),
-        #"BINARY" = Type.ReplaceFacets(Binary.Type, [NativeTypeName = "BINARY"]),
         #"UUID" = Type.ReplaceFacets(Text.Type, [NativeTypeName = "UUID"]),
         #"JSON" = Type.ReplaceFacets(Text.Type, [NativeTypeName = "JSON"]),
         #"INTERVAL" = Type.ReplaceFacets(Text.Type, [NativeTypeName = "INTERVAL"]),
