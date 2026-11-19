@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="BuildMez">
+  <PropertyGroup>
+    <OutputPath Condition="'$(OutputPath)' == ''">$(MSBuildProjectDirectory)\bin\AnyCPU\Debug\</OutputPath>
+    <IntermediateOutputPath Condition="'$(IntermediateOutputPath)' == ''">$(MSBuildProjectDirectory)\obj\</IntermediateOutputPath>
+    <MezIntermediatePath>$(IntermediateOutputPath)MEZ\</MezIntermediatePath>
+    <MezOutputPath>$(OutputPath)$(MsBuildProjectName).mez</MezOutputPath>
+  </PropertyGroup>
+  <ItemGroup>
+    <MezContent Include="IntegCubes.pq" />
+    <MezContent Include="IntegCubes.query.pq" />
+    <MezContent Include="IntegCubes16.png" />
+    <MezContent Include="IntegCubes20.png" />
+    <MezContent Include="IntegCubes24.png" />
+    <MezContent Include="IntegCubes32.png" />
+    <MezContent Include="IntegCubes40.png" />
+    <MezContent Include="IntegCubes48.png" />
+    <MezContent Include="IntegCubes64.png" />
+    <MezContent Include="resources.resx" />
+  </ItemGroup>
+  <Target Name="BuildMez" AfterTargets="Build" Inputs="@(MezContent)" Outputs="$(MezOutputPath)">
+    <RemoveDir Directories="$(MezIntermediatePath)" />
+    <Copy SourceFiles="@(MezContent)" DestinationFolder="$(MezIntermediatePath)" />
+    <MakeDir Directories="$(OutputPath)" Condition="!Exists('$(OutputPath)')" />
+    <ZipDirectory SourceDirectory="$(MezIntermediatePath)" DestinationFile="$(MezOutputPath)" Overwrite="true" />
+  </Target>
+  <Target Name="Clean">
+    <RemoveDir Directories="$(MezIntermediatePath)" />
+    <Delete Files="$(MezOutputPath)" />
+  </Target>
+</Project>
